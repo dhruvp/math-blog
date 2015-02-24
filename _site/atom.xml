@@ -1,0 +1,619 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+ <title>Dhruv's Bog</title>
+ <link href="http://dhruvp.github.io/atom.xml" rel="self"/>
+ <link href="http://dhruvp.github.io/"/>
+ <updated>2015-02-23T19:57:56-08:00</updated>
+ <id>http://dhruvp.github.io</id>
+ <author>
+   <name>Dhruv Parthasarathy</name>
+   <email>dhruv@udacity.com</email>
+ </author>
+
+ 
+ <entry>
+   <title>Building a login form in Clojurescript and Reagent</title>
+   <link href="http://dhruvp.github.io//2015/02/23/mailchimip-clojure/"/>
+   <updated>2015-02-23T00:00:00-08:00</updated>
+   <id>http://dhruvp.github.io/2015/02/23/mailchimip-clojure</id>
+   <content type="html">&lt;p&gt;I recently have been reading up on Lisp (on Lisp) a lot lately and have been quite excited by the ideas and simplicity of the language. So I looked for a nice project to get started on and decided to try building a simple Mailchimp-esque login form in Clojurescript to get my feet wet. You can see the dead simple demo &lt;a href=&quot;https://dhruvp.github.io/mailchimp-form-cljs/&quot;&gt;here&lt;/a&gt;. It is inspired by Lukas Ruebbelke’s awesome &lt;a href=&quot;&quot;&gt;post&lt;/a&gt; on the same idea, but in Angular.  Below, I’m going to walk you through the process of how to get from 0 to a working site and all the cool things I learned along the way. Ready? Leggo&lt;/p&gt;
+
+&lt;h2 id=&quot;what-is-clojurescript&quot;&gt;What is Clojurescript&lt;/h2&gt;
+
+&lt;p&gt;Clojurescript is tightly associated with Clojure, the Lisp with all the attention these days that runs on the JVM. The language itself is almost identical to Clojure with the primary difference being that Clojurescript compiles to Javascript and thus can be used for client side code! If you want to learn more about Clojure and Clojurescript, do listen to Rich Hickey’s talks on the language and its ideas. They’re really well presented and beautifully explained. See the following:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.infoq.com/author/Rich-Hickey&quot;&gt;A collection of Rich Hickey Talks&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.braveclojure.com/&quot;&gt;An introduction to learning Clojure&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/magomimmo/modern-cljs&quot;&gt;A series of tutorials on Clojurescript&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;what-are-we-going-to-do&quot;&gt;What are we going to do?&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Setup a development process for Clojurescript&lt;/li&gt;
+  &lt;li&gt;Walk through building a simple form for login with the following:
+    &lt;ul&gt;
+      &lt;li&gt;Validate the form as it’s being typed&lt;/li&gt;
+      &lt;li&gt;Hide and show labels based on your focus&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Alright then! On to step 1.&lt;/p&gt;
+
+&lt;h2 id=&quot;setting-up-your-developer-workflow&quot;&gt;Setting up your developer workflow&lt;/h2&gt;
+
+&lt;p&gt;First, do the following (don’t worry we’ll go over them):&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Install [leiningen] (https://github.com/technomancy/leiningen)
+    &lt;ul&gt;
+      &lt;li&gt;Leiningen is a tool for automating Clojure project tasks.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Go to the directory you wish to create your project in and type the following:
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;lein new reagent myproject&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;cd into your new project and execute the following:
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;lein ring server&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;You should see leiningen try and download a whole host of dependencies. Not to worry!&lt;/li&gt;
+      &lt;li&gt;At the end, you should see a server running on localhost:3000&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Open a new terminal and execute the following:
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;lein figwheel&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Install Emacs and Cider (you don’t have to but I think it’s helpful)
+    &lt;ul&gt;
+      &lt;li&gt;See these awesome &lt;a href=&quot;http://www.braveclojure.com/basic-emacs/&quot;&gt;instructions&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;what-was-all-that&quot;&gt;What was all that?&lt;/h2&gt;
+
+&lt;p&gt;Here’s what each of those pieces were:&lt;/p&gt;
+
+&lt;h3 id=&quot;leiningenhttpsgithubcomtechnomancyleiningen&quot;&gt;&lt;a href=&quot;https://github.com/technomancy/leiningen&quot;&gt;Leiningen&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;This is an absolute necessity for clojure development. It helps automate tasks and even comes with a repl!&lt;/p&gt;
+
+&lt;h3 id=&quot;ringhttpsgithubcomweavejesterlein-ring&quot;&gt;&lt;a href=&quot;https://github.com/weavejester/lein-ring&quot;&gt;Ring&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Ring is a simple abstraction for HTTP in Clojure. It allows you to create a webserver, define middleware etc.&lt;/p&gt;
+
+&lt;h3 id=&quot;figwheelhttpsgithubcombhaumanlein-figwheel&quot;&gt;&lt;a href=&quot;https://github.com/bhauman/lein-figwheel&quot;&gt;Figwheel&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Figwheel autoreloads and compiles your clojurescript code so that you can live code and see your changes update in the browser. It also comes with a repl for your clojurescript so you can evaluate your code there. This will come in handy.&lt;/p&gt;
+
+&lt;h3 id=&quot;reagenthttpsgithubcomreagent-projectreagent&quot;&gt;&lt;a href=&quot;https://github.com/reagent-project/reagent&quot;&gt;Reagent&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;Reagent wraps the React.js library and provides a neat Clojurescript interface to it. This is my first time using it and it’s been very simple to pick up and use.&lt;/p&gt;
+
+&lt;h2 id=&quot;can-we-write-something-already&quot;&gt;Can we write something already?&lt;/h2&gt;
+
+&lt;p&gt;Why of course. Let’s get started then. The code is in this &lt;a href=&quot;https://github.com/dhruvp/mailchimp-form-cljs&quot;&gt;repo&lt;/a&gt; for following along.&lt;/p&gt;
+
+&lt;p&gt;Open up the core.cljs file in &lt;code&gt;src/cljs/&amp;lt;your-project&amp;gt;/core.cljs&lt;/code&gt; in emacs or your favorite browser.&lt;/p&gt;
+
+&lt;p&gt;You should see a few function definitions under the heading “Views”. This is the first thing we’re going to edit. Each of these functions return separate DOM elements. If you check out the code under the Routes heading, you should see the following&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;secretary/defroute&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;session/put!&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:current-page&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;&amp;#39;home-page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;What’s happening there is secretary, another clojure library we are using for routing, is matching the route “/” to the home-page function we defined in the views section. The function is simply setting a session variable, :current-page, to be home-page upon the match.&lt;/p&gt;
+
+&lt;p&gt;Then, at the bottom of the page, we see are telling reagent to render what’s defined by current-page, and bind it to whatever is at document.getElementById(“app”). That’s defined here:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;c1&quot;&gt;;; Initialize app&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;init!&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hook-browser-navigation!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reagent/render-component&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;current-page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.getElementById&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;js/document&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;app&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Ok cool. So we are just going to play around with the home page to get what we need. Let’s take a closer look at how the home-page view is being defined quickly.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;home-page&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:h2&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Welcome to my-project&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:a&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:href&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#/about&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;go to about page&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;home-page, in the spirit of Clojure and Lisp, is just a function that returns dom elements. The syntax for defining a dom element is similar to &lt;a href=&quot;https://github.com/weavejester/hiccup&quot;&gt;hiccup&lt;/a&gt;. All dom elements are defined as clojure vectors. The first element of the vector is the tag of the element (in this case :div). We can then nest any amount of vectors inside such a vector to represent dom nesting. So home-page compiles to&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;div&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;h2&amp;gt;&lt;/span&gt;Welcome to my-project&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h2&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;div&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;a&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;href=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;#/about&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;about&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&amp;lt;/a&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This is cool because we can now pass along dom elements as first class data structures! I can pass them to functions, return them, map over them, compose them … Basically the possibilities are endless.&lt;/p&gt;
+
+&lt;p&gt;Ok now let’s remove the gunk and focus just on the home page. We don’t really need the about page. Edit the home-page code to be&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;home-page&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:class&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;signup-wrapper&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:h2&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Welcome to TestChimp&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:form&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;We now have an empty form! Look at that. Let’s start by putting in an email-address field. We’re going to need a variable to track the state of the email-address field value so we can run some validations and other things on it. We share state between components in reagent using atoms. So let’s create a new atom for email-address and pass it into an email-input component (that we haven’t created yet).&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;home-page&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-address&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;atom&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:class&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;signup-wrapper&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:h2&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Welcome to TestChimp&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:form&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]])))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Notice how we also changed home-page now to return a function. Reagent requires that if we do any setup via lets etc., we return a function (or a thunk as SICP would call it) that returns the elements we want. This just sets up the lexical scoping up front.&lt;/p&gt;
+
+&lt;p&gt;Also, we now have this email-form component inside a form tag. What’s up with that? That’s component composing in reagent! Isn’t it sweet? I can easily build and compose components to make simple, modular ui elements. Let’s now define this email-form component.&lt;/p&gt;
+
+&lt;p&gt;Add the following functions in:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;input-element&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;An input element which updates its value on change&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;name &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:input&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:id&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt;
+           &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;
+           &lt;span class=&quot;ss&quot;&gt;:class&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;form-control&amp;quot;&lt;/span&gt;
+           &lt;span class=&quot;ss&quot;&gt;:type&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;type&lt;/span&gt;
+           &lt;span class=&quot;ss&quot;&gt;:required&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;
+           &lt;span class=&quot;ss&quot;&gt;:value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;
+           &lt;span class=&quot;ss&quot;&gt;:on-change&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reset!&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;-&amp;gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;.-target&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;.-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))}])&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-input&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-address-atom&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;input-element&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;email&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;email&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;email&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;email-address-atom&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;In the spirit of LISP, we are defining a generic function for input-elements, and having the email-input just be a specific application of that function. Awesome. Also, let’s see how we update the email-address when someone types something in. We pass the following function into :on-change attribute of the input element.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reset!&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;-&amp;gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;.-target&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;.-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Here, we are reseting the value of atom to be the output of (-&amp;gt; % .-target .-value). The hell is that? That is a &lt;a href=&quot;http://clojuredocs.org/clojure.core/-%3E&quot;&gt;macro&lt;/a&gt; that expands to (.-value (.-target %)) where % is the only argument of the anonymous function we defined above. .-value and .-target are how we call javascript properties in Clojurescript.&lt;/p&gt;
+
+&lt;p&gt;And what’s with the “@value” we passed to the value field of input? Well the @ is just telling the function to apply the value of the atom (So that we don’t pass in an atom which html has no idea how to display!).&lt;/p&gt;
+
+&lt;p&gt;So now if you check out localhost:3000, you should see a simple page with an input for your email-address! Add in the following to display the email address.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;home-page&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-address&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;atom&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:class&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;signup-wrapper&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:h2&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Welcome to TestChimp&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:form&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-input&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;email-address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;EMAIL ADDRESS IS &amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]])))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;AWESOMEE! We got some sweet functionality going. Ok, now I want to display a little message that says “What is your email address?” when you click on the email box. Let’s create a component for that.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;prompt-message&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;A prompt that will animate to help the user with a given input&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:class&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;my-messages&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:class&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;prompt message-animation&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:p&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]])&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-prompt&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prompt-message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;What&amp;#39;s your email address?&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Right off the bat, we know we’re going to need to store state regarding whether the input is in focus or not. Depending on when that input is in focus, we are going to hide or show the component we defined above. The below function is going to do just that. It will take in information about the input, and a prompt element, and return a representation of a DOM element that has an input field, and a prompt field that appears above it if the input is in focus.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;input-and-prompt&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Creates an input box and a prompt box that appears above the input when the input comes into focus.&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;label-value&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;input-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;input-type&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;input-element-arg&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;prompt-element&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;input-focus&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;atom&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:label&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;label-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;input-focus&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;prompt-element&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;input-element&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;input-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;input-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;input-type&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;input-element-arg&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;input-focus&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]])))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Let’s dive in a little deeper. The below snippet is what hides and shows the prompt element:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;input-focus&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;prompt-element&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Notice we aren’t using any templating! Just plain old clojure. If the input-focus atom is set to true, we return the prompt-element, otherwise, we return an empty div. COOL! Note this shows that reagent allows you to place functions within its vectors so long as the functions also return vectors that can be compiled to DOM nodes. We are also defining a new atom (input-focus) and passing that into our input-element. Let’s change the input-element component to use it.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;input-element&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;An input element which updates its value and on focus parameters on change, blur, and focus&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;name &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;in-focus&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:input&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:id&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt;
+           &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;
+           &lt;span class=&quot;ss&quot;&gt;:class&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;form-control&amp;quot;&lt;/span&gt;
+           &lt;span class=&quot;ss&quot;&gt;:type&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;type&lt;/span&gt;
+           &lt;span class=&quot;ss&quot;&gt;:required&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;
+           &lt;span class=&quot;ss&quot;&gt;:value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;
+           &lt;span class=&quot;ss&quot;&gt;:on-change&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reset!&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;-&amp;gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;.-target&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;.-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+           &lt;span class=&quot;ss&quot;&gt;:on-focus&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;swap!&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;in-focus&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;not&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+           &lt;span class=&quot;ss&quot;&gt;:on-blur&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;swap!&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;in-focus&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;not&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;So now we have our input element swap the in-focus atom to be its converse when an on-focus or on-blur event happens. Dope.&lt;/p&gt;
+
+&lt;p&gt;Let’s now use all these functions we’ve built.&lt;/p&gt;
+
+&lt;p&gt;Rename the email-input method to be email-form, and change it to be what you see below so that it uses input-and-prompt.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-form&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-address-atom&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;input-and-prompt&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;email&amp;quot;&lt;/span&gt;
+                    &lt;span class=&quot;s&quot;&gt;&amp;quot;email&amp;quot;&lt;/span&gt;
+                    &lt;span class=&quot;s&quot;&gt;&amp;quot;email&amp;quot;&lt;/span&gt;
+                    &lt;span class=&quot;nv&quot;&gt;email-address-atom&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;prompt-message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;What&amp;#39;s your email?&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Right now, your home-page function should be:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;home-page&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-address&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;atom&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:class&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;signup-wrapper&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:h2&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Welcome to TestChimp&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:form&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-form&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;email-address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]])))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Try it out! As you click in and click out, you should see the prompt message appear and disappear.
+Finally, we want a little validation. If the field is required, we want our form to throw out a little message if it’s not filled in. This is a simple addition. Let’s change our input-and-prompt method to take in a required? attribute and display a message saying “Field is required!” when the field is empty.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;input-and-prompt&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Creates an input box and a prompt box that appears above the input when the input comes into focus. Also throws in a little required message&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;label-value&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;input-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;input-type&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;input-element-arg&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;prompt-element&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;required?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;input-focus&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;atom&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:label&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;label-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;input-focus&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;prompt-element&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;input-element&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;input-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;input-name&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;input-type&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;input-element-arg&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;input-focus&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;and &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;required?&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;= &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;input-element-arg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Field is required!&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+         &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])])))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-form&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-address-atom&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;input-and-prompt&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;email&amp;quot;&lt;/span&gt;
+                   &lt;span class=&quot;s&quot;&gt;&amp;quot;email&amp;quot;&lt;/span&gt;
+                   &lt;span class=&quot;s&quot;&gt;&amp;quot;email&amp;quot;&lt;/span&gt;
+                   &lt;span class=&quot;nv&quot;&gt;email-address-atom&lt;/span&gt;
+                   &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;prompt-message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;What&amp;#39;s your email?&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+                   &lt;span class=&quot;nv&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Hopefully this works as expected. Now you must be thinking, why did we define so many generic components instead of directly creating the components themselves? Like couldn’t we have tailored input-and-prompt to just worry about email addresses? Well we could have. But because we made it generic, we now a password, and name form for free! Just add in the following:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name-form&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name-atom&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;input-and-prompt&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;
+                    &lt;span class=&quot;s&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;
+                    &lt;span class=&quot;s&quot;&gt;&amp;quot;text&amp;quot;&lt;/span&gt;
+                    &lt;span class=&quot;nv&quot;&gt;name-atom&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prompt-message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;What&amp;#39;s your name?&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                    &lt;span class=&quot;nv&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name-form&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;password-atom&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;input-and-prompt&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;password&amp;quot;&lt;/span&gt;
+                    &lt;span class=&quot;s&quot;&gt;&amp;quot;password&amp;quot;&lt;/span&gt;
+                    &lt;span class=&quot;s&quot;&gt;&amp;quot;password&amp;quot;&lt;/span&gt;
+                    &lt;span class=&quot;nv&quot;&gt;password-atom&lt;/span&gt;
+                    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prompt-message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;What&amp;#39;s your password?&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                    &lt;span class=&quot;nv&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This to me is a big deal. We can now create UI elements using reusable, testable, utility functions. I don’t think that’s easy at all in most setups.&lt;/p&gt;
+
+&lt;p&gt;Ok onto the last challenge. We are going to validate the password field a little more heavily. We want the password to be at least 8 characters long, have at least 1 special character, and have at least one digit. Let’s start by defining some regexps to check for this.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;check-nil-then-predicate&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Check if the value is nil, then apply the predicate&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;predicate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil? &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;false&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;predicate&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;eight-or-more-characters?&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;word&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;check-nil-then-predicate&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;word&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;arg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;&amp;gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;count &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;arg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;has-special-character?&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;word&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;check-nil-then-predicate&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;word&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;arg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;boolean &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;first &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;re-seq &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;\W+&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;arg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;
+
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;has-number?&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;word&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;check-nil-then-predicate&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;word&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;arg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;boolean &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;re-seq &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;\d+&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;arg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Ok great. We now move on to defining the component that will show what requirements we haven’t satisfied yet in our password. It’s going to be a list where requirements disappear as we fullfill them. The function will take in a data structure like the one pasted below it.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;password-requirements&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;A list to describe which password requirements have been met so far&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;requirements&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:ul&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;requirements&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;not &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:check-fn&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;doall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:li&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:message&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)])))]])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Let’s break down the function above. It’s taking in a password (atom) and a set of requirements. You can see what the requirements data structure looks like below. It then returns a div with a list inside it.&lt;/p&gt;
+
+&lt;p&gt;For each requirement, we filter out the requirements that aren’t passed, and then map those requirements to create :li elements whose contents are just the messages of the requirements. This is cool. Again, this shows how we are doing things most templating languages can’t really do.&lt;/p&gt;
+
+&lt;p&gt;Below is what a set of requirements looks like. Each element is a map with a message attribute, and a check-fn attribute. In Clojure style, we don’t create an object or anything to represent this. We just pass it in as a simple data structure.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;8 or more characters&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:check-fn&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;eight-or-more-characters?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                                        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;At least one special character&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:check-fn&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;has-special-character?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                                        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;At least one number&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:check-fn&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;has-number?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Let’s now change our password-form to use these requirements.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;password-form&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;password-type-atom&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;atom&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;password&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;[(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;input-and-prompt&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;password&amp;quot;&lt;/span&gt;
+                          &lt;span class=&quot;s&quot;&gt;&amp;quot;password&amp;quot;&lt;/span&gt;
+                          &lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;password-type-atom&lt;/span&gt;
+                          &lt;span class=&quot;nv&quot;&gt;password&lt;/span&gt;
+                          &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prompt-message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;What&amp;#39;s your password&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                          &lt;span class=&quot;nv&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;password-requirements&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;8 or more characters&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:check-fn&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;eight-or-more-characters?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                                        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;At least one special character&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:check-fn&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;has-special-character?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+                                        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;At least one number&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:check-fn&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;has-number?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]]])))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Finally, notice that password-form, input-form etc. aren’t in a form-group class. Let’s fix that. We create the following function:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;wrap-as-element-in-form&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;element&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:class=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;row form-group&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+   &lt;span class=&quot;nv&quot;&gt;element&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And then use it to wrap all our forms in form-group elements.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;home-page&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-address&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;atom&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;name &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;atom&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;atom&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:class&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;signup-wrapper&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:h2&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Welcome to TestChimp&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:form&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;wrap-as-element-in-form&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-form&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;email-address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;wrap-as-element-in-form&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name-form&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;wrap-as-element-in-form&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;password-form&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])]])))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;That’s it for now! Your final code should match the file &lt;a href=&quot;https://github.com/dhruvp/mailchimp-form-cljs/blob/master/src/cljs/mailchimp_form/core.cljs&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Hope you enjoyed this!&lt;/p&gt;
+
+&lt;p&gt;My main take aways were the following:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;It’s really nice to be able to treat UI elements as first class data structures that you can compose and apply logic on. I think it does lead to more modular pieces.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;It’s also very nice that you can use clojure as your templating language! No need for feeling hamstrung by a lack of functionality there.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;It is hard for me to debug clojurescript code. I still don’t know how to do this efficiently. Many times I would see errors and have no idea why they were ocurring. In javascript, I would just breakpoint my code to catch the error. Here I couldn’t do that.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Introducing Poole</title>
+   <link href="http://dhruvp.github.io//2014/01/02/introducing-poole/"/>
+   <updated>2014-01-02T00:00:00-08:00</updated>
+   <id>http://dhruvp.github.io/2014/01/02/introducing-poole</id>
+   <content type="html">&lt;p&gt;&lt;em&gt;The Strange Case of Dr. Jekyll and Mr. Hyde&lt;/em&gt; tells the story of a lawyer investigating the connection of two persons, Dr. Henry Jekyll and Mr. Edward Hyde. Chief among the novel’s supporting cast is a man by the name of Mr. Poole, Dr. Jekyll’s loyal butler.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Poole is the butler for &lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll&lt;/a&gt;, the static site generator. It’s designed and developed by &lt;a href=&quot;https://twitter.com/mdo&quot;&gt;@mdo&lt;/a&gt; to provide a clear and concise foundational setup for any Jekyll site. It does so by furnishing a full vanilla Jekyll install with example templates, pages, posts, and styles.&lt;/p&gt;
+
+&lt;p&gt;There are currently two themes built on Poole:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://hyde.getpoole.com&quot;&gt;Hyde&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://lanyon.getpoole.com&quot;&gt;Lanyon&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Learn more and contribute on &lt;a href=&quot;https://github.com/poole&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;whats-included&quot;&gt;What’s included&lt;/h3&gt;
+
+&lt;p&gt;Poole is a streamlined Jekyll site designed and built as a foundation for building more meaningful themes. Poole, and every theme built on it, includes the following:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Complete Jekyll setup included (layouts, config, &lt;a href=&quot;/404.html&quot;&gt;404&lt;/a&gt;, &lt;a href=&quot;/atom.xml&quot;&gt;RSS feed&lt;/a&gt;, posts, and &lt;a href=&quot;/about&quot;&gt;example page&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;Mobile friendly design and development&lt;/li&gt;
+  &lt;li&gt;Easily scalable text and component sizing with &lt;code&gt;rem&lt;/code&gt; units in the CSS&lt;/li&gt;
+  &lt;li&gt;Support for a wide gamut of HTML elements&lt;/li&gt;
+  &lt;li&gt;Related posts (time-based, because Jekyll) below each post&lt;/li&gt;
+  &lt;li&gt;Syntax highlighting, courtesy Pygments (the Python-based code snippet highlighter)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Additional features are available in individual themes.&lt;/p&gt;
+
+&lt;h3 id=&quot;browser-support&quot;&gt;Browser support&lt;/h3&gt;
+
+&lt;p&gt;Poole and it’s themes are by preference a forward-thinking project. In addition to the latest versions of Chrome, Safari (mobile and desktop), and Firefox, it is only compatible with Internet Explorer 9 and above.&lt;/p&gt;
+
+&lt;h3 id=&quot;download&quot;&gt;Download&lt;/h3&gt;
+
+&lt;p&gt;Poole is developed on and hosted with GitHub. Head to the &lt;a href=&quot;https://github.com/poole/poole&quot;&gt;GitHub repository&lt;/a&gt; for downloads, bug reports, and features requests.&lt;/p&gt;
+
+&lt;p&gt;Thanks!&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>Example content</title>
+   <link href="http://dhruvp.github.io//2014/01/01/example-content/"/>
+   <updated>2014-01-01T00:00:00-08:00</updated>
+   <id>http://dhruvp.github.io/2014/01/01/example-content</id>
+   <content type="html">&lt;div class=&quot;message&quot;&gt;
+  Howdy! This is an example blog post that shows several types of HTML content supported in this theme.
+&lt;/div&gt;
+
+&lt;p&gt;Cum sociis natoque penatibus et magnis &lt;a href=&quot;#&quot;&gt;dis parturient montes&lt;/a&gt;, nascetur ridiculus mus. &lt;em&gt;Aenean eu leo quam.&lt;/em&gt; Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Etiam porta &lt;strong&gt;sem malesuada magna&lt;/strong&gt; mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.&lt;/p&gt;
+
+&lt;h2 id=&quot;inline-html-elements&quot;&gt;Inline HTML elements&lt;/h2&gt;
+
+&lt;p&gt;HTML defines a long list of available inline tags, a complete list of which can be found on the &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/HTML/Element&quot;&gt;Mozilla Developer Network&lt;/a&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;To bold text&lt;/strong&gt;, use &lt;code&gt;&amp;lt;strong&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;To italicize text&lt;/em&gt;, use &lt;code&gt;&amp;lt;em&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Abbreviations, like &lt;abbr title=&quot;HyperText Markup Langage&quot;&gt;HTML&lt;/abbr&gt; should use &lt;code&gt;&amp;lt;abbr&amp;gt;&lt;/code&gt;, with an optional &lt;code&gt;title&lt;/code&gt; attribute for the full phrase.&lt;/li&gt;
+  &lt;li&gt;Citations, like &lt;cite&gt;— Mark otto&lt;/cite&gt;, should use &lt;code&gt;&amp;lt;cite&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;del&gt;Deleted&lt;/del&gt; text should use &lt;code&gt;&amp;lt;del&amp;gt;&lt;/code&gt; and &lt;ins&gt;inserted&lt;/ins&gt; text should use &lt;code&gt;&amp;lt;ins&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Superscript &lt;sup&gt;text&lt;/sup&gt; uses &lt;code&gt;&amp;lt;sup&amp;gt;&lt;/code&gt; and subscript &lt;sub&gt;text&lt;/sub&gt; uses &lt;code&gt;&amp;lt;sub&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Most of these elements are styled by browsers with few modifications on our part.&lt;/p&gt;
+
+&lt;h2 id=&quot;heading&quot;&gt;Heading&lt;/h2&gt;
+
+&lt;p&gt;Vivamus sagittis lacus vel augue rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.&lt;/p&gt;
+
+&lt;h3 id=&quot;code&quot;&gt;Code&lt;/h3&gt;
+
+&lt;p&gt;Cum sociis natoque penatibus et magnis dis &lt;code&gt;code element&lt;/code&gt; montes, nascetur ridiculus mus.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// Example can be run directly in your JavaScript console&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Create a function that takes two arguments and returns the sum of those arguments&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;adder&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;b&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;return a + b&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Call the function&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;adder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// &amp;gt; 8&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.&lt;/p&gt;
+
+&lt;h3 id=&quot;gists-via-github-pages&quot;&gt;Gists via GitHub Pages&lt;/h3&gt;
+
+&lt;p&gt;Vestibulum id ligula porta felis euismod semper. Nullam quis risus eget urna mollis ornare vel eu leo. Donec sed odio dui.&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/5555251.js?file=gist.md&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sed odio dui. Vestibulum id ligula porta felis euismod semper.&lt;/p&gt;
+
+&lt;h3 id=&quot;lists&quot;&gt;Lists&lt;/h3&gt;
+
+&lt;p&gt;Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Praesent commodo cursus magna, vel scelerisque nisl consectetur et.&lt;/li&gt;
+  &lt;li&gt;Donec id elit non mi porta gravida at eget metus.&lt;/li&gt;
+  &lt;li&gt;Nulla vitae elit libero, a pharetra augue.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Donec ullamcorper nulla non metus auctor fringilla. Nulla vitae elit libero, a pharetra augue.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Vestibulum id ligula porta felis euismod semper.&lt;/li&gt;
+  &lt;li&gt;Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.&lt;/li&gt;
+  &lt;li&gt;Maecenas sed diam eget risus varius blandit sit amet non magna.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Cras mattis consectetur purus sit amet fermentum. Sed posuere consectetur est at lobortis.&lt;/p&gt;
+
+&lt;dl&gt;
+  &lt;dt&gt;HyperText Markup Language (HTML)&lt;/dt&gt;
+  &lt;dd&gt;The language used to describe and define the content of a Web page&lt;/dd&gt;
+
+  &lt;dt&gt;Cascading Style Sheets (CSS)&lt;/dt&gt;
+  &lt;dd&gt;Used to describe the appearance of Web content&lt;/dd&gt;
+
+  &lt;dt&gt;JavaScript (JS)&lt;/dt&gt;
+  &lt;dd&gt;The programming language used to build advanced Web sites and applications&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;p&gt;Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Nullam quis risus eget urna mollis ornare vel eu leo.&lt;/p&gt;
+
+&lt;h3 id=&quot;images&quot;&gt;Images&lt;/h3&gt;
+
+&lt;p&gt;Quisque consequat sapien eget quam rhoncus, sit amet laoreet diam tempus. Aliquam aliquam metus erat, a pulvinar turpis suscipit at.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://placehold.it/800x400&quot; alt=&quot;placeholder&quot; title=&quot;Large example image&quot; /&gt;
+&lt;img src=&quot;http://placehold.it/400x200&quot; alt=&quot;placeholder&quot; title=&quot;Medium example image&quot; /&gt;
+&lt;img src=&quot;http://placehold.it/200x200&quot; alt=&quot;placeholder&quot; title=&quot;Small example image&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;tables&quot;&gt;Tables&lt;/h3&gt;
+
+&lt;p&gt;Aenean lacinia bibendum nulla sed consectetur. Lorem ipsum dolor sit amet, consectetur adipiscing elit.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Name&lt;/th&gt;
+      &lt;th&gt;Upvotes&lt;/th&gt;
+      &lt;th&gt;Downvotes&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Totals&lt;/td&gt;
+      &lt;td&gt;21&lt;/td&gt;
+      &lt;td&gt;23&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tfoot&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Alice&lt;/td&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;11&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Bob&lt;/td&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;3&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Charlie&lt;/td&gt;
+      &lt;td&gt;7&lt;/td&gt;
+      &lt;td&gt;9&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Nullam id dolor id nibh ultricies vehicula ut id elit. Sed posuere consectetur est at lobortis. Nullam quis risus eget urna mollis ornare vel eu leo.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Want to see something else added? &lt;a href=&quot;https://github.com/poole/poole/issues/new&quot;&gt;Open an issue.&lt;/a&gt;&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
+   <title>What's Jekyll?</title>
+   <link href="http://dhruvp.github.io//2013/12/31/whats-jekyll/"/>
+   <updated>2013-12-31T00:00:00-08:00</updated>
+   <id>http://dhruvp.github.io/2013/12/31/whats-jekyll</id>
+   <content type="html">&lt;p&gt;&lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll&lt;/a&gt; is a static site generator, an open-source tool for creating simple yet powerful websites of all shapes and sizes. From &lt;a href=&quot;https://github.com/jekyll/jekyll/blob/master/README.markdown&quot;&gt;the project’s readme&lt;/a&gt;:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Jekyll is a simple, blog aware, static site generator. It takes a template directory […] and spits out a complete, static website suitable for serving with Apache or your favorite web server. This is also the engine behind GitHub Pages, which you can use to host your project’s page or blog right here from GitHub.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;It’s an immensely useful tool. Find out more by &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;visiting the project on GitHub&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
+ 
+
+</feed>
