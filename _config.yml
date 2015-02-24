@@ -3,7 +3,7 @@ permalink:        pretty
 relative_permalinks: true
 
 # Setup
-title:            Dhruv's Bog
+title:            Dhruv's Blog
 tagline:          Always Be Learnin'
 url:              http://dhruvp.github.io
 paginate:         1

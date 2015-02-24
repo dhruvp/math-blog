@@ -365,8 +365,8 @@ Below is what a set of requirements looks like. Each element is a map with a mes
 
 {% highlight clojure  %}
 [{:message "8 or more characters" :check-fn eight-or-more-characters?}
-                                        {:message "At least one special character" :check-fn has-special-character?}
-                                        {:message "At least one number" :check-fn has-number?}]
+ {:message "At least one special character" :check-fn has-special-character?}
+ {:message "At least one number" :check-fn has-number?}]
 
 {% endhighlight %}
 
