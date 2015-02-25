@@ -3,7 +3,7 @@ layout: post
 title: Building a login form in Clojurescript and Reagent
 ---
 
-I recently have been reading up on Lisp (on Lisp) a lot lately and have been quite excited by the ideas and simplicity of the language. So I looked for a nice project to get started on and decided to try building a simple Mailchimp-esque login form in Clojurescript to get my feet wet. You can see the dead simple demo [here](https://dhruvp.github.io/mailchimp-form-cljs/). It is inspired by Lukas Ruebbelke's awesome [post]() on the same idea, but in Angular.  Below, I'm going to walk you through the process of how to get from 0 to a working site and all the cool things I learned along the way. Ready? Leggo
+I recently have been reading up on Lisp (on Lisp) a lot lately and have been quite excited by the ideas and simplicity of the language. So I looked for a nice project to get started on and decided to try building a simple Mailchimp-esque login form in Clojurescript to get my feet wet. You can see the dead simple demo <a href="https://dhruvp.github.io/mailchimp-form-cljs/" target="_blank">here</a>. It is inspired by Lukas Ruebbelke's awesome <a href="http://onehungrymind.com/build-mailchimp-signup-form-angularjs/" target="_blank">post</a> on the same idea, but in Angular. Below, I'm going to walk you through the process of how to get from 0 to a working site and all the cool things I learned along the way. Ready? LEGGO!
 
 
 What is Clojurescript
@@ -19,8 +19,8 @@ Clojurescript is tightly associated with Clojure, the Lisp with all the attentio
 What are we going to do?
 ------------------------
 
-* Setup a development process for Clojurescript
-* Walk through building a simple form for login with the following:
+1. Setup a development process for Clojurescript
+2. Walk through building a simple form for login with the following:
   * Validate the form as it's being typed
   * Hide and show labels based on your focus
 
@@ -30,9 +30,9 @@ Alright then! On to step 1.
 Setting up your developer workflow
 ----------------------------------
 
-First, do the following (don't worry we'll go over them):
+First, let's get a developer flow going so that the build process gets out of the way and we can focus on coding. Do the following:
 
-1. Install [leiningen] (https://github.com/technomancy/leiningen)
+1. Install [leiningen](https://github.com/technomancy/leiningen)
   * Leiningen is a tool for automating Clojure project tasks.
 2. Go to the directory you wish to create your project in and type the following:
   * {% highlight bash %}
@@ -46,13 +46,10 @@ First, do the following (don't worry we'll go over them):
     * You should see leiningen try and download a whole host of dependencies. Not to worry!
     * At the end, you should see a server running on localhost:3000
 
-4. Open a new terminal and execute the following:
+4. Open a new terminal and execute the following from the base of your project:
   * {% highlight bash %}
     lein figwheel
     {% endhighlight %}
-
-5. Install Emacs and Cider (you don't have to but I think it's helpful)
-  * See these awesome [instructions](http://www.braveclojure.com/basic-emacs/)
 
 ## What was all that? ##
 
@@ -103,7 +100,14 @@ Ok cool. So we are just going to play around with the home page to get what we n
    [:div [:a {:href "#/about"} "go to about page"]]])
  {% endhighlight %}
 
-home-page, in the spirit of Clojure and Lisp, is just a function that returns dom elements. The syntax for defining a dom element is similar to [hiccup](https://github.com/weavejester/hiccup). All dom elements are defined as clojure vectors. The first element of the vector is the tag of the element (in this case :div). We can then nest any amount of vectors inside such a vector to represent dom nesting. So home-page compiles to
+home-page, in the spirit of Clojure and Lisp, is just a function that returns dom elements. The syntax for defining a dom element is similar to [hiccup](https://github.com/weavejester/hiccup). All dom elements are defined as clojure vectors. The first element of the vector is the tag of the element (in this case :div). We can then place other vectors(that represent elements) inside the original vector to represent element nesting (in the example above, the Welcome to my Project h2 is nested inside the div). So to show an example, I've pasted a vector representation of a dom and its corresponding dom element below it.
+
+{% highlight clojure %}
+[:div [:h2 "Welcome to my-project"]
+ [:div [:a {:href "#/about"} "go to about page"]]]
+{% endhighlight %}
+
+And the html:
 
 {% highlight html %}
 <div>
@@ -125,7 +129,9 @@ Ok now let's remove the gunk and focus just on the home page. We don't really ne
     [:form]]
  {% endhighlight %}
 
-We now have an empty form! Look at that. Let's start by putting in an email-address field. We're going to need a variable to track the state of the email-address field value so we can run some validations and other things on it. We share state between components in reagent using atoms. So let's create a new atom for email-address and pass it into an email-input component (that we haven't created yet).
+We now have an empty form! Look at that. Let's start by putting in an email-address field. We're going to need a variable to track the state of the email-address field value so we can run some validations and other things on it. We share state between components in reagent using atoms. Atoms are uniquely implemented in reagent such that whenever an atom's value changes, any component that was using the atom gets rerendered. So we basically don't have to worry about manually updating our html!!!! WOWOWOW!
+
+So let's create a new atom for email-address and pass it into an email-input component (that we haven't created yet).
 
 {% highlight clojure  %}
 (defn home-page []
@@ -134,10 +140,10 @@ We now have an empty form! Look at that. Let's start by putting in an email-addr
       [:div {:class "signup-wrapper"}
        [:h2 "Welcome to TestChimp"]
        [:form
-        [email-input]]])))
+        [email-input email-address]]])))
 {% endhighlight %}
 
-Notice how we also changed home-page now to return a function. Reagent requires that if we do any setup via lets etc., we return a function (or a thunk as SICP would call it) that returns the elements we want. This just sets up the lexical scoping up front.
+Notice how we also changed home-page now to return a function. Reagent requires that if we do any setup via lets etc., we return a function that in turn returns the elements we want. This just sets up the lexical scoping up front.
 
 Also, we now have this email-form component inside a form tag. What's up with that? That's component composing in reagent! Isn't it sweet? I can easily build and compose components to make simple, modular ui elements. Let's now define this email-form component.
 
@@ -161,13 +167,16 @@ Add the following functions in:
   (input-element "email" "email" "email" email-address-atom))
 {% endhighlight %}
 
-In the spirit of LISP, we are defining a generic function for input-elements, and having the email-input just be a specific application of that function. Awesome. Also, let's see how we update the email-address when someone types something in. We pass the following function into :on-change attribute of the input element.
+In the spirit of LISP, we are defining a generic function for input-elements, and having the email-input just be a specific application of that function. Awesome.
+
+
+Now, let's see how we update the email-address when someone types something in. We pass the following function into :on-change attribute of the input element.
 
 {% highlight clojure  %}
 #(reset! value (-> % .-target .-value))
 {% endhighlight %}
 
-Here, we are reseting the value of atom to be the output of (-> % .-target .-value). The hell is that? That is a [macro](http://clojuredocs.org/clojure.core/-%3E) that expands to (.-value (.-target %)) where % is the only argument of the anonymous function we defined above. .-value and .-target are how we call javascript properties in Clojurescript.
+Here, we are reseting the value of atom to be the output of (-> % .-target .-value). The hell is that? That is a [macro](http://clojuredocs.org/clojure.core/-%3E) that expands to (.-value (.-target %)) or just event.target.value in javascript. Note that .-value and .-target are how we call javascript properties in Clojurescript. The cool thing here is we just have to change the atom here and ANY other component that uses this atom rerenders automatically! This is some sweet stuff already.
 
 And what's with the "@value" we passed to the value field of input? Well the @ is just telling the function to apply the value of the atom (So that we don't pass in an atom which html has no idea how to display!).
 
@@ -352,16 +361,12 @@ Ok great. We now move on to defining the component that will show what requireme
   [password requirements]
   [:div
    [:ul (->> requirements
-            (filter (fn [req] (not ((:check-fn req) @password))))
-            (doall)
-            (map (fn [req] ^{:key req} [:li (:message req)])))]])
+             (filter (fn [req] (not ((:check-fn req) @password))))
+             (doall)
+             (map (fn [req] ^{:key req} [:li (:message req)])))]])
 {% endhighlight %}
 
-Let's break down the function above. It's taking in a password (atom) and a set of requirements. You can see what the requirements data structure looks like below. It then returns a div with a list inside it.
-
-For each requirement, we filter out the requirements that aren't passed, and then map those requirements to create :li elements whose contents are just the messages of the requirements. This is cool. Again, this shows how we are doing things most templating languages can't really do.
-
-Below is what a set of requirements looks like. Each element is a map with a message attribute, and a check-fn attribute. In Clojure style, we don't create an object or anything to represent this. We just pass it in as a simple data structure.
+Let's break down the function above. It's taking in a password (atom) and a set of requirements. You can see what the requirements data structure looks like below.
 
 {% highlight clojure  %}
 [{:message "8 or more characters" :check-fn eight-or-more-characters?}
@@ -370,6 +375,9 @@ Below is what a set of requirements looks like. Each element is a map with a mes
 
 {% endhighlight %}
 
+password-requirements then returns a div with a ul list inside it.
+
+For each requirement, we filter out the requirements that aren't passed, and then map those requirements to create :li elements whose contents are just the messages of the requirements. This is cool. Again, this shows how we are doing things most templating languages can't really do.
 
 Let's now change our password-form to use these requirements.
 

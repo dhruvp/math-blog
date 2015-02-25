@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
- <title>Dhruv's Bog</title>
+ <title>Dhruv's Blog</title>
  <link href="http://dhruvp.github.io/atom.xml" rel="self"/>
  <link href="http://dhruvp.github.io/"/>
- <updated>2015-02-23T19:57:56-08:00</updated>
+ <updated>2015-02-25T00:23:58-08:00</updated>
  <id>http://dhruvp.github.io</id>
  <author>
    <name>Dhruv Parthasarathy</name>
@@ -13,11 +13,135 @@
 
  
  <entry>
+   <title>Understanding Core Async vs. Events and Callbacks</title>
+   <link href="http://dhruvp.github.io//2015/02/24/understanding-core-async-examples/"/>
+   <updated>2015-02-24T00:00:00-08:00</updated>
+   <id>http://dhruvp.github.io/2015/02/24/understanding-core-async-examples</id>
+   <content type="html">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;If you read David Nolen’s &lt;a href=&quot;http://swannodette.github.io/&quot;&gt;blog&lt;/a&gt;, you’ll notice he frequently extolls the virtues of Core.Async as opposed to events and callbacks. For a while, I haven’t quite understood why core.async and Go style concurrency is a big deal. So I went over to his blog and read this &lt;a href=&quot;http://swannodette.github.io/2013/07/12/communicating-sequential-processes/&quot;&gt;post&lt;/a&gt; to get a better idea. The below is my attempt to break down his example and contrast it to what you would do in traditional eventing to finally understand why Core.Async and Go Channels are a big deal.&lt;/p&gt;
+
+&lt;h1 id=&quot;diving-into-coreasync&quot;&gt;Diving into Core.Async&lt;/h1&gt;
+
+&lt;p&gt;Core.Async, if you haven’t seen it before, is essentially a library for Clojure that gives you access to the concurrency pattern implemented in Go. To read more about it, see &lt;a href=&quot;http://clojure.com/blog/2013/06/28/clojure-core-async-channels.html&quot;&gt;this&lt;/a&gt;. Moreover, the Go authors do an awesome job breaking it down below.&lt;/p&gt;
+
+&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/cN_DpYBzKso&quot; frameborder=&quot;0&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+
+&lt;p&gt;The main idea is that core.async emphasizes using shared Queues as the underlying way for different processes to communicate. Each process just places its message onto the queue and anyone interested in the message, grabs the queue and reads from it. What could be more simple?&lt;/p&gt;
+
+&lt;p&gt;Well it’s not quite that simple. Say we have two processes, a Caller, and a Listener. The Caller keeps throwing out new things onto the queue, and the Listener is listening to new things on this queue. How would the listener know when to listen to the queue and pick new things off it? Naively, it would have a while loop where it just keeps checking the size of the queue right? We obviously don’t want this as it would block the hell out of our program! Both Go and Core.Async solve this problem using Go routines which essentially are light weight threads that run asynchronously. When Listener listens to a queue from within a go routine, it parks the go routine and returns execution to the main thread UNTIL there’s something to get from the queue. This way you’re not blocking AND you know when stuff comes off the queue. BOOM.&lt;/p&gt;
+
+&lt;h1 id=&quot;diving-into-david-nolens-example&quot;&gt;Diving into David Nolen’s example&lt;/h1&gt;
+
+&lt;p&gt;In David Nolen’s &lt;a href=&quot;http://swannodette.github.io/2013/07/12/communicating-sequential-processes/&quot;&gt;blog post&lt;/a&gt;, he starts off with an example that he says should make you “fall out of your chair”. I honestly did not fall out of my chair at first because I didn’t understand it! So I’m now going to break it down and say WHY what he’s doing is interesting and what’s cool about it. In his example, Nolen creates 3 independent processes fire events of at different rates. He then creates a fourth process that collects the events from these three processes and presents them to the user. You should just go check it out because it’s best understood by seeing it. His code is here for reference.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;chan&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;render&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;apply &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;str&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;for &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;reverse &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;str &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;div class=&amp;#39;proc-&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;#39;&amp;gt;Process &amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;/div&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;&amp;lt;!&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;timeout&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;250&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;&amp;gt;!&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;&amp;lt;!&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;timeout&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;&amp;gt;!&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;&amp;lt;!&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;timeout&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;&amp;gt;!&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;peekn&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;&amp;quot;Returns vector of (up to) n items from the end of vector v&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;&amp;gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;count &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;subvec &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;- &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;count &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;el&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by-id&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ex0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;nv&quot;&gt;out&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by-id&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ex0-out&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;loop &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;q&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]]&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set-html!&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;out&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;render&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recur&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;-&amp;gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;conj &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;q&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;&amp;lt;!&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;peekn&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Nolen immediately says that, when done without any mutability, “[this] should seem impossible for those familiar with JavaScript)”. Let’s find out why!&lt;/p&gt;
+
+&lt;p&gt;We first recreate Nolen’s render and peek functions in JS. They’re simple enough!&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;render&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;processNumber&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;lt;div class=&amp;#39;proc-&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;processNumber&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;#39;&amp;gt;Process &amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;processNumber&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;lt;/div&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}));&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;peek&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;slice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Ok the rest should be just as easy right :)? We now need to create three processes that fire off events at different rates and somehow collect them all. Traditionally in javascript, we use events and callbacks to communicate between separate async processes. Promises aren’t quite applicable as they are meant for one off events - not like the processes we have here that fire again and again. Let’s see if we can pull off a callback approach here. I can attach a callback to each of the processes and trigger the callbacks when the processes finish. So I’m going to just create a function that takes in a callback and an array, and calls the callback on the array when the event finishes. I’m using this array to collect the events.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;subscribeToProcess1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setTimeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;250&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And likewise for the other processes.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;subscribeToProcess2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setTimeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;subscribeToProcess3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setTimeout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Ok now that I have these processes set up, let me call them. I’m going to create an array to store all the events.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;processes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[];&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Now for the callback. I’m going to try and make my callback function non mutating. How about something like this?&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;callback&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;concat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;subscribeToProcess1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;processes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;subscribeToProcess2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;processes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;subscribeToProcess3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;processes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;and-this-is-where-it-all-breaks-down&quot;&gt;And this is where it all breaks down.&lt;/h2&gt;
+
+&lt;p&gt;Why? Our callback is not going to do anything!!! It just returns a new array somewhere but no one is using it!&lt;/p&gt;
+
+&lt;p&gt;See the problem is that callbacks are kind of by definition Side Effecting. Since the process creating a callback can’t use what it returns, we HAVE to have our callback mutate some state somewhere. If I had created a callback that didn’t mutate any state, would it have any point? NO! I would be in the exact same place had I not run it!  I would have no way of finding out what happened as a result of calling the callback! THAT is why Nolen’s example should knock you off your seat if you’re big on JS and eventing. He’s able to have different processes communicate without using any mutable state! Awesome.&lt;/p&gt;
+
+&lt;p&gt;Now if I use a callback function like the one below, my code is trivial.&lt;/p&gt;
+
+&lt;p&gt;callback = function (event, processes) {
+  processes.push(event);
+}&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;subscribeToProcess1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;processes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;subscribeToProcess2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;processes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;subscribeToProcess3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;callback&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;processes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;BOOM. I’m done. Note that we essentially pass the array around and allow the processes to push directly to it. If you see this closely, we are basically treating our array exactly like the channel in Nolen’s blog post! But such a design has a weak separation of concerns between the producer of the events (the independent processes that fire events) and the receiver (our array). However, if we use channels, they can be independent so long as they share a channel. In David Nolen’s example, the processes don’t care who or what is consuming their output.&lt;/p&gt;
+
+&lt;p&gt;Now the question to me is this - how important is it to you that you shouldn’t mutate state? Because, as we saw, it’s pretty easy to do what Nolen did with mutable state. I personally haven’t fully answered this question for myself. Perhaps you might have and realized immutability is the way to go. If you have, hopefully this blog post has shown you why Core.Async should be invaluable!&lt;/p&gt;
+</content>
+ </entry>
+ 
+ <entry>
    <title>Building a login form in Clojurescript and Reagent</title>
    <link href="http://dhruvp.github.io//2015/02/23/mailchimip-clojure/"/>
    <updated>2015-02-23T00:00:00-08:00</updated>
    <id>http://dhruvp.github.io/2015/02/23/mailchimip-clojure</id>
-   <content type="html">&lt;p&gt;I recently have been reading up on Lisp (on Lisp) a lot lately and have been quite excited by the ideas and simplicity of the language. So I looked for a nice project to get started on and decided to try building a simple Mailchimp-esque login form in Clojurescript to get my feet wet. You can see the dead simple demo &lt;a href=&quot;https://dhruvp.github.io/mailchimp-form-cljs/&quot;&gt;here&lt;/a&gt;. It is inspired by Lukas Ruebbelke’s awesome &lt;a href=&quot;&quot;&gt;post&lt;/a&gt; on the same idea, but in Angular.  Below, I’m going to walk you through the process of how to get from 0 to a working site and all the cool things I learned along the way. Ready? Leggo&lt;/p&gt;
+   <content type="html">&lt;p&gt;I recently have been reading up on Lisp (on Lisp) a lot lately and have been quite excited by the ideas and simplicity of the language. So I looked for a nice project to get started on and decided to try building a simple Mailchimp-esque login form in Clojurescript to get my feet wet. You can see the dead simple demo &lt;a href=&quot;https://dhruvp.github.io/mailchimp-form-cljs/&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;. It is inspired by Lukas Ruebbelke’s awesome &lt;a href=&quot;http://onehungrymind.com/build-mailchimp-signup-form-angularjs/&quot; target=&quot;_blank&quot;&gt;post&lt;/a&gt; on the same idea, but in Angular. Below, I’m going to walk you through the process of how to get from 0 to a working site and all the cool things I learned along the way. Ready? LEGGO!&lt;/p&gt;
 
 &lt;h2 id=&quot;what-is-clojurescript&quot;&gt;What is Clojurescript&lt;/h2&gt;
 
@@ -31,7 +155,7 @@
 
 &lt;h2 id=&quot;what-are-we-going-to-do&quot;&gt;What are we going to do?&lt;/h2&gt;
 
-&lt;ul&gt;
+&lt;ol&gt;
   &lt;li&gt;Setup a development process for Clojurescript&lt;/li&gt;
   &lt;li&gt;Walk through building a simple form for login with the following:
     &lt;ul&gt;
@@ -39,16 +163,16 @@
       &lt;li&gt;Hide and show labels based on your focus&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-&lt;/ul&gt;
+&lt;/ol&gt;
 
 &lt;p&gt;Alright then! On to step 1.&lt;/p&gt;
 
 &lt;h2 id=&quot;setting-up-your-developer-workflow&quot;&gt;Setting up your developer workflow&lt;/h2&gt;
 
-&lt;p&gt;First, do the following (don’t worry we’ll go over them):&lt;/p&gt;
+&lt;p&gt;First, let’s get a developer flow going so that the build process gets out of the way and we can focus on coding. Do the following:&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;Install [leiningen] (https://github.com/technomancy/leiningen)
+  &lt;li&gt;Install &lt;a href=&quot;https://github.com/technomancy/leiningen&quot;&gt;leiningen&lt;/a&gt;
     &lt;ul&gt;
       &lt;li&gt;Leiningen is a tool for automating Clojure project tasks.&lt;/li&gt;
     &lt;/ul&gt;
@@ -69,16 +193,11 @@
       &lt;li&gt;At the end, you should see a server running on localhost:3000&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;Open a new terminal and execute the following:
+  &lt;li&gt;Open a new terminal and execute the following from the base of your project:
     &lt;ul&gt;
       &lt;li&gt;
         &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;lein figwheel&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
       &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Install Emacs and Cider (you don’t have to but I think it’s helpful)
-    &lt;ul&gt;
-      &lt;li&gt;See these awesome &lt;a href=&quot;http://www.braveclojure.com/basic-emacs/&quot;&gt;instructions&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
 &lt;/ol&gt;
@@ -125,7 +244,12 @@
   &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:h2&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Welcome to my-project&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:a&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:href&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#/about&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;go to about page&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;home-page, in the spirit of Clojure and Lisp, is just a function that returns dom elements. The syntax for defining a dom element is similar to &lt;a href=&quot;https://github.com/weavejester/hiccup&quot;&gt;hiccup&lt;/a&gt;. All dom elements are defined as clojure vectors. The first element of the vector is the tag of the element (in this case :div). We can then nest any amount of vectors inside such a vector to represent dom nesting. So home-page compiles to&lt;/p&gt;
+&lt;p&gt;home-page, in the spirit of Clojure and Lisp, is just a function that returns dom elements. The syntax for defining a dom element is similar to &lt;a href=&quot;https://github.com/weavejester/hiccup&quot;&gt;hiccup&lt;/a&gt;. All dom elements are defined as clojure vectors. The first element of the vector is the tag of the element (in this case :div). We can then place other vectors(that represent elements) inside the original vector to represent element nesting (in the example above, the Welcome to my Project h2 is nested inside the div). So to show an example, I’ve pasted a vector representation of a dom and its corresponding dom element below it.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:h2&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Welcome to my-project&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:a&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:href&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;#/about&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;go to about page&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And the html:&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;div&amp;gt;&lt;/span&gt;
   &lt;span class=&quot;nt&quot;&gt;&amp;lt;h2&amp;gt;&lt;/span&gt;Welcome to my-project&lt;span class=&quot;nt&quot;&gt;&amp;lt;/h2&amp;gt;&lt;/span&gt;
@@ -143,7 +267,9 @@
     &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:h2&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Welcome to TestChimp&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:form&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;We now have an empty form! Look at that. Let’s start by putting in an email-address field. We’re going to need a variable to track the state of the email-address field value so we can run some validations and other things on it. We share state between components in reagent using atoms. So let’s create a new atom for email-address and pass it into an email-input component (that we haven’t created yet).&lt;/p&gt;
+&lt;p&gt;We now have an empty form! Look at that. Let’s start by putting in an email-address field. We’re going to need a variable to track the state of the email-address field value so we can run some validations and other things on it. We share state between components in reagent using atoms. Atoms are uniquely implemented in reagent such that whenever an atom’s value changes, any component that was using the atom gets rerendered. So we basically don’t have to worry about manually updating our html!!!! WOWOWOW!&lt;/p&gt;
+
+&lt;p&gt;So let’s create a new atom for email-address and pass it into an email-input component (that we haven’t created yet).&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;home-page&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-address&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;atom&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
@@ -151,9 +277,9 @@
       &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:class&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;signup-wrapper&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:h2&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Welcome to TestChimp&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:form&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-input&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]])))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-input&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;email-address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]])))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Notice how we also changed home-page now to return a function. Reagent requires that if we do any setup via lets etc., we return a function (or a thunk as SICP would call it) that returns the elements we want. This just sets up the lexical scoping up front.&lt;/p&gt;
+&lt;p&gt;Notice how we also changed home-page now to return a function. Reagent requires that if we do any setup via lets etc., we return a function that in turn returns the elements we want. This just sets up the lexical scoping up front.&lt;/p&gt;
 
 &lt;p&gt;Also, we now have this email-form component inside a form tag. What’s up with that? That’s component composing in reagent! Isn’t it sweet? I can easily build and compose components to make simple, modular ui elements. Let’s now define this email-form component.&lt;/p&gt;
 
@@ -174,11 +300,13 @@
   &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;email-address-atom&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;input-element&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;email&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;email&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;email&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;email-address-atom&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;In the spirit of LISP, we are defining a generic function for input-elements, and having the email-input just be a specific application of that function. Awesome. Also, let’s see how we update the email-address when someone types something in. We pass the following function into :on-change attribute of the input element.&lt;/p&gt;
+&lt;p&gt;In the spirit of LISP, we are defining a generic function for input-elements, and having the email-input just be a specific application of that function. Awesome.&lt;/p&gt;
+
+&lt;p&gt;Now, let’s see how we update the email-address when someone types something in. We pass the following function into :on-change attribute of the input element.&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;o&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reset!&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;-&amp;gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;.-target&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;.-value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Here, we are reseting the value of atom to be the output of (-&amp;gt; % .-target .-value). The hell is that? That is a &lt;a href=&quot;http://clojuredocs.org/clojure.core/-%3E&quot;&gt;macro&lt;/a&gt; that expands to (.-value (.-target %)) where % is the only argument of the anonymous function we defined above. .-value and .-target are how we call javascript properties in Clojurescript.&lt;/p&gt;
+&lt;p&gt;Here, we are reseting the value of atom to be the output of (-&amp;gt; % .-target .-value). The hell is that? That is a &lt;a href=&quot;http://clojuredocs.org/clojure.core/-%3E&quot;&gt;macro&lt;/a&gt; that expands to (.-value (.-target %)) or just event.target.value in javascript. Note that .-value and .-target are how we call javascript properties in Clojurescript. The cool thing here is we just have to change the atom here and ANY other component that uses this atom rerenders automatically! This is some sweet stuff already.&lt;/p&gt;
 
 &lt;p&gt;And what’s with the “@value” we passed to the value field of input? Well the @ is just telling the function to apply the value of the atom (So that we don’t pass in an atom which html has no idea how to display!).&lt;/p&gt;
 
@@ -335,19 +463,19 @@ Finally, we want a little validation. If the field is required, we want our form
   &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;requirements&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
   &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:div&lt;/span&gt;
    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:ul&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;-&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;requirements&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;not &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:check-fn&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;doall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:li&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:message&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)])))]])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;not &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:check-fn&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;doall&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:key&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:li&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:message&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)])))]])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;Let’s break down the function above. It’s taking in a password (atom) and a set of requirements. You can see what the requirements data structure looks like below. It then returns a div with a list inside it.&lt;/p&gt;
-
-&lt;p&gt;For each requirement, we filter out the requirements that aren’t passed, and then map those requirements to create :li elements whose contents are just the messages of the requirements. This is cool. Again, this shows how we are doing things most templating languages can’t really do.&lt;/p&gt;
-
-&lt;p&gt;Below is what a set of requirements looks like. Each element is a map with a message attribute, and a check-fn attribute. In Clojure style, we don’t create an object or anything to represent this. We just pass it in as a simple data structure.&lt;/p&gt;
+&lt;p&gt;Let’s break down the function above. It’s taking in a password (atom) and a set of requirements. You can see what the requirements data structure looks like below.&lt;/p&gt;
 
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;8 or more characters&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:check-fn&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;eight-or-more-characters?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-                                        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;At least one special character&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:check-fn&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;has-special-character?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-                                        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;At least one number&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:check-fn&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;has-number?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+ &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;At least one special character&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:check-fn&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;has-special-character?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+ &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:message&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;At least one number&amp;quot;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:check-fn&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;has-number?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;password-requirements then returns a div with a ul list inside it.&lt;/p&gt;
+
+&lt;p&gt;For each requirement, we filter out the requirements that aren’t passed, and then map those requirements to create :li elements whose contents are just the messages of the requirements. This is cool. Again, this shows how we are doing things most templating languages can’t really do.&lt;/p&gt;
 
 &lt;p&gt;Let’s now change our password-form to use these requirements.&lt;/p&gt;
 
@@ -404,214 +532,6 @@ Finally, we want a little validation. If the field is required, we want our form
     &lt;p&gt;It is hard for me to debug clojurescript code. I still don’t know how to do this efficiently. Many times I would see errors and have no idea why they were ocurring. In javascript, I would just breakpoint my code to catch the error. Here I couldn’t do that.&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ol&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>Introducing Poole</title>
-   <link href="http://dhruvp.github.io//2014/01/02/introducing-poole/"/>
-   <updated>2014-01-02T00:00:00-08:00</updated>
-   <id>http://dhruvp.github.io/2014/01/02/introducing-poole</id>
-   <content type="html">&lt;p&gt;&lt;em&gt;The Strange Case of Dr. Jekyll and Mr. Hyde&lt;/em&gt; tells the story of a lawyer investigating the connection of two persons, Dr. Henry Jekyll and Mr. Edward Hyde. Chief among the novel’s supporting cast is a man by the name of Mr. Poole, Dr. Jekyll’s loyal butler.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;Poole is the butler for &lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll&lt;/a&gt;, the static site generator. It’s designed and developed by &lt;a href=&quot;https://twitter.com/mdo&quot;&gt;@mdo&lt;/a&gt; to provide a clear and concise foundational setup for any Jekyll site. It does so by furnishing a full vanilla Jekyll install with example templates, pages, posts, and styles.&lt;/p&gt;
-
-&lt;p&gt;There are currently two themes built on Poole:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://hyde.getpoole.com&quot;&gt;Hyde&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://lanyon.getpoole.com&quot;&gt;Lanyon&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Learn more and contribute on &lt;a href=&quot;https://github.com/poole&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&quot;whats-included&quot;&gt;What’s included&lt;/h3&gt;
-
-&lt;p&gt;Poole is a streamlined Jekyll site designed and built as a foundation for building more meaningful themes. Poole, and every theme built on it, includes the following:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Complete Jekyll setup included (layouts, config, &lt;a href=&quot;/404.html&quot;&gt;404&lt;/a&gt;, &lt;a href=&quot;/atom.xml&quot;&gt;RSS feed&lt;/a&gt;, posts, and &lt;a href=&quot;/about&quot;&gt;example page&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Mobile friendly design and development&lt;/li&gt;
-  &lt;li&gt;Easily scalable text and component sizing with &lt;code&gt;rem&lt;/code&gt; units in the CSS&lt;/li&gt;
-  &lt;li&gt;Support for a wide gamut of HTML elements&lt;/li&gt;
-  &lt;li&gt;Related posts (time-based, because Jekyll) below each post&lt;/li&gt;
-  &lt;li&gt;Syntax highlighting, courtesy Pygments (the Python-based code snippet highlighter)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Additional features are available in individual themes.&lt;/p&gt;
-
-&lt;h3 id=&quot;browser-support&quot;&gt;Browser support&lt;/h3&gt;
-
-&lt;p&gt;Poole and it’s themes are by preference a forward-thinking project. In addition to the latest versions of Chrome, Safari (mobile and desktop), and Firefox, it is only compatible with Internet Explorer 9 and above.&lt;/p&gt;
-
-&lt;h3 id=&quot;download&quot;&gt;Download&lt;/h3&gt;
-
-&lt;p&gt;Poole is developed on and hosted with GitHub. Head to the &lt;a href=&quot;https://github.com/poole/poole&quot;&gt;GitHub repository&lt;/a&gt; for downloads, bug reports, and features requests.&lt;/p&gt;
-
-&lt;p&gt;Thanks!&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>Example content</title>
-   <link href="http://dhruvp.github.io//2014/01/01/example-content/"/>
-   <updated>2014-01-01T00:00:00-08:00</updated>
-   <id>http://dhruvp.github.io/2014/01/01/example-content</id>
-   <content type="html">&lt;div class=&quot;message&quot;&gt;
-  Howdy! This is an example blog post that shows several types of HTML content supported in this theme.
-&lt;/div&gt;
-
-&lt;p&gt;Cum sociis natoque penatibus et magnis &lt;a href=&quot;#&quot;&gt;dis parturient montes&lt;/a&gt;, nascetur ridiculus mus. &lt;em&gt;Aenean eu leo quam.&lt;/em&gt; Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Etiam porta &lt;strong&gt;sem malesuada magna&lt;/strong&gt; mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.&lt;/p&gt;
-
-&lt;h2 id=&quot;inline-html-elements&quot;&gt;Inline HTML elements&lt;/h2&gt;
-
-&lt;p&gt;HTML defines a long list of available inline tags, a complete list of which can be found on the &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/HTML/Element&quot;&gt;Mozilla Developer Network&lt;/a&gt;.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;To bold text&lt;/strong&gt;, use &lt;code&gt;&amp;lt;strong&amp;gt;&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;&lt;em&gt;To italicize text&lt;/em&gt;, use &lt;code&gt;&amp;lt;em&amp;gt;&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Abbreviations, like &lt;abbr title=&quot;HyperText Markup Langage&quot;&gt;HTML&lt;/abbr&gt; should use &lt;code&gt;&amp;lt;abbr&amp;gt;&lt;/code&gt;, with an optional &lt;code&gt;title&lt;/code&gt; attribute for the full phrase.&lt;/li&gt;
-  &lt;li&gt;Citations, like &lt;cite&gt;— Mark otto&lt;/cite&gt;, should use &lt;code&gt;&amp;lt;cite&amp;gt;&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;&lt;del&gt;Deleted&lt;/del&gt; text should use &lt;code&gt;&amp;lt;del&amp;gt;&lt;/code&gt; and &lt;ins&gt;inserted&lt;/ins&gt; text should use &lt;code&gt;&amp;lt;ins&amp;gt;&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;Superscript &lt;sup&gt;text&lt;/sup&gt; uses &lt;code&gt;&amp;lt;sup&amp;gt;&lt;/code&gt; and subscript &lt;sub&gt;text&lt;/sub&gt; uses &lt;code&gt;&amp;lt;sub&amp;gt;&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Most of these elements are styled by browsers with few modifications on our part.&lt;/p&gt;
-
-&lt;h2 id=&quot;heading&quot;&gt;Heading&lt;/h2&gt;
-
-&lt;p&gt;Vivamus sagittis lacus vel augue rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.&lt;/p&gt;
-
-&lt;h3 id=&quot;code&quot;&gt;Code&lt;/h3&gt;
-
-&lt;p&gt;Cum sociis natoque penatibus et magnis dis &lt;code&gt;code element&lt;/code&gt; montes, nascetur ridiculus mus.&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// Example can be run directly in your JavaScript console&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// Create a function that takes two arguments and returns the sum of those arguments&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;adder&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;a&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;b&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;return a + b&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// Call the function&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;adder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// &amp;gt; 8&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.&lt;/p&gt;
-
-&lt;h3 id=&quot;gists-via-github-pages&quot;&gt;Gists via GitHub Pages&lt;/h3&gt;
-
-&lt;p&gt;Vestibulum id ligula porta felis euismod semper. Nullam quis risus eget urna mollis ornare vel eu leo. Donec sed odio dui.&lt;/p&gt;
-
-&lt;script src=&quot;https://gist.github.com/5555251.js?file=gist.md&quot;&gt; &lt;/script&gt;
-
-&lt;p&gt;Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sed odio dui. Vestibulum id ligula porta felis euismod semper.&lt;/p&gt;
-
-&lt;h3 id=&quot;lists&quot;&gt;Lists&lt;/h3&gt;
-
-&lt;p&gt;Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Praesent commodo cursus magna, vel scelerisque nisl consectetur et.&lt;/li&gt;
-  &lt;li&gt;Donec id elit non mi porta gravida at eget metus.&lt;/li&gt;
-  &lt;li&gt;Nulla vitae elit libero, a pharetra augue.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Donec ullamcorper nulla non metus auctor fringilla. Nulla vitae elit libero, a pharetra augue.&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Vestibulum id ligula porta felis euismod semper.&lt;/li&gt;
-  &lt;li&gt;Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.&lt;/li&gt;
-  &lt;li&gt;Maecenas sed diam eget risus varius blandit sit amet non magna.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Cras mattis consectetur purus sit amet fermentum. Sed posuere consectetur est at lobortis.&lt;/p&gt;
-
-&lt;dl&gt;
-  &lt;dt&gt;HyperText Markup Language (HTML)&lt;/dt&gt;
-  &lt;dd&gt;The language used to describe and define the content of a Web page&lt;/dd&gt;
-
-  &lt;dt&gt;Cascading Style Sheets (CSS)&lt;/dt&gt;
-  &lt;dd&gt;Used to describe the appearance of Web content&lt;/dd&gt;
-
-  &lt;dt&gt;JavaScript (JS)&lt;/dt&gt;
-  &lt;dd&gt;The programming language used to build advanced Web sites and applications&lt;/dd&gt;
-&lt;/dl&gt;
-
-&lt;p&gt;Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Nullam quis risus eget urna mollis ornare vel eu leo.&lt;/p&gt;
-
-&lt;h3 id=&quot;images&quot;&gt;Images&lt;/h3&gt;
-
-&lt;p&gt;Quisque consequat sapien eget quam rhoncus, sit amet laoreet diam tempus. Aliquam aliquam metus erat, a pulvinar turpis suscipit at.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://placehold.it/800x400&quot; alt=&quot;placeholder&quot; title=&quot;Large example image&quot; /&gt;
-&lt;img src=&quot;http://placehold.it/400x200&quot; alt=&quot;placeholder&quot; title=&quot;Medium example image&quot; /&gt;
-&lt;img src=&quot;http://placehold.it/200x200&quot; alt=&quot;placeholder&quot; title=&quot;Small example image&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;tables&quot;&gt;Tables&lt;/h3&gt;
-
-&lt;p&gt;Aenean lacinia bibendum nulla sed consectetur. Lorem ipsum dolor sit amet, consectetur adipiscing elit.&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Name&lt;/th&gt;
-      &lt;th&gt;Upvotes&lt;/th&gt;
-      &lt;th&gt;Downvotes&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tfoot&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Totals&lt;/td&gt;
-      &lt;td&gt;21&lt;/td&gt;
-      &lt;td&gt;23&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tfoot&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Alice&lt;/td&gt;
-      &lt;td&gt;10&lt;/td&gt;
-      &lt;td&gt;11&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Bob&lt;/td&gt;
-      &lt;td&gt;4&lt;/td&gt;
-      &lt;td&gt;3&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Charlie&lt;/td&gt;
-      &lt;td&gt;7&lt;/td&gt;
-      &lt;td&gt;9&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;Nullam id dolor id nibh ultricies vehicula ut id elit. Sed posuere consectetur est at lobortis. Nullam quis risus eget urna mollis ornare vel eu leo.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;Want to see something else added? &lt;a href=&quot;https://github.com/poole/poole/issues/new&quot;&gt;Open an issue.&lt;/a&gt;&lt;/p&gt;
-</content>
- </entry>
- 
- <entry>
-   <title>What's Jekyll?</title>
-   <link href="http://dhruvp.github.io//2013/12/31/whats-jekyll/"/>
-   <updated>2013-12-31T00:00:00-08:00</updated>
-   <id>http://dhruvp.github.io/2013/12/31/whats-jekyll</id>
-   <content type="html">&lt;p&gt;&lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll&lt;/a&gt; is a static site generator, an open-source tool for creating simple yet powerful websites of all shapes and sizes. From &lt;a href=&quot;https://github.com/jekyll/jekyll/blob/master/README.markdown&quot;&gt;the project’s readme&lt;/a&gt;:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Jekyll is a simple, blog aware, static site generator. It takes a template directory […] and spits out a complete, static website suitable for serving with Apache or your favorite web server. This is also the engine behind GitHub Pages, which you can use to host your project’s page or blog right here from GitHub.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;It’s an immensely useful tool. Find out more by &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;visiting the project on GitHub&lt;/a&gt;.&lt;/p&gt;
 </content>
  </entry>
  

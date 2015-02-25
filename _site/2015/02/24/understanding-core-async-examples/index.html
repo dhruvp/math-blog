@@ -10,7 +10,7 @@
 
   <title>
     
-      Dhruv's Blog &middot; Always Be Learnin'
+      Understanding Core Async vs. Events and Callbacks &middot; Dhruv's Blog
     
   </title>
 
@@ -38,18 +38,10 @@
       </header>
 
       <main>
-        <div class="posts">
-  
-  <article class="post">
-    <h1 class="post-title">
-      <a href="/2015/02/24/understanding-core-async-examples/">
-        Understanding Core Async vs. Events and Callbacks
-      </a>
-    </h1>
-
-    <time datetime="2015-02-24T00:00:00-08:00" class="post-date">24 Feb 2015</time>
-
-    <h2 id="introduction">Introduction</h2>
+        <article class="post">
+  <h1 class="post-title">Understanding Core Async vs. Events and Callbacks</h1>
+  <time datetime="2015-02-24T00:00:00-08:00" class="page-date">24 Feb 2015</time>
+  <h2 id="introduction">Introduction</h2>
 
 <p>If you read David Nolen’s <a href="http://swannodette.github.io/">blog</a>, you’ll notice he frequently extolls the virtues of Core.Async as opposed to events and callbacks. For a while, I haven’t quite understood why core.async and Go style concurrency is a big deal. So I went over to his blog and read this <a href="http://swannodette.github.io/2013/07/12/communicating-sequential-processes/">post</a> to get a better idea. The below is my attempt to break down his example and contrast it to what you would do in traditional eventing to finally understand why Core.Async and Go Channels are a big deal.</p>
 
@@ -166,18 +158,23 @@
 
 <p>Now the question to me is this - how important is it to you that you shouldn’t mutate state? Because, as we saw, it’s pretty easy to do what Nolen did with mutable state. I personally haven’t fully answered this question for myself. Perhaps you might have and realized immutability is the way to go. If you have, hopefully this blog post has shown you why Core.Async should be invaluable!</p>
 
-  </article>
-  
-</div>
+</article>
 
-<div class="pagination">
-  
-    <a class="pagination-item older" href="/page2">Older</a>
-  
-  
-    <span class="pagination-item newer">Newer</span>
-  
-</div>
+<aside class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="//2015/02/23/mailchimip-clojure/">
+            Building a login form in Clojurescript and Reagent
+            <small><time datetime="2015-02-23T00:00:00-08:00">23 Feb 2015</time></small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</aside>
 
       </main>
 

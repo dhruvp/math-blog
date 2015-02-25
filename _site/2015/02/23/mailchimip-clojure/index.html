@@ -10,7 +10,7 @@
 
   <title>
     
-      Building a login form in Clojurescript and Reagent &middot; Dhruv's Bog
+      Building a login form in Clojurescript and Reagent &middot; Dhruv's Blog
     
   </title>
 
@@ -23,7 +23,7 @@
   <link rel="shortcut icon" href="/public/favicon.ico">
 
   <!-- RSS -->
-  <link rel="alternate" type="application/atom+xml" title="Dhruv's Bog" href="/atom.xml">
+  <link rel="alternate" type="application/atom+xml" title="Dhruv's Blog" href="/atom.xml">
 </head>
 
 
@@ -32,7 +32,7 @@
     <div class="container content">
       <header class="masthead">
         <h3 class="masthead-title">
-          <a href="/" title="Home">Dhruv's Bog</a>
+          <a href="/" title="Home">Dhruv's Blog</a>
           <small>Always Be Learnin'</small>
         </h3>
       </header>
@@ -41,7 +41,7 @@
         <article class="post">
   <h1 class="post-title">Building a login form in Clojurescript and Reagent</h1>
   <time datetime="2015-02-23T00:00:00-08:00" class="page-date">23 Feb 2015</time>
-  <p>I recently have been reading up on Lisp (on Lisp) a lot lately and have been quite excited by the ideas and simplicity of the language. So I looked for a nice project to get started on and decided to try building a simple Mailchimp-esque login form in Clojurescript to get my feet wet. You can see the dead simple demo <a href="https://dhruvp.github.io/mailchimp-form-cljs/">here</a>. It is inspired by Lukas Ruebbelke’s awesome <a href="">post</a> on the same idea, but in Angular.  Below, I’m going to walk you through the process of how to get from 0 to a working site and all the cool things I learned along the way. Ready? Leggo</p>
+  <p>I recently have been reading up on Lisp (on Lisp) a lot lately and have been quite excited by the ideas and simplicity of the language. So I looked for a nice project to get started on and decided to try building a simple Mailchimp-esque login form in Clojurescript to get my feet wet. You can see the dead simple demo <a href="https://dhruvp.github.io/mailchimp-form-cljs/" target="_blank">here</a>. It is inspired by Lukas Ruebbelke’s awesome <a href="http://onehungrymind.com/build-mailchimp-signup-form-angularjs/" target="_blank">post</a> on the same idea, but in Angular. Below, I’m going to walk you through the process of how to get from 0 to a working site and all the cool things I learned along the way. Ready? LEGGO!</p>
 
 <h2 id="what-is-clojurescript">What is Clojurescript</h2>
 
@@ -55,7 +55,7 @@
 
 <h2 id="what-are-we-going-to-do">What are we going to do?</h2>
 
-<ul>
+<ol>
   <li>Setup a development process for Clojurescript</li>
   <li>Walk through building a simple form for login with the following:
     <ul>
@@ -63,16 +63,16 @@
       <li>Hide and show labels based on your focus</li>
     </ul>
   </li>
-</ul>
+</ol>
 
 <p>Alright then! On to step 1.</p>
 
 <h2 id="setting-up-your-developer-workflow">Setting up your developer workflow</h2>
 
-<p>First, do the following (don’t worry we’ll go over them):</p>
+<p>First, let’s get a developer flow going so that the build process gets out of the way and we can focus on coding. Do the following:</p>
 
 <ol>
-  <li>Install [leiningen] (https://github.com/technomancy/leiningen)
+  <li>Install <a href="https://github.com/technomancy/leiningen">leiningen</a>
     <ul>
       <li>Leiningen is a tool for automating Clojure project tasks.</li>
     </ul>
@@ -93,16 +93,11 @@
       <li>At the end, you should see a server running on localhost:3000</li>
     </ul>
   </li>
-  <li>Open a new terminal and execute the following:
+  <li>Open a new terminal and execute the following from the base of your project:
     <ul>
       <li>
         <div class="highlight"><pre><code class="language-bash" data-lang="bash">lein figwheel</code></pre></div>
       </li>
-    </ul>
-  </li>
-  <li>Install Emacs and Cider (you don’t have to but I think it’s helpful)
-    <ul>
-      <li>See these awesome <a href="http://www.braveclojure.com/basic-emacs/">instructions</a></li>
     </ul>
   </li>
 </ol>
@@ -149,7 +144,12 @@
   <span class="p">[</span><span class="ss">:div</span> <span class="p">[</span><span class="ss">:h2</span> <span class="s">&quot;Welcome to my-project&quot;</span><span class="p">]</span>
    <span class="p">[</span><span class="ss">:div</span> <span class="p">[</span><span class="ss">:a</span> <span class="p">{</span><span class="ss">:href</span> <span class="s">&quot;#/about&quot;</span><span class="p">}</span> <span class="s">&quot;go to about page&quot;</span><span class="p">]]])</span></code></pre></div>
 
-<p>home-page, in the spirit of Clojure and Lisp, is just a function that returns dom elements. The syntax for defining a dom element is similar to <a href="https://github.com/weavejester/hiccup">hiccup</a>. All dom elements are defined as clojure vectors. The first element of the vector is the tag of the element (in this case :div). We can then nest any amount of vectors inside such a vector to represent dom nesting. So home-page compiles to</p>
+<p>home-page, in the spirit of Clojure and Lisp, is just a function that returns dom elements. The syntax for defining a dom element is similar to <a href="https://github.com/weavejester/hiccup">hiccup</a>. All dom elements are defined as clojure vectors. The first element of the vector is the tag of the element (in this case :div). We can then place other vectors(that represent elements) inside the original vector to represent element nesting (in the example above, the Welcome to my Project h2 is nested inside the div). So to show an example, I’ve pasted a vector representation of a dom and its corresponding dom element below it.</p>
+
+<div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">[</span><span class="ss">:div</span> <span class="p">[</span><span class="ss">:h2</span> <span class="s">&quot;Welcome to my-project&quot;</span><span class="p">]</span>
+ <span class="p">[</span><span class="ss">:div</span> <span class="p">[</span><span class="ss">:a</span> <span class="p">{</span><span class="ss">:href</span> <span class="s">&quot;#/about&quot;</span><span class="p">}</span> <span class="s">&quot;go to about page&quot;</span><span class="p">]]]</span></code></pre></div>
+
+<p>And the html:</p>
 
 <div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div&gt;</span>
   <span class="nt">&lt;h2&gt;</span>Welcome to my-project<span class="nt">&lt;/h2&gt;</span>
@@ -167,7 +167,9 @@
     <span class="p">[</span><span class="ss">:h2</span> <span class="s">&quot;Welcome to TestChimp&quot;</span><span class="p">]</span>
     <span class="p">[</span><span class="ss">:form</span><span class="p">]]</span></code></pre></div>
 
-<p>We now have an empty form! Look at that. Let’s start by putting in an email-address field. We’re going to need a variable to track the state of the email-address field value so we can run some validations and other things on it. We share state between components in reagent using atoms. So let’s create a new atom for email-address and pass it into an email-input component (that we haven’t created yet).</p>
+<p>We now have an empty form! Look at that. Let’s start by putting in an email-address field. We’re going to need a variable to track the state of the email-address field value so we can run some validations and other things on it. We share state between components in reagent using atoms. Atoms are uniquely implemented in reagent such that whenever an atom’s value changes, any component that was using the atom gets rerendered. So we basically don’t have to worry about manually updating our html!!!! WOWOWOW!</p>
+
+<p>So let’s create a new atom for email-address and pass it into an email-input component (that we haven’t created yet).</p>
 
 <div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">(</span><span class="kd">defn </span><span class="nv">home-page</span> <span class="p">[]</span>
   <span class="p">(</span><span class="k">let </span><span class="p">[</span><span class="nv">email-address</span> <span class="p">(</span><span class="nf">atom</span> <span class="nv">nil</span><span class="p">)]</span>
@@ -175,9 +177,9 @@
       <span class="p">[</span><span class="ss">:div</span> <span class="p">{</span><span class="ss">:class</span> <span class="s">&quot;signup-wrapper&quot;</span><span class="p">}</span>
        <span class="p">[</span><span class="ss">:h2</span> <span class="s">&quot;Welcome to TestChimp&quot;</span><span class="p">]</span>
        <span class="p">[</span><span class="ss">:form</span>
-        <span class="p">[</span><span class="nv">email-input</span><span class="p">]]])))</span></code></pre></div>
+        <span class="p">[</span><span class="nv">email-input</span> <span class="nv">email-address</span><span class="p">]]])))</span></code></pre></div>
 
-<p>Notice how we also changed home-page now to return a function. Reagent requires that if we do any setup via lets etc., we return a function (or a thunk as SICP would call it) that returns the elements we want. This just sets up the lexical scoping up front.</p>
+<p>Notice how we also changed home-page now to return a function. Reagent requires that if we do any setup via lets etc., we return a function that in turn returns the elements we want. This just sets up the lexical scoping up front.</p>
 
 <p>Also, we now have this email-form component inside a form tag. What’s up with that? That’s component composing in reagent! Isn’t it sweet? I can easily build and compose components to make simple, modular ui elements. Let’s now define this email-form component.</p>
 
@@ -198,11 +200,13 @@
   <span class="p">[</span><span class="nv">email-address-atom</span><span class="p">]</span>
   <span class="p">(</span><span class="nf">input-element</span> <span class="s">&quot;email&quot;</span> <span class="s">&quot;email&quot;</span> <span class="s">&quot;email&quot;</span> <span class="nv">email-address-atom</span><span class="p">))</span></code></pre></div>
 
-<p>In the spirit of LISP, we are defining a generic function for input-elements, and having the email-input just be a specific application of that function. Awesome. Also, let’s see how we update the email-address when someone types something in. We pass the following function into :on-change attribute of the input element.</p>
+<p>In the spirit of LISP, we are defining a generic function for input-elements, and having the email-input just be a specific application of that function. Awesome.</p>
+
+<p>Now, let’s see how we update the email-address when someone types something in. We pass the following function into :on-change attribute of the input element.</p>
 
 <div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="o">#</span><span class="p">(</span><span class="nf">reset!</span> <span class="nv">value</span> <span class="p">(</span><span class="nb">-&gt; </span><span class="nv">%</span> <span class="nv">.-target</span> <span class="nv">.-value</span><span class="p">))</span></code></pre></div>
 
-<p>Here, we are reseting the value of atom to be the output of (-&gt; % .-target .-value). The hell is that? That is a <a href="http://clojuredocs.org/clojure.core/-%3E">macro</a> that expands to (.-value (.-target %)) where % is the only argument of the anonymous function we defined above. .-value and .-target are how we call javascript properties in Clojurescript.</p>
+<p>Here, we are reseting the value of atom to be the output of (-&gt; % .-target .-value). The hell is that? That is a <a href="http://clojuredocs.org/clojure.core/-%3E">macro</a> that expands to (.-value (.-target %)) or just event.target.value in javascript. Note that .-value and .-target are how we call javascript properties in Clojurescript. The cool thing here is we just have to change the atom here and ANY other component that uses this atom rerenders automatically! This is some sweet stuff already.</p>
 
 <p>And what’s with the “@value” we passed to the value field of input? Well the @ is just telling the function to apply the value of the atom (So that we don’t pass in an atom which html has no idea how to display!).</p>
 
@@ -359,19 +363,19 @@ Finally, we want a little validation. If the field is required, we want our form
   <span class="p">[</span><span class="nv">password</span> <span class="nv">requirements</span><span class="p">]</span>
   <span class="p">[</span><span class="ss">:div</span>
    <span class="p">[</span><span class="ss">:ul</span> <span class="p">(</span><span class="nf">-&gt;&gt;</span> <span class="nv">requirements</span>
-            <span class="p">(</span><span class="nb">filter </span><span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">req</span><span class="p">]</span> <span class="p">(</span><span class="nb">not </span><span class="p">((</span><span class="ss">:check-fn</span> <span class="nv">req</span><span class="p">)</span> <span class="o">@</span><span class="nv">password</span><span class="p">))))</span>
-            <span class="p">(</span><span class="nf">doall</span><span class="p">)</span>
-            <span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">req</span><span class="p">]</span> <span class="o">^</span><span class="p">{</span><span class="ss">:key</span> <span class="nv">req</span><span class="p">}</span> <span class="p">[</span><span class="ss">:li</span> <span class="p">(</span><span class="ss">:message</span> <span class="nv">req</span><span class="p">)])))]])</span></code></pre></div>
+             <span class="p">(</span><span class="nb">filter </span><span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">req</span><span class="p">]</span> <span class="p">(</span><span class="nb">not </span><span class="p">((</span><span class="ss">:check-fn</span> <span class="nv">req</span><span class="p">)</span> <span class="o">@</span><span class="nv">password</span><span class="p">))))</span>
+             <span class="p">(</span><span class="nf">doall</span><span class="p">)</span>
+             <span class="p">(</span><span class="nb">map </span><span class="p">(</span><span class="k">fn </span><span class="p">[</span><span class="nv">req</span><span class="p">]</span> <span class="o">^</span><span class="p">{</span><span class="ss">:key</span> <span class="nv">req</span><span class="p">}</span> <span class="p">[</span><span class="ss">:li</span> <span class="p">(</span><span class="ss">:message</span> <span class="nv">req</span><span class="p">)])))]])</span></code></pre></div>
 
-<p>Let’s break down the function above. It’s taking in a password (atom) and a set of requirements. You can see what the requirements data structure looks like below. It then returns a div with a list inside it.</p>
-
-<p>For each requirement, we filter out the requirements that aren’t passed, and then map those requirements to create :li elements whose contents are just the messages of the requirements. This is cool. Again, this shows how we are doing things most templating languages can’t really do.</p>
-
-<p>Below is what a set of requirements looks like. Each element is a map with a message attribute, and a check-fn attribute. In Clojure style, we don’t create an object or anything to represent this. We just pass it in as a simple data structure.</p>
+<p>Let’s break down the function above. It’s taking in a password (atom) and a set of requirements. You can see what the requirements data structure looks like below.</p>
 
 <div class="highlight"><pre><code class="language-clojure" data-lang="clojure"><span class="p">[{</span><span class="ss">:message</span> <span class="s">&quot;8 or more characters&quot;</span> <span class="ss">:check-fn</span> <span class="nv">eight-or-more-characters?</span><span class="p">}</span>
-                                        <span class="p">{</span><span class="ss">:message</span> <span class="s">&quot;At least one special character&quot;</span> <span class="ss">:check-fn</span> <span class="nv">has-special-character?</span><span class="p">}</span>
-                                        <span class="p">{</span><span class="ss">:message</span> <span class="s">&quot;At least one number&quot;</span> <span class="ss">:check-fn</span> <span class="nv">has-number?</span><span class="p">}]</span></code></pre></div>
+ <span class="p">{</span><span class="ss">:message</span> <span class="s">&quot;At least one special character&quot;</span> <span class="ss">:check-fn</span> <span class="nv">has-special-character?</span><span class="p">}</span>
+ <span class="p">{</span><span class="ss">:message</span> <span class="s">&quot;At least one number&quot;</span> <span class="ss">:check-fn</span> <span class="nv">has-number?</span><span class="p">}]</span></code></pre></div>
+
+<p>password-requirements then returns a div with a ul list inside it.</p>
+
+<p>For each requirement, we filter out the requirements that aren’t passed, and then map those requirements to create :li elements whose contents are just the messages of the requirements. This is cool. Again, this shows how we are doing things most templating languages can’t really do.</p>
 
 <p>Let’s now change our password-form to use these requirements.</p>
 
@@ -437,27 +441,9 @@ Finally, we want a little validation. If the field is required, we want our form
     
       <li>
         <h3>
-          <a href="//2014/01/02/introducing-poole/">
-            Introducing Poole
-            <small><time datetime="2014-01-02T00:00:00-08:00">02 Jan 2014</time></small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="//2014/01/01/example-content/">
-            Example content
-            <small><time datetime="2014-01-01T00:00:00-08:00">01 Jan 2014</time></small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="//2013/12/31/whats-jekyll/">
-            What's Jekyll?
-            <small><time datetime="2013-12-31T00:00:00-08:00">31 Dec 2013</time></small>
+          <a href="//2015/02/24/understanding-core-async-examples/">
+            Understanding Core Async vs. Events and Callbacks
+            <small><time datetime="2015-02-24T00:00:00-08:00">24 Feb 2015</time></small>
           </a>
         </h3>
       </li>
@@ -469,7 +455,7 @@ Finally, we want a little validation. If the field is required, we want our form
 
       <footer class="footer">
         <small>
-          &copy; <time datetime="2015-02-23T19:57:56-08:00">2015</time>. All rights reserved.
+          &copy; <time datetime="2015-02-25T00:23:58-08:00">2015</time>. All rights reserved.
         </small>
       </footer>
     </div>
