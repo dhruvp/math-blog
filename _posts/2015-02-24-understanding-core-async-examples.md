@@ -12,9 +12,8 @@ If you read David Nolen's [blog](http://swannodette.github.io/), you'll notice h
 Diving into Core.Async
 ======================
 
-Core.Async, if you haven't seen it before, is essentially a library for Clojure that gives you access to the concurrency pattern implemented in Go. To read more about it, see [this](http://clojure.com/blog/2013/06/28/clojure-core-async-channels.html). Moreover, the Go authors do an awesome job breaking it down below.
+Core.Async, if you haven't seen it before, is essentially a library for Clojure that gives you access to the concurrency pattern implemented in Go. To read more about it, see [this](http://clojure.com/blog/2013/06/28/clojure-core-async-channels.html). Moreover, there's an awesome talk on the matter you can check out <a href="http://www.infoq.com/presentations/clojure-core-async" target="_blank">here</a>.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/cN_DpYBzKso" frameborder="0" allowfullscreen></iframe>
 
 The main idea is that core.async emphasizes using shared Queues as the underlying way for different processes to communicate. Each process just places its message onto the queue and anyone interested in the message, grabs the queue and reads from it. What could be more simple?
 
