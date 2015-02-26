@@ -72,12 +72,12 @@ peek = function (v, n) {
 };
 {% endhighlight %}
 
-Ok the rest should be just as easy right :)? We now need to create three processes that fire off events at different rates and somehow collect them all. Traditionally in javascript, we use events and callbacks to communicate between separate async processes. Promises aren't quite applicable as they are meant for one off events - not like the processes we have here that fire again and again. Let's see if we can pull off a callback approach here. I can attach a callback to each of the processes and trigger the callbacks when the processes finish. So I'm going to just create a function that takes in a callback and an array, and calls the callback on the array when the event finishes. I'm using this array to collect the events.
+Now let's focus on the main concept. We now need to create three processes that fire off events at different rates and somehow collect them all. I'm going to start by recreating the three independent processes that fire at different rates and place their events onto some sort of list. This is easy enough:
 
 {% highlight js %}
-subscribeToProcess1 = function (callback, arr) {
+subscribeToProcess1 = function (arr) {
   window.setTimeout(function () {
-    callback(1, arr);
+    arr.push(1);
   }, 250);
 };
 {% endhighlight %}
@@ -86,54 +86,84 @@ subscribeToProcess1 = function (callback, arr) {
 And likewise for the other processes.
 
 {% highlight js %}
-subscribeToProcess2 = function (callback, arr) {
+subscribeToProcess2 = function (arr) {
   window.setTimeout(function () {
-    callback(2, arr);
+    arr.push(2);
   }, 1000);
 };
 
-subscribeToProcess3 = function (callback, arr) {
+subscribeToProcess3 = function (arr) {
   window.setTimeout(function () {
-    callback(3, arr);
+    arr.push(3);
   }, 1500);
 };
 {% endhighlight %}
 
-Ok now that I have these processes set up, let me call them. I'm going to create an array to store all the events.
+Ok now that I have these processes set up, let me call them. I'm going to create an array to collect all the events.
 
 {% highlight js %}
-var processes = [];
+var collector = [];
 {% endhighlight %}
-Now for the callback. I'm going to try and make my callback function non mutating. How about something like this?
+Now for the callback.
 
-{% highlight js %}
-callback = function (event, arr) {
-  return arr.concat([event]);
-};
-
-subscribeToProcess1(callback, processes);
-subscribeToProcess2(callback, processes);
-subscribeToProcess3(callback, processes);
+subscribeToProcess1(collector);
+subscribeToProcess2(collector);
+subscribeToProcess3(collector);
 {% endhighlight %}
 
 ## And this is where it all breaks down. ##
 
-Why? Our callback is not going to do anything!!! It just returns a new array somewhere but no one is using it!
+If I'm to proceed. I need to do something like what Nolen does here:
 
-See the problem is that callbacks are kind of by definition Side Effecting. Since the process creating a callback can't use what it returns, we HAVE to have our callback mutate some state somewhere. If I had created a callback that didn't mutate any state, would it have any point? NO! I would be in the exact same place had I not run it!  I would have no way of finding out what happened as a result of calling the callback! THAT is why Nolen's example should knock you off your seat if you're big on JS and eventing. He's able to have different processes communicate without using any mutable state! Awesome.
+{% highlight clojure %}
+(go (loop [q []]
+      (set-html! out (render q))
+      (recur (-> (conj q (<! c)) (peekn 10)))))
+{% endhighlight %}
 
-Now if I use a callback function like the one below, my code is trivial.
+To break down what's happening above, Nolen is basically saying listen to the channel c (<! c), and whenever a new element arrives, place it onto a new array that's basically my old list of processes (q) with the new event at the end (conj q (<! c)). What's amazing here is that this code is not blocking! Because it's within a go loop, the code just causes the current goroutine (a light weight thread) to park and give execution back to the main thread until we get an element off the channel c.
 
-callback = function (event, processes) {
-  processes.push(event);
-}
+Can I replicate this functionality? I could pass in a callback function to the individual processes and ask them to call something whenever they add something to the collector. That would kind of be like an ES7 Object.Observe() on my push array. Let's see what happens.
 
 {% highlight js %}
-subscribeToProcess1(callback, processes);
-subscribeToProcess2(callback, processes);
-subscribeToProcess3(callback, processes);
+subscribeToProcess1 = function (callback) {
+  window.setTimeout(function () {
+    callback(1);
+  }, 250);
+};
+
+collector = [];
+callback = fn (event) {
+  render(peek(collector.concat([event]), 10));
+  collector.push(event);
+};
+subscribeToProcess1(collector, callback);
+subscribeToProcess1(collector, callback);
+subscribeToProcess1(collector, callback);
 {% endhighlight %}
+
+This does indeed works like Nolen's example. Whenever one of my processes fires an event, it will add the event to the collector, and then render and peek will be called on the collector to display the values. And indeed, the array passed in to peek and render will not be mutated. So then what's the big deal?
+
+
+What's the big deal?
+======================================
+
+One of the main differences between Nolen's solution and our JS solution is that Nolen separated the idea of communication between processes, and the collection of events into two distinct data structures - a channel, and his vector q. The channel is very much like our array collector. It is a shared mutable entity that collects all the events.
+<!--
+If I just make the collector array the same as the array that renders my final output, I should be able to pull of what Nolen achieves. Let's see what I mean:
+
+{% highlight js %}
+var collector = [];
+
+subscribeToProcess1(collector);
+subscribeToProcess2(collector);
+subscribeToProcess3(collector);
+
+render(collector);
+{% endhighlight %}
+
+There are some more changes I need to do to make this work though. I need to have my processes place the right type of elements (strings) onto my collector array. I don't have the luxury of calling a separate render function on the array whenever I find out it updates
 
 BOOM. I'm done. Note that we essentially pass the array around and allow the processes to push directly to it. If you see this closely, we are basically treating our array exactly like the channel in Nolen's blog post! But such a design has a weak separation of concerns between the producer of the events (the independent processes that fire events) and the receiver (our array). However, if we use channels, they can be independent so long as they share a channel. In David Nolen's example, the processes don't care who or what is consuming their output.
 
-Now the question to me is this - how important is it to you that you shouldn't mutate state? Because, as we saw, it's pretty easy to do what Nolen did with mutable state. I personally haven't fully answered this question for myself. Perhaps you might have and realized immutability is the way to go. If you have, hopefully this blog post has shown you why Core.Async should be invaluable!
+Now the question to me is this - how important is it to you that you shouldn't mutate state? Because, as we saw, it's pretty easy to do what Nolen did with mutable state. I personally haven't fully answered this question for myself. Perhaps you might have and realized immutability is the way to go. If you have, hopefully this blog post has shown you why Core.Async should be invaluable! -->
