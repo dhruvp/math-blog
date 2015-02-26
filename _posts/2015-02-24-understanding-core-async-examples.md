@@ -72,12 +72,12 @@ peek = function (v, n) {
 };
 {% endhighlight %}
 
-Now let's focus on the main concept. We now need to create three processes that fire off events at different rates and somehow collect them all. I'm going to start by recreating the three independent processes that fire at different rates and place their events onto some sort of list. This is easy enough:
+Now let's focus on the main concept. We now need to create three processes that fire off events at different rates and somehow collect them all. I'm going to start by recreating the three independent processes that fire at different rates and place their events onto some sort of list. This is easy enough with callbacks:
 
 {% highlight js %}
-subscribeToProcess1 = function (arr) {
+subscribeToProcess1 = function (callback) {
   window.setTimeout(function () {
-    arr.push(1);
+    callback(1);
   }, 250);
 };
 {% endhighlight %}
@@ -86,15 +86,15 @@ subscribeToProcess1 = function (arr) {
 And likewise for the other processes.
 
 {% highlight js %}
-subscribeToProcess2 = function (arr) {
+subscribeToProcess2 = function (callback) {
   window.setTimeout(function () {
-    arr.push(2);
+    callback(2);
   }, 1000);
 };
 
-subscribeToProcess3 = function (arr) {
+subscribeToProcess3 = function (callback) {
   window.setTimeout(function () {
-    arr.push(3);
+    callback(3);
   }, 1500);
 };
 {% endhighlight %}
@@ -104,12 +104,16 @@ Ok now that I have these processes set up, let me call them. I'm going to create
 {% highlight js %}
 var collector = [];
 
-subscribeToProcess1(collector);
-subscribeToProcess2(collector);
-subscribeToProcess3(collector);
+callback = function (event) {
+  collector.push(event);
+}
+
+subscribeToProcess1(callback);
+subscribeToProcess2(callback);
+subscribeToProcess3(callback);
 {% endhighlight %}
 
-## And this is where it all breaks down. ##
+## Processing And Rendering ##
 
 If I'm to proceed. I need to do something like what Nolen does here:
 
@@ -119,49 +123,20 @@ If I'm to proceed. I need to do something like what Nolen does here:
       (recur (-> (conj q (<! c)) (peekn 10)))))
 {% endhighlight %}
 
-To break down what's happening above, Nolen is basically saying listen to the channel c (<! c), and whenever a new element arrives, place it onto a new array that's basically my old list of processes (q) with the new event at the end (conj q (<! c)). What's amazing here is that this code is not blocking! Because it's within a go loop, the code just causes the current goroutine (a light weight thread) to park and give execution back to the main thread until we get an element off the channel c.
-
-Can I replicate this functionality? I could pass in a callback function to the individual processes and ask them to call something whenever they add something to the collector. That would kind of be like an ES7 Object.Observe() on my push array. Let's see what happens.
+Now I need to just get the last 10 events and render them. In accordance with Nolen's solution, I'll make sure that the array I pass to peek and render isn't mutated by anything else.
 
 {% highlight js %}
-subscribeToProcess1 = function (callback) {
-  window.setTimeout(function () {
-    callback(1);
-  }, 250);
-};
-
-collector = [];
 callback = fn (event) {
   render(peek(collector.concat([event]), 10));
   collector.push(event);
 };
-subscribeToProcess1(collector, callback);
-subscribeToProcess1(collector, callback);
-subscribeToProcess1(collector, callback);
 {% endhighlight %}
 
-This does indeed works like Nolen's example. Whenever one of my processes fires an event, it will add the event to the collector, and then render and peek will be called on the collector to display the values. And indeed, the array passed in to peek and render will not be mutated. So then what's the big deal?
+This does indeed works like Nolen's example. Whenever one of my processes fires an event, it will add the event to the collector, and then render and peek will be called on the collector to display the values. And indeed, the array passed in to peek and render will not be mutated.
 
+Note that Nolen, much like us, uses mutable state to collect the events from the separate processes. A channel is indeed an example shared mutable state!
 
-What's the big deal?
+So what's the big deal?
 ======================================
 
-One of the main differences between Nolen's solution and our JS solution is that Nolen separated the idea of communication between processes, and the collection of events into two distinct data structures - a channel, and his vector q. The channel is very much like our array collector. It is a shared mutable entity that collects all the events.
-<!--
-If I just make the collector array the same as the array that renders my final output, I should be able to pull of what Nolen achieves. Let's see what I mean:
-
-{% highlight js %}
-var collector = [];
-
-subscribeToProcess1(collector);
-subscribeToProcess2(collector);
-subscribeToProcess3(collector);
-
-render(collector);
-{% endhighlight %}
-
-There are some more changes I need to do to make this work though. I need to have my processes place the right type of elements (strings) onto my collector array. I don't have the luxury of calling a separate render function on the array whenever I find out it updates
-
-BOOM. I'm done. Note that we essentially pass the array around and allow the processes to push directly to it. If you see this closely, we are basically treating our array exactly like the channel in Nolen's blog post! But such a design has a weak separation of concerns between the producer of the events (the independent processes that fire events) and the receiver (our array). However, if we use channels, they can be independent so long as they share a channel. In David Nolen's example, the processes don't care who or what is consuming their output.
-
-Now the question to me is this - how important is it to you that you shouldn't mutate state? Because, as we saw, it's pretty easy to do what Nolen did with mutable state. I personally haven't fully answered this question for myself. Perhaps you might have and realized immutability is the way to go. If you have, hopefully this blog post has shown you why Core.Async should be invaluable! -->
+Need to fill this out. I honestly don't know what's the big deal.
