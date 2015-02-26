@@ -137,7 +137,7 @@ This does indeed works like Nolen's example. Whenever one of my processes fires 
 Note that Nolen, much like us, uses mutable state to collect the events from the separate processes. A channel is indeed an example shared mutable state!
 
 So what's the big deal?
-======================================
+=======================
 
 It seems like we were able to recreate Nolen's solution in JS without too much crazyness. So what's the big deal after all? I think it is this: Nolen's solution uses no callbacks and I think that's really his main point. In this toy example it may not seem like a big deal, but for those who've dealt with callback hell, it probably will be a big deal. Callback hell is essentially a way of describing the following problem - Callbacks are not a good way of representing processes and flows through a program. This is because if you want to impose any kind of ordering on multiple such callbacks, you quickly start nesting callbacks which leads to code that can be hard to understand. On the other hand, the ideas used by core async do a great job of explaining processes. In Nolen's code, it's clear that the following happen in order:
 
@@ -151,3 +151,7 @@ Why is this clear? Because his code is able to describe this process in a very n
 (-> (conj q (<! c))
     (peekn 10))
 {% endhighlight %}
+
+Moreover, it's a better separation of concerns. In the callback code, the processes that generate the events also have to worry about running code for collecting and rendering those events. In fact they are potentially running arbitrary code from whoever called them via the callback.
+
+In Nolen's version there is no such worry. All the processes have to do is push events onto a channel and that's it. Surely that's simpler. And if you've heard Rich Hickey Talk, then you'll know that simple is what Clojure strives for.
