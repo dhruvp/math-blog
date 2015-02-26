@@ -73,7 +73,7 @@ Reagent wraps the React.js library and provides a neat Clojurescript interface t
 
 Why of course. Let's get started then. The code is in this [repo](https://github.com/dhruvp/mailchimp-form-cljs) for following along.
 
-Open up the core.cljs file in ```src/cljs/<your-project>/core.cljs``` in emacs or your favorite browser.
+Open up the core.cljs file in ```src/cljs/<your-project>/core.cljs``` in emacs or your favorite editor.
 
 You should see a few function definitions under the heading "Views". This is the first thing we're going to edit. Each of these functions return separate DOM elements. If you check out the code under the Routes heading, you should see the following
 {% highlight clojure  %}
@@ -129,7 +129,19 @@ Ok now let's remove the gunk and focus just on the home page. We don't really ne
     [:form]]
  {% endhighlight %}
 
-We now have an empty form! Look at that. Let's start by putting in an email-address field. We're going to need a variable to track the state of the email-address field value so we can run some validations and other things on it. We share state between components in reagent using atoms. Atoms are uniquely implemented in reagent such that whenever an atom's value changes, any component that was using the atom gets rerendered. So we basically don't have to worry about manually updating our html!!!! WOWOWOW!
+
+We now have an empty form! Look at that.
+
+Let's now create a function for rendering an email-input component. We define a simple email-input function that for now will return an empty-div. We'll fix it shortly.
+
+{% highlight clojure  %}
+(defn email-input
+  []
+  [:div])
+{% endhighlight %}
+
+
+Ok back to the form. We're going to need a variable to track the state of the email-address field value so we can run some validations and other things on it. We share state between components in reagent using atoms. Atoms are uniquely implemented in reagent such that whenever an atom's value changes, any component that was using the atom gets rerendered. So we basically don't have to worry about manually updating our html! WOWOW!
 
 So let's create a new atom for email-address and pass it into an email-input component (that we haven't created yet).
 
@@ -143,12 +155,11 @@ So let's create a new atom for email-address and pass it into an email-input com
         [email-input email-address]]])))
 {% endhighlight %}
 
+Notice how we compose the email-input component into a form div by just placing a vector [email-input email-address] inside the vector describing the form. Super simple! The first element of the vector is just the name of the function defining the component and the next elements are the arguments to that function. You can see how easy it is to build and compose components to make simple, modular ui elements.
+
 Notice how we also changed home-page now to return a function. Reagent requires that if we do any setup via lets etc., we return a function that in turn returns the elements we want. This just sets up the lexical scoping up front.
 
-Also, we now have this email-form component inside a form tag. What's up with that? That's component composing in reagent! Isn't it sweet? I can easily build and compose components to make simple, modular ui elements. Let's now define this email-form component.
-
-Add the following functions in:
-
+Let's now fill out the email-input component. In the spirit of LISP, we are defining a generic function for input-elements, and having the email-input just be a specific application of that function. Awesome.
 
 {% highlight clojure  %}
 (defn input-element
@@ -166,8 +177,6 @@ Add the following functions in:
   [email-address-atom]
   (input-element "email" "email" "email" email-address-atom))
 {% endhighlight %}
-
-In the spirit of LISP, we are defining a generic function for input-elements, and having the email-input just be a specific application of that function. Awesome.
 
 
 Now, let's see how we update the email-address when someone types something in. We pass the following function into :on-change attribute of the input element.
@@ -302,7 +311,7 @@ Finally, we want a little validation. If the field is required, we want our form
                    true))
 {% endhighlight %}
 
-Hopefully this works as expected. Now you must be thinking, why did we define so many generic components instead of directly creating the components themselves? Like couldn't we have tailored input-and-prompt to just worry about email addresses? Well we could have. But because we made it generic, we now a password, and name form for free! Just add in the following:
+Hopefully this works as expected. Now you must be thinking, why did we define so many generic components instead of directly creating the components themselves? Couldn't we have tailored input-and-prompt to just worry about email addresses? Well we could have. But because we made it generic, we now a password, and name form for free! Just add in the following:
 
 {% highlight clojure  %}
 (defn name-form [name-atom]
@@ -352,7 +361,7 @@ Ok onto the last challenge. We are going to validate the password field a little
 
 {% endhighlight %}
 
-Ok great. We now move on to defining the component that will show what requirements we haven't satisfied yet in our password. It's going to be a list where requirements disappear as we fullfill them. The function will take in a data structure like the one pasted below it.
+Ok great. We now move on to defining the component that will show what requirements we haven't satisfied yet in our password. It's going to be a list where requirements disappear as we meet them. The function will take in a data structure like the one pasted below it.
 
 {% highlight clojure  %}
 
@@ -436,4 +445,8 @@ My main take aways were the following:
 
 2. It's also very nice that you can use clojure as your templating language! No need for feeling hamstrung by a lack of functionality there.
 
-3. It is hard for me to debug clojurescript code. I still don't know how to do this efficiently. Many times I would see errors and have no idea why they were ocurring. In javascript, I would just breakpoint my code to catch the error. Here I couldn't do that.
+3. Reagent is also just a really simple to use library. Atoms abstract away any worrying about rerendering elements and the syntax of using reagent is dead simple.
+
+4. It is hard for me to debug clojurescript code. I still don't know how to do this efficiently. Many times I would see errors and have no idea why they were ocurring. In javascript, I would just breakpoint my code to catch the error. Here I couldn't do that. Also, at times I would have to run lein clean and then rerun a cljscript autobuild and this took like 30 seconds each time. You can imagine that this is not fun.
+
+5. The biggest thing I learned is that it really is possible to write very functional code for the frontend. I was happy with how easy it was for me to apply LISP principles of defining lots of utility functions and composing them to make your logic. I think this could be a big deal in larger apps.
