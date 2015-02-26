@@ -139,7 +139,7 @@ Note that Nolen, much like us, uses mutable state to collect the events from the
 So what's the big deal?
 ======================================
 
-It seems like we were able to recreate Nolen's solution in JS without too much crazyness. So what's the big deal after all? I think it is this: Nolen's solution uses no callbacks and I think that's really his main point. In this toy example it may not seem like a big deal, but for those who've dealt with callback hell, it probably will be a big deal. Callback hell is essentailly a way of describing the following problem - Callbacks are not a good way of representing processes and flows throguh a program. This is because if you want to impose any kind of ordering, you quickly start nesting callbacks and lead to code that can be hard to understand. On the other hand, the ideas used by core async do a great job of explaining processes. In Nolen's code, it's clear that the following happen in order:
+It seems like we were able to recreate Nolen's solution in JS without too much crazyness. So what's the big deal after all? I think it is this: Nolen's solution uses no callbacks and I think that's really his main point. In this toy example it may not seem like a big deal, but for those who've dealt with callback hell, it probably will be a big deal. Callback hell is essentially a way of describing the following problem - Callbacks are not a good way of representing processes and flows through a program. This is because if you want to impose any kind of ordering on multiple such callbacks, you quickly start nesting callbacks which leads to code that can be hard to understand. On the other hand, the ideas used by core async do a great job of explaining processes. In Nolen's code, it's clear that the following happen in order:
 
 1. An event is pulled of the channel
 2. That event is added to the vector of existing events to create a new vector
@@ -147,5 +147,7 @@ It seems like we were able to recreate Nolen's solution in JS without too much c
 
 Why is this clear? Because his code is able to describe this process in a very nice, imperative way:
 
+{% highlight clojure %}
 (-> (conj q (<! c))
     (peekn 10))
+{% endhighlight %}
