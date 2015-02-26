@@ -103,8 +103,6 @@ Ok now that I have these processes set up, let me call them. I'm going to create
 
 {% highlight js %}
 var collector = [];
-{% endhighlight %}
-Now for the callback.
 
 subscribeToProcess1(collector);
 subscribeToProcess2(collector);
