@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Understanding Core Async vs. Events and Callbacks
+comments: true
 ---
 
 Introduction
