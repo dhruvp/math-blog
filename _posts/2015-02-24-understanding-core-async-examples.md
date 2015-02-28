@@ -6,7 +6,7 @@ title: Understanding Core Async vs. Events and Callbacks
 Introduction
 ------------
 
-If you read David Nolen's [blog](http://swannodette.github.io/), you'll notice he frequently extolls the virtues of Core.Async as opposed to events and callbacks. For a while, I haven't quite understood why core.async and Go style concurrency is a big deal. So I went over to his blog and read this [post](http://swannodette.github.io/2013/07/12/communicating-sequential-processes/) to get a better idea. The below is my attempt to break down his example and contrast it to what you would do in traditional eventing to finally understand why Core.Async and Go Channels are a big deal.
+If you read David Nolen's [blog](http://swannodette.github.io/), you'll notice he frequently extolls the virtues of Core.Async as opposed to events and callbacks. For a while, I haven't quite understood why Core.Async and Go style concurrency is a big deal. So I went over to his blog and read this [post](http://swannodette.github.io/2013/07/12/communicating-sequential-processes/) to get a better idea. The below is my attempt to break down his example and contrast it to what you would do in traditional eventing to finally understand why Core.Async and Go Channels are a big deal.
 
 
 Diving into Core.Async
@@ -15,14 +15,14 @@ Diving into Core.Async
 Core.Async, if you haven't seen it before, is essentially a library for Clojure that gives you access to the concurrency pattern implemented in Go. To read more about it, see [this](http://clojure.com/blog/2013/06/28/clojure-core-async-channels.html). Moreover, there's an awesome talk on the matter you can check out <a href="http://www.infoq.com/presentations/clojure-core-async" target="_blank">here</a>.
 
 
-The main idea is that core.async emphasizes using shared Queues as the underlying way for different processes to communicate. Each process just places its message onto the queue and anyone interested in the message, grabs the queue and reads from it. What could be more simple?
+The main idea is that Core.Async emphasizes using shared Queues as the underlying way for different processes to communicate. Each process just places its message onto the queue and anyone interested in the message, grabs the queue and reads from it. What could be more simple?
 
-Well it's not quite that simple. Say we have two processes, a Caller, and a Listener. The Caller keeps throwing out new things onto the queue, and the Listener is listening to new things on this queue. How would the listener know when to listen to the queue and pick new things off it? Naively, it would have a while loop where it just keeps checking the size of the queue right? We obviously don't want this as it would block the hell out of our program! Both Go and Core.Async solve this problem using Go routines which essentially are light weight threads that run asynchronously. When Listener listens to a queue from within a go routine, it parks the go routine and returns execution to the main thread UNTIL there's something to get from the queue. This way you're not blocking AND you know when stuff comes off the queue. BOOM.
+Well it's not quite that simple. Say we have two processes, a Caller, and a Listener. The Caller keeps throwing out new things onto the queue, and the Listener is listening to new things on this queue. How would the listener know when to listen to the queue and pick new things off it? Naively, it would have a while loop where it just keeps checking the size of the queue right? We obviously don't want this as it would block the hell out of our program! Both Go and Core.Async solve this problem using Goroutines which essentially are light weight threads that run asynchronously. When Listener listens to a queue from within a go routine, it parks the go routine and returns execution to the main thread UNTIL there's something to get from the queue. This way you're not blocking AND you know when stuff comes off the queue. Really the bigger idea here is that the Listener and Caller don't have to know eachother in any way. All they have to do is share a queue and that leads to a simpler, decoupled design. BOOM.
 
 Diving into David Nolen's example
 =================================
 
-In David Nolen's [blog post](http://swannodette.github.io/2013/07/12/communicating-sequential-processes/), he starts off with an example that he says should make you "fall out of your chair". I honestly did not fall out of my chair at first because I didn't understand it! So I'm now going to break it down and say WHY what he's doing is interesting and what's cool about it. In his example, Nolen creates 3 independent processes fire events of at different rates. He then creates a fourth process that collects the events from these three processes and presents them to the user. You should just go check it out because it's best understood by seeing it. His code is here for reference.
+In David Nolen's [blog post](http://swannodette.github.io/2013/07/12/communicating-sequential-processes/), he starts off with an example that he says should make you "fall out of your chair". I honestly did not fall out of my chair at first because I didn't understand it! So I'm now going to break it down and say WHY what he's doing is interesting and what's cool about it. In his example, Nolen creates 3 independent processes fire events off at different rates. He then creates a fourth process that collects the events from these three processes and presents them to the user. You should just go check it out because it's best understood by seeing it. His code is here for reference.
 
 
 {% highlight clojure %}
@@ -132,16 +132,16 @@ callback = fn (event) {
 };
 {% endhighlight %}
 
-This does indeed works like Nolen's example. Whenever one of my processes fires an event, it will add the event to the collector, and then render and peek will be called on the collector to display the values. And indeed, the array passed in to peek and render will not be mutated.
+This does indeed work like Nolen's example. Whenever one of my processes fires an event, it will add the event to the collector, and then render and peek will be called on the collector to display the values. And indeed, the array passed in to peek and render will not be mutated.
 
 Note that Nolen, much like us, uses mutable state to collect the events from the separate processes. A channel is indeed an example shared mutable state!
 
 So what's the big deal?
 =======================
 
-It seems like we were able to recreate Nolen's solution in JS without too much crazyness. So what's the big deal after all? I think it is this: Nolen's solution uses no callbacks and I think that's really his main point. In this toy example it may not seem like a big deal, but for those who've dealt with callback hell, it probably will be a big deal. Callback hell is essentially a way of describing the following problem - Callbacks are not a good way of representing processes and flows through a program. This is because if you want to impose any kind of ordering on multiple such callbacks, you quickly start nesting callbacks which leads to code that can be hard to understand. On the other hand, the ideas used by core async do a great job of explaining processes. In Nolen's code, it's clear that the following happen in order:
+It seems like we were able to recreate Nolen's solution in JS without too much crazyness. So what's the big deal after all? I think it is this: Nolen's solution uses no callbacks and I think that's really his main point. In this toy example it may not seem like a big deal, but for those who've dealt with callback hell, it probably will be. Callback hell is essentially a way of describing the following problem - Callbacks are not always a good way of representing processes and flows through a program. This is because if you want to impose any kind of ordering on multiple such callbacks, you quickly start nesting callbacks which leads to code that can be hard to understand. On the other hand, the ideas used by Core.Async do a great job of explaining processes. In Nolen's code, it's clear that the following happen in order:
 
-1. An event is pulled of the channel
+1. An event is pulled off the channel
 2. That event is added to the vector of existing events to create a new vector
 3. Peek and Render are called on the new vector
 
@@ -152,6 +152,6 @@ Why is this clear? Because his code is able to describe this process in a very n
     (peekn 10))
 {% endhighlight %}
 
-Moreover, it's a better separation of concerns. In the callback code, the processes that generate the events also have to worry about running code for collecting and rendering those events. In fact they are potentially running arbitrary code from whoever called them via the callback.
+Moreover, it's a better separation of concerns. In the callback code, the processes that generate the events also have to worry about running code for collecting and rendering those events. In fact they are potentially running arbitrary code from whoever called them via the callback. Similarly, even if we used an eventing system, the eventing system would have to still run arbitrary code when an event happens.
 
-In Nolen's version there is no such worry. All the processes have to do is push events onto a channel and that's it. Surely that's simpler. And if you've heard Rich Hickey Talk, then you'll know that simple is what Clojure strives for.
+In Nolen's version there is no such problem. All the processes have to do is push events onto a channel and that's it. There's no executing arbitrary code, handing control of execution over etc. Indeed this is quite simple! And if you've heard Rich Hickey Talk, then you'll know that simple is easy.
