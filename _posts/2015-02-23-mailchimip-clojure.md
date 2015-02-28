@@ -3,7 +3,7 @@ layout: post
 title: Building a login form in Clojurescript and Reagent
 ---
 
-I recently have been reading up on Lisp (on Lisp) a lot lately and have been quite excited by the ideas and simplicity of the language. So I looked for a nice project to get started on and decided to try building a simple Mailchimp-esque login form in Clojurescript to get my feet wet. You can see the dead simple demo <a href="https://dhruvp.github.io/mailchimp-form-cljs/" target="_blank">here</a>. It is inspired by Lukas Ruebbelke's awesome <a href="http://onehungrymind.com/build-mailchimp-signup-form-angularjs/" target="_blank">post</a> on the same idea, but in Angular. Below, I'm going to walk you through the process of how to get from 0 to a working site and all the cool things I learned along the way. Ready? LEGGO!
+I recently have been reading up on Lisp (on Lisp) a lot lately and have been quite excited by the ideas and simplicity of the language. So I looked for a nice project to get started on and decided to try building a simple Mailchimp-esque login form in Clojurescript to get my feet wet. You can see the dead simple demo <a href="https://dhruvp.github.io/mailchimp-form-cljs/" target="_blank">here</a>, and the full repo <a href="https://github.com/dhruvp/mailchimp-form-cljs">here</a>. It is inspired by Lukas Ruebbelke's awesome <a href="http://onehungrymind.com/build-mailchimp-signup-form-angularjs/" target="_blank">post</a> on the same idea, but in Angular. Below, I'm going to walk you through the process of how to get from 0 to a working site and all the cool things I learned along the way. Ready? LEGGO!
 
 
 What is Clojurescript
