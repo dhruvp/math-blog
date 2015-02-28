@@ -13,9 +13,9 @@ What is Clojurescript
 
 Clojurescript is tightly associated with Clojure, the LISP with all the attention these days that runs on the JVM. The language itself is almost identical to Clojure with the primary difference being that Clojurescript compiles to Javascript and thus can be used for client side code! If you want to learn more about Clojure and Clojurescript, do listen to Rich Hickey's talks on the language and its ideas. They're really well presented and beautifully explained. See the following:
 
-* [A collection of Rich Hickey Talks](https://www.infoq.com/author/Rich-Hickey)
-* [An introduction to learning Clojure](https://www.braveclojure.com/)
-* [A series of tutorials on Clojurescript](https://github.com/magomimmo/modern-cljs)
+* <a href="https://www.infoq.com/author/Rich-Hickey" target="_blank">A collection of Rich Hickey Talks</a>
+* <a href="https://www.braveclojure.com/" target="_blank">An introduction to learning Clojure
+* <a href="https://github.com/magomimmo/modern-cljs">A series of tutorials on Clojurescript</a>
 
 
 What are we going to do?
@@ -34,7 +34,7 @@ Setting up your developer workflow
 
 First, let's get a developer flow going so that the build process gets out of the way and we can focus on coding. Do the following:
 
-1. Install [Leiningen](https://github.com/technomancy/leiningen)
+1. Install <a href="https://github.com/technomancy/leiningen" target="_blank">Leiningen</a>
   * Leiningen is a tool for automating Clojure project tasks.
 2. Go to the directory you wish to create your project in and type the following:
   * {% highlight bash %}
@@ -57,23 +57,23 @@ First, let's get a developer flow going so that the build process gets out of th
 
 Here's what each of those pieces were:
 
-### [Leiningen](https://github.com/technomancy/leiningen) ###
+### <a href="https://github.com/technomancy/leiningen" target="_blank">Leiningen</a> ###
 This is an absolute necessity for clojure development. It helps automate tasks and even comes with a repl!
 
-### [Ring](https://github.com/weavejester/lein-ring) ###
+### <a href="https://github.com/weavejester/lein-ring" target="_blank">Ring</a> ###
 Ring is a simple abstraction for HTTP in Clojure. It allows you to create a webserver, define middleware etc.
 
 
-### [Figwheel](https://github.com/bhauman/lein-figwheel) ###
+### <a href="https://github.com/bhauman/lein-figwheel" target="_blank">Figwheel</a> ###
 Figwheel autoreloads and compiles your clojurescript code so that you can live code and see your changes update in the browser. It also comes with a repl for your clojurescript so you can evaluate your code there. This will come in handy.
 
-### [Reagent](https://github.com/reagent-project/reagent) ###
+### <a href="https://github.com/reagent-project/reagent" target="_blank">Reagent</a> ###
 Reagent wraps the React.js library and provides a neat Clojurescript interface to it. This is my first time using it and it's been very simple to pick up and use.
 
 
 ## Understanding the basic setup ##
 
-Let's get started then. We're going to first look at some of the scaffolding code and understand at a high level what's going on. The code is in this [repo](https://github.com/dhruvp/mailchimp-form-cljs) for following along.
+Let's get started then. We're going to first look at some of the scaffolding code and understand at a high level what's going on. The code is in this <a href="https://github.com/dhruvp/mailchimp-form-cljs" target="_blank">repo</a> for following along.
 
 Open up the core.cljs file in ```src/cljs/<your-project>/core.cljs``` in emacs or your favorite editor.
 
