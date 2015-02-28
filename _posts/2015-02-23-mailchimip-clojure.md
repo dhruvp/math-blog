@@ -100,7 +100,7 @@ Ok cool. So we are just going to play around with the home page to get what we n
    [:div [:a {:href "#/about"} "go to about page"]]])
  {% endhighlight %}
 
-home-page is just a function that returns dom elements (theme alert - we are going to make many such functions!). The syntax for defining a dom element is similar to [hiccup](https://github.com/weavejester/hiccup) in that all dom elements are defined as clojure vectors. The first element of the vector is the tag of the element (in this case :div as in [:div ...]). We can then place other vectors(that represent elements) inside the original vector to represent element nesting (in the example above, the Welcome to my Project h2 is nested inside the div). So to show an example, I've pasted a vector representation of a dom and its corresponding dom element below it.
+home-page is just a function that returns dom elements (theme alert - we are going to make many such functions!). The syntax for defining html is similar to [hiccup](https://github.com/weavejester/hiccup) in that html is represented by clojure vectors. The first element of the vector is the tag of the element (in this case :div as in [:div ...]). We can then place other vectors(that represent elements) inside the original vector to represent element nesting (in the example above, the Welcome to my Project h2 is nested inside the div). So to show an example, I've pasted a vector representation of a dom and its corresponding html element below it.
 
 {% highlight clojure %}
 [:div [:h2 "Welcome to my-project"]
@@ -118,7 +118,7 @@ And the html:
 </div>
 {% endhighlight %}
 
-This is cool because we can now pass along dom elements as first class data structures! I can pass them to functions, return them, map over them, compose them ... Basically the possibilities are endless.
+This is cool because we can now pass along representations of dom elements as first class data structures! I can pass them to functions, return them, map over them, compose them ... Basically the possibilities are endless.
 
 
 ## Starting to build the form ##
@@ -130,7 +130,7 @@ Ok now let's remove the gunk and focus just on the home page. We don't really ne
 (defn home-page []
   [:div {:class "signup-wrapper"}
     [:h2 "Welcome to TestChimp"]
-    [:form]]
+    [:form]])
  {% endhighlight %}
 
 
@@ -168,7 +168,7 @@ Notice how we changed home-page now to return a function. Reagent requires that 
 
 Let's now create the html for our actual email input form. We're going to do this by creating a function that is just responsible for the UI of the email input. What's awesome about this is that functions are now the building blocks of our UI. That's exactly how LISP was intended to be used!
 
-Let's develop a generic function for input-elements, and have the email-input just be a specific application of that function. Awesome! This is the essence of LISP (but we're applying it to UI)!
+Let's develop a generic function for input-elements, and have the email-input just be a specific application of that function.
 
 {% highlight clojure  %}
 (defn input-element
@@ -234,7 +234,7 @@ So now if you check out localhost:3000, you should see a simple page with an inp
 
 ## Sharing state between components ##
 
-We got some sweet functionality going. Ok, now I want to display a little message that says "What is your email address?" when you click on the email box. Let's create a component for that.
+Ok, now I want to display a little message that says "What is your email address?" when you click on the email box. Let's create a component for that.
 
 {% highlight clojure  %}
 ;;generic function
@@ -361,7 +361,7 @@ Hopefully this works as expected. Now you must be thinking, why did we define so
                     name-atom
                     (prompt-message "What's your name?")
                     true))
-(defn name-form [password-atom]
+(defn password-form [password-atom]
   (input-and-prompt "password"
                     "password"
                     "password"
@@ -370,7 +370,21 @@ Hopefully this works as expected. Now you must be thinking, why did we define so
                     true))
 {% endhighlight %}
 
-This to me is a big deal. We can now create UI elements using reusable, testable, utility functions. I don't think that's particularly easy in most setups.
+This to me is a big deal. We can now create UI elements using reusable, testable, utility functions. I don't think that's particularly easy in most setups. Let's add in these additional forms by changing the home-page method to be the following:
+
+{% highlight clojure %}
+(defn home-page []
+ (let [email-address (atom nil)
+       name (atom nil)
+       password (atom nil)]
+   (fn []
+     [:div {:class "signup-wrapper"}
+      [:h2 "Welcome to TestChimp"]
+      [:form
+       [email-form email-address]
+       [name-form name]
+       [password-form password]]])))
+{% endhighlight %}
 
 ## Bonus - Applying Additional validation on the password ##
 
