@@ -5,13 +5,13 @@ comments: true
 
 ---
 
-I recently have been reading up on Lisp (on Lisp) a lot lately and have been quite excited by the ideas and simplicity of the language. So I looked for a nice project to get started on and decided to try building a simple Mailchimp-esque login form in Clojurescript to get my feet wet. You can see the dead simple demo <a href="https://dhruvp.github.io/mailchimp-form-cljs/" target="_blank">here</a>, and the full repo <a href="https://github.com/dhruvp/mailchimp-form-cljs" target="_blank">here</a>. It is inspired by Lukas Ruebbelke's awesome <a href="http://onehungrymind.com/build-mailchimp-signup-form-angularjs/" target="_blank">post</a> on the same idea, but in Angular. Below, I'm going to walk you through the process of how to get from 0 to a working site and all the cool things I learned along the way. Ready? LEGGO!
+I recently have been reading up on LISP (on LISP) a lot lately and have been quite excited by the ideas and simplicity of the language. So I looked for a nice project to get started on and decided to try building a simple Mailchimp-esque login form in Clojurescript to get my feet wet. You can see the dead simple demo <a href="https://dhruvp.github.io/mailchimp-form-cljs/" target="_blank">here</a>, and the full repo <a href="https://github.com/dhruvp/mailchimp-form-cljs" target="_blank">here</a>. It is inspired by Lukas Ruebbelke's awesome <a href="http://onehungrymind.com/build-mailchimp-signup-form-angularjs/" target="_blank">post</a> on the same idea, but in Angular. Below, I'm going to walk you through the process of how to get from 0 to a working site and all the cool things I learned along the way. Ready? LEGGO!
 
 
 What is Clojurescript
 ---------------------
 
-Clojurescript is tightly associated with Clojure, the Lisp with all the attention these days that runs on the JVM. The language itself is almost identical to Clojure with the primary difference being that Clojurescript compiles to Javascript and thus can be used for client side code! If you want to learn more about Clojure and Clojurescript, do listen to Rich Hickey's talks on the language and its ideas. They're really well presented and beautifully explained. See the following:
+Clojurescript is tightly associated with Clojure, the LISP with all the attention these days that runs on the JVM. The language itself is almost identical to Clojure with the primary difference being that Clojurescript compiles to Javascript and thus can be used for client side code! If you want to learn more about Clojure and Clojurescript, do listen to Rich Hickey's talks on the language and its ideas. They're really well presented and beautifully explained. See the following:
 
 * [A collection of Rich Hickey Talks](https://www.infoq.com/author/Rich-Hickey)
 * [An introduction to learning Clojure](https://www.braveclojure.com/)
@@ -34,7 +34,7 @@ Setting up your developer workflow
 
 First, let's get a developer flow going so that the build process gets out of the way and we can focus on coding. Do the following:
 
-1. Install [leiningen](https://github.com/technomancy/leiningen)
+1. Install [Leiningen](https://github.com/technomancy/leiningen)
   * Leiningen is a tool for automating Clojure project tasks.
 2. Go to the directory you wish to create your project in and type the following:
   * {% highlight bash %}
@@ -45,7 +45,7 @@ First, let's get a developer flow going so that the build process gets out of th
   * {% highlight bash %}
     lein ring server
     {% endhighlight %}
-    * You should see leiningen try and download a whole host of dependencies. Not to worry!
+    * You should see Leiningen try and download a whole host of dependencies. Not to worry!
     * At the end, you should see a server running on localhost:3000
 
 4. Open a new terminal and execute the following from the base of your project:
@@ -77,13 +77,13 @@ Let's get started then. We're going to first look at some of the scaffolding cod
 
 Open up the core.cljs file in ```src/cljs/<your-project>/core.cljs``` in emacs or your favorite editor.
 
-You should see a few function definitions under the heading "Views". This is the first thing we're going to edit. Each of these functions return separate DOM elements. If you check out the code under the Routes heading, you should see the following
+You should see a few function definitions under the heading "Views". This is the first thing we're going to edit. Each of these functions return separate DOM elements. If you check out the code under the Routes heading, you should see the following:
 {% highlight clojure  %}
 (secretary/defroute "/" []
   (session/put! :current-page #'home-page))
 {% endhighlight %}
 
-What's happening there is secretary, another clojure library we are using for routing, is matching the route "/" to the home-page function we defined in the views section. The function is simply setting a session variable, :current-page, to be home-page upon the match.
+What's happening there is <a href="https://github.com/gf3/secretary" target="_blank">Secretary</a>, another Clojurescript library we are using for routing, is matching the route "/" to the home-page function we defined in the views section. The function is simply setting a session variable, :current-page, to be home-page upon the match.
 
 Then, at the bottom of the page, we see are telling reagent to render what's defined by current-page, and bind it to whatever is at document.getElementById("app"). That's defined here:
 
@@ -102,14 +102,14 @@ Ok cool. So we are just going to play around with the home page to get what we n
    [:div [:a {:href "#/about"} "go to about page"]]])
  {% endhighlight %}
 
-home-page is just a function that returns dom elements (theme alert - we are going to make many such functions!). The syntax for defining html is similar to [hiccup](https://github.com/weavejester/hiccup) in that html is represented by clojure vectors. The first element of the vector is the tag of the element (in this case :div as in [:div ...]). We can then place other vectors(that represent elements) inside the original vector to represent element nesting (in the example above, the Welcome to my Project h2 is nested inside the div). So to show an example, I've pasted a vector representation of a dom and its corresponding html element below it.
+home-page is just a function that returns DOM elements (theme alert - we are going to make many such functions!). The syntax for defining HTML is similar to [hiccup](https://github.com/weavejester/hiccup) in that HTML is represented by clojure vectors. The first element of the vector is the tag of the element (in this case :div as in [:div ...]). We can then place other vectors(that represent elements) inside the original vector to represent element nesting (in the example above, the Welcome to my Project h2 is nested inside the div). So to show an example, I've pasted a vector representation of a DOM and its corresponding HTML element below it.
 
 {% highlight clojure %}
 [:div [:h2 "Welcome to my-project"]
  [:div [:a {:href "#/about"} "go to about page"]]]
 {% endhighlight %}
 
-And the html:
+And the HTML:
 
 {% highlight html %}
 <div>
@@ -120,7 +120,7 @@ And the html:
 </div>
 {% endhighlight %}
 
-This is cool because we can now pass along representations of dom elements as first class data structures! I can pass them to functions, return them, map over them, compose them ... Basically the possibilities are endless.
+This is cool because we can now pass along representations of DOM elements as first class data structures! I can pass them to functions, return them, map over them, compose them ... Basically the possibilities are endless.
 
 
 ## Starting to build the form ##
@@ -168,7 +168,7 @@ Notice how we changed home-page now to return a function. Reagent requires that 
 
 ## The Building Blocks of our UI - Functions ##
 
-Let's now create the html for our actual email input form. We're going to do this by creating a function that is just responsible for the UI of the email input. What's awesome about this is that functions are now the building blocks of our UI. That's exactly how LISP was intended to be used!
+Let's now create the HTML for our actual email input form. We're going to do this by creating a function that is just responsible for the UI of the email input. What's awesome about this is that functions are now the building blocks of our UI. That's exactly how LISP was intended to be used!
 
 Let's develop a generic function for input-elements, and have the email-input just be a specific application of that function.
 
@@ -216,9 +216,9 @@ Now, we need to implement a basic form of two way data binding so that when the 
 #(reset! value (-> % .-target .-value))
 {% endhighlight %}
 
-Here, we are reseting the value of atom to be the output of (-> % .-target .-value). The hell is that? That is a [macro](http://clojuredocs.org/clojure.core/-%3E) that expands to (.-value (.-target %)) or just event.target.value in javascript. Note that .-value and .-target are how we call javascript properties in Clojurescript (yes! Clojurescript let's you talk to javascript objects!). The cool thing here is we just have to change the atom here and ANY other component that uses this atom rerenders automatically! This is some sweet stuff already.
+Here, we are resetting the value of atom to be the output of (-> % .-target .-value). The hell is that? That is a [macro](http://clojuredocs.org/clojure.core/-%3E) that expands to (.-value (.-target %)) or just event.target.value in JavaScript. Note that .-value and .-target are how we call JavaScript properties in Clojurescript (yes! Clojurescript let's you talk to JavaScript objects!). The cool thing here is we just have to change the atom here and ANY other component that uses this atom rerenders automatically! This is some sweet stuff already.
 
-And what's with the "@value" we passed to the value field of input? Well the @ is just telling the function to apply the value of the atom (So that we don't pass in an atom which html has no idea how to display!).
+And what's with the "@value" we passed to the value field of input? Well the @ is just telling the function to apply the value of the atom (So that we don't pass in an atom which HTML has no idea how to display!).
 
 So now if you check out localhost:3000, you should see a simple page with an input for your email-address! Add in the following to display the email address.
 
@@ -390,7 +390,7 @@ This to me is a big deal. We can now create UI elements using reusable, testable
 
 ## Bonus - Applying Additional validation on the password ##
 
-Ok onto the last challenge. We are going to validate the password field a little more heavily. We want the password to be at least 8 characters long, have at least 1 special character, and have at least one digit. Let's start by defining some regexps to check for this.
+Ok! Onto the last challenge. We are going to validate the password field a little more heavily. We want the password to be at least 8 characters long, have at least 1 special character, and have at least one digit. Let's start by defining some regexps to check for this.
 
 {% highlight clojure  %}
 
@@ -506,4 +506,4 @@ More specifically, here are my main takeaways:
 
 3. Reagent is also just a really simple to use library. Atoms abstract away any worrying about rerendering elements and the syntax of using reagent is dead simple.
 
-4. It is hard for me to debug clojurescript code. I still don't know how to do this efficiently. Many times I would see errors and have no idea why they were ocurring. In javascript, I would just breakpoint my code to catch the error. Here I couldn't do that. Also, at times I would have to run lein clean and then rerun a cljscript autobuild and this took like 30 seconds each time. You can imagine that this is not fun.
+4. It is hard for me to debug clojurescript code. I still don't know how to do this efficiently. Many times I would see errors and have no idea why they were ocurring. In JavaScript, I would just breakpoint my code to catch the error. Here I couldn't do that. Also, at times I would have to run lein clean and then rerun a cljscript autobuild and this took like 30 seconds each time. You can imagine that this is not fun.
