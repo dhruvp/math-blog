@@ -69,9 +69,9 @@ Figwheel autoreloads and compiles your clojurescript code so that you can live c
 Reagent wraps the React.js library and provides a neat Clojurescript interface to it. This is my first time using it and it's been very simple to pick up and use.
 
 
-## Can we write something already? ##
+## Understanding the basic setup ##
 
-Why of course. Let's get started then. The code is in this [repo](https://github.com/dhruvp/mailchimp-form-cljs) for following along.
+Let's get started then. We're going to first look at some of the scaffolding code and understand at a high level what's going on. The code is in this [repo](https://github.com/dhruvp/mailchimp-form-cljs) for following along.
 
 Open up the core.cljs file in ```src/cljs/<your-project>/core.cljs``` in emacs or your favorite editor.
 
@@ -100,7 +100,7 @@ Ok cool. So we are just going to play around with the home page to get what we n
    [:div [:a {:href "#/about"} "go to about page"]]])
  {% endhighlight %}
 
-home-page, in the spirit of Clojure and Lisp, is just a function that returns dom elements. The syntax for defining a dom element is similar to [hiccup](https://github.com/weavejester/hiccup). All dom elements are defined as clojure vectors. The first element of the vector is the tag of the element (in this case :div). We can then place other vectors(that represent elements) inside the original vector to represent element nesting (in the example above, the Welcome to my Project h2 is nested inside the div). So to show an example, I've pasted a vector representation of a dom and its corresponding dom element below it.
+home-page is just a function that returns dom elements (theme alert - we are going to make many such functions!). The syntax for defining a dom element is similar to [hiccup](https://github.com/weavejester/hiccup) in that all dom elements are defined as clojure vectors. The first element of the vector is the tag of the element (in this case :div as in [:div ...]). We can then place other vectors(that represent elements) inside the original vector to represent element nesting (in the example above, the Welcome to my Project h2 is nested inside the div). So to show an example, I've pasted a vector representation of a dom and its corresponding dom element below it.
 
 {% highlight clojure %}
 [:div [:h2 "Welcome to my-project"]
@@ -119,6 +119,10 @@ And the html:
 {% endhighlight %}
 
 This is cool because we can now pass along dom elements as first class data structures! I can pass them to functions, return them, map over them, compose them ... Basically the possibilities are endless.
+
+
+## Starting to build the form ##
+
 
 Ok now let's remove the gunk and focus just on the home page. We don't really need the about page. Edit the home-page code to be
 
@@ -141,25 +145,33 @@ Let's now create a function for rendering an email-input component. We define a 
 {% endhighlight %}
 
 
-Ok back to the form. We're going to need a variable to track the state of the email-address field value so we can run some validations and other things on it. We share state between components in reagent using atoms. Atoms are uniquely implemented in reagent such that whenever an atom's value changes, any component that was using the atom gets rerendered. So we basically don't have to worry about manually updating our html! WOWOW!
+## Data Binding ##
 
-So let's create a new atom for email-address and pass it into an email-input component (that we haven't created yet).
+Ok back to the form. We're going to need a variable to track the state of the email-address field and auto updates as users type in their email address. In Angular and similar frameworks, we would achieve this by using some form of two way data binding. In reagent, we do something very similar using an Atom. Atoms are one of the few mutable data structure in Clojure. Reagent extends a Clojure Atom by ensuring that whenever an Atom is mutated, any component that uses it is rerendered (so we don't have to worry about updating our views). So let's use that!
+
+
+We create a new atom for email-address and pass it into an email-input component (that we haven't created yet).
 
 {% highlight clojure  %}
 (defn home-page []
+  ;; We define the email-address as an atom right here
   (let [email-address (atom nil)]
     (fn []
       [:div {:class "signup-wrapper"}
        [:h2 "Welcome to TestChimp"]
-       [:form
-        [email-input email-address]]])))
+       [:form]])))
 {% endhighlight %}
 
-Notice how we compose the email-input component into a form div by just placing a vector [email-input email-address] inside the vector describing the form. Super simple! The first element of the vector is just the name of the function defining the component and the next elements are the arguments to that function. You can see how easy it is to build and compose components to make simple, modular ui elements.
+;; We pass the email address atom into an email-input component
+ [email-input email-address]
 
-Notice how we also changed home-page now to return a function. Reagent requires that if we do any setup via lets etc., we return a function that in turn returns the elements we want. This just sets up the lexical scoping up front.
+Notice how we changed home-page now to return a function. Reagent requires that if we do any setup via lets etc., we return a function that in turn returns the elements we want. This just sets up the lexical scoping up front.
 
-Let's now fill out the email-input component. In the spirit of LISP, we are defining a generic function for input-elements, and having the email-input just be a specific application of that function. Awesome.
+## The Building Blocks of our UI - Functions ##
+
+Let's now create the html for our actual email input form. We're going to do this by creating a function that is just responsible for the UI of the email input. What's awesome about this is that functions are now the building blocks of our UI. That's exactly how LISP was intended to be used!
+
+Let's develop a generic function for input-elements, and have the email-input just be a specific application of that function. Awesome! This is the essence of LISP (but we're applying it to UI)!
 
 {% highlight clojure  %}
 (defn input-element
@@ -178,14 +190,34 @@ Let's now fill out the email-input component. In the spirit of LISP, we are defi
   (input-element "email" "email" "email" email-address-atom))
 {% endhighlight %}
 
+Let's now use this UI component and put it into our original form.
 
-Now, let's see how we update the email-address when someone types something in. We pass the following function into :on-change attribute of the input element.
 
 {% highlight clojure  %}
+(defn home-page []
+  ;; We define the email-address as an atom right here
+  (let [email-address (atom nil)]
+    (fn []
+      [:div {:class "signup-wrapper"}
+       [:h2 "Welcome to TestChimp"]
+       [:form
+       ;; We use the email-input component here
+        [email-input email-address]]])))
+{% endhighlight %}
+
+
+Notice how we compose the email-input component into a form div by just placing a vector [email-input email-address] inside the vector describing the form. Super simple! The first element of the vector is just the name of the function defining the component and the next elements are the arguments to that function. You can see how easy it is to build and compose components to make simple, modular ui elements.
+
+
+## Implementing Two Way Data Binding ##
+
+Now, we need to implement a basic form of two way data binding so that when the user types something in we are able to track it. We can implement this with an :on-change attribute on our element. We pass the following function into :on-change attribute of the input element.
+
+{% highlight clojure %}
 #(reset! value (-> % .-target .-value))
 {% endhighlight %}
 
-Here, we are reseting the value of atom to be the output of (-> % .-target .-value). The hell is that? That is a [macro](http://clojuredocs.org/clojure.core/-%3E) that expands to (.-value (.-target %)) or just event.target.value in javascript. Note that .-value and .-target are how we call javascript properties in Clojurescript. The cool thing here is we just have to change the atom here and ANY other component that uses this atom rerenders automatically! This is some sweet stuff already.
+Here, we are reseting the value of atom to be the output of (-> % .-target .-value). The hell is that? That is a [macro](http://clojuredocs.org/clojure.core/-%3E) that expands to (.-value (.-target %)) or just event.target.value in javascript. Note that .-value and .-target are how we call javascript properties in Clojurescript (yes! Clojurescript let's you talk to javascript objects!). The cool thing here is we just have to change the atom here and ANY other component that uses this atom rerenders automatically! This is some sweet stuff already.
 
 And what's with the "@value" we passed to the value field of input? Well the @ is just telling the function to apply the value of the atom (So that we don't pass in an atom which html has no idea how to display!).
 
@@ -202,8 +234,6 @@ So now if you check out localhost:3000, you should see a simple page with an inp
        [:div "EMAIL ADDRESS IS " @email-address]])))
 {% endhighlight %}
 
-AWESOMEE! We got some sweet functionality going. Ok, now I want to display a little message that says "What is your email address?" when you click on the email box. Let's create a component for that.
-
 {% highlight clojure  %}
 (defn prompt-message
   "A prompt that will animate to help the user with a given input"
@@ -216,7 +246,14 @@ AWESOMEE! We got some sweet functionality going. Ok, now I want to display a lit
   (prompt-message "What's your email address?"))
 {% endhighlight %}
 
- Right off the bat, we know we're going to need to store state regarding whether the input is in focus or not. Depending on when that input is in focus, we are going to hide or show the component we defined above. The below function is going to do just that. It will take in information about the input, and a prompt element, and return a representation of a DOM element that has an input field, and a prompt field that appears above it if the input is in focus.
+
+## Sharing state between components ##
+
+AWESOMEE! We got some sweet functionality going. Ok, now I want to display a little message that says "What is your email address?" when you click on the email box. Let's create a component for that.
+
+Right off the bat, we know we're going to need to share state regarding whether the input is in focus or not. This state is going to be shared between the input component and the component that displays our little message.
+
+Depending on when that input is in focus, we are going to hide or show the component we defined above. The below function is going to do just that. It will take in information about the input, and a prompt element, and return a representation of a DOM element that has an input field, and a prompt field that appears above it if the input is in focus.
 
 {% highlight clojure  %}
 (defn input-and-prompt
@@ -238,7 +275,7 @@ Let's dive in a little deeper. The below snippet is what hides and shows the pro
 (if @input-focus prompt-element [:div])
 {% endhighlight %}
 
-Notice we aren't using any templating! Just plain old clojure. If the input-focus atom is set to true, we return the prompt-element, otherwise, we return an empty div. COOL! Note this shows that reagent allows you to place functions within its vectors so long as the functions also return vectors that can be compiled to DOM nodes. We are also defining a new atom (input-focus) and passing that into our input-element. Let's change the input-element component to use it.
+Notice we aren't using any templating! Just plain old clojure. If the input-focus atom is set to true, we return the prompt-element, otherwise, we return an empty div. COOL! Note this shows that reagent allows you to place functions within its vectors so long as the functions also return vectors that can be compiled to DOM nodes. We are also defining a new atom (input-focus) and passing that into our input-element (this is how we are sharing state!). Let's change the input-element component to use it.
 
 {% highlight clojure  %}
 (defn input-element
@@ -251,11 +288,14 @@ Notice we aren't using any templating! Just plain old clojure. If the input-focu
            :required ""
            :value @value
            :on-change #(reset! value (-> % .-target .-value))
+           ;; Below we change the state of in-focus
            :on-focus #(swap! in-focus not)
            :on-blur #(swap! in-focus not)}])
 {% endhighlight %}
 
 So now we have our input element swap the in-focus atom to be its converse when an on-focus or on-blur event happens. Dope.
+
+## Putting it all together ##
 
 Let's now use all these functions we've built.
 
@@ -311,6 +351,9 @@ Finally, we want a little validation. If the field is required, we want our form
                    true))
 {% endhighlight %}
 
+
+## The power of generics - create a name form and a password form ##
+
 Hopefully this works as expected. Now you must be thinking, why did we define so many generic components instead of directly creating the components themselves? Couldn't we have tailored input-and-prompt to just worry about email addresses? Well we could have. But because we made it generic, we now a password, and name form for free! Just add in the following:
 
 {% highlight clojure  %}
@@ -330,8 +373,9 @@ Hopefully this works as expected. Now you must be thinking, why did we define so
                     true))
 {% endhighlight %}
 
-This to me is a big deal. We can now create UI elements using reusable, testable, utility functions. I don't think that's easy at all in most setups.
+This to me is a big deal. We can now create UI elements using reusable, testable, utility functions. I don't think that's particularly easy in most setups.
 
+## Bonus - Applying Additional validation on the password ##
 
 Ok onto the last challenge. We are going to validate the password field a little more heavily. We want the password to be at least 8 characters long, have at least 1 special character, and have at least one digit. Let's start by defining some regexps to check for this.
 
@@ -437,16 +481,16 @@ And then use it to wrap all our forms in form-group elements.
 That's it for now! Your final code should match the file [here](https://github.com/dhruvp/mailchimp-form-cljs/blob/master/src/cljs/mailchimp_form/core.cljs).
 
 
-Hope you enjoyed this!
+## So what have we learned? ##
 
-My main take aways were the following:
+We went through something really cool in this post (I think at least!). We applied the Clojure principle of using simple, composable functions as a way of building UIs! And why should we not? Can't frontend software development also use the same principles of modularity, simplicity, and composition? Indeed, I think with Clojurescript and Reagent, it can.
+
+More specifically, here are my main takeaways:
 
 1. It's really nice to be able to treat UI elements as first class data structures that you can compose and apply logic on. I think it does lead to more modular pieces.
 
-2. It's also very nice that you can use clojure as your templating language! No need for feeling hamstrung by a lack of functionality there.
+2. It's also very nice that you can use clojure as your templating language! No need for feeling hamstrung by a lack of functionality there and we don't have to learn any new languages.
 
 3. Reagent is also just a really simple to use library. Atoms abstract away any worrying about rerendering elements and the syntax of using reagent is dead simple.
 
 4. It is hard for me to debug clojurescript code. I still don't know how to do this efficiently. Many times I would see errors and have no idea why they were ocurring. In javascript, I would just breakpoint my code to catch the error. Here I couldn't do that. Also, at times I would have to run lein clean and then rerun a cljscript autobuild and this took like 30 seconds each time. You can imagine that this is not fun.
-
-5. The biggest thing I learned is that it really is possible to write very functional code for the frontend. I was happy with how easy it was for me to apply LISP principles of defining lots of utility functions and composing them to make your logic. I think this could be a big deal in larger apps.
