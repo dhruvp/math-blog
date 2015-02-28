@@ -162,9 +162,6 @@ We create a new atom for email-address and pass it into an email-input component
        [:form]])))
 {% endhighlight %}
 
-;; We pass the email address atom into an email-input component
- [email-input email-address]
-
 Notice how we changed home-page now to return a function. Reagent requires that if we do any setup via lets etc., we return a function that in turn returns the elements we want. This just sets up the lexical scoping up front.
 
 ## The Building Blocks of our UI - Functions ##
