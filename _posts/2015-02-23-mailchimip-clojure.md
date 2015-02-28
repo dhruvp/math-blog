@@ -150,7 +150,7 @@ Let's now create a function for rendering an email-input component. We define a 
 Ok back to the form. We're going to need a variable to track the state of the email-address field and auto updates as users type in their email address. In Angular and similar frameworks, we would achieve this by using some form of two way data binding. In reagent, we do something very similar using an Atom. Atoms are one of the few mutable data structure in Clojure. Reagent extends a Clojure Atom by ensuring that whenever an Atom is mutated, any component that uses it is rerendered (so we don't have to worry about updating our views). So let's use that!
 
 
-We create a new atom for email-address and pass it into an email-input component (that we haven't created yet).
+Let's just create a new atom for email-address to start.
 
 {% highlight clojure  %}
 (defn home-page []
@@ -231,26 +231,26 @@ So now if you check out localhost:3000, you should see a simple page with an inp
        [:div "EMAIL ADDRESS IS " @email-address]])))
 {% endhighlight %}
 
+
+## Sharing state between components ##
+
+We got some sweet functionality going. Ok, now I want to display a little message that says "What is your email address?" when you click on the email box. Let's create a component for that.
+
 {% highlight clojure  %}
+;;generic function
 (defn prompt-message
   "A prompt that will animate to help the user with a given input"
   [message]
   [:div {:class "my-messages"}
    [:div {:class "prompt message-animation"} [:p message]]])
 
+;;specific function
 (defn email-prompt
   []
   (prompt-message "What's your email address?"))
 {% endhighlight %}
 
-
-## Sharing state between components ##
-
-AWESOMEE! We got some sweet functionality going. Ok, now I want to display a little message that says "What is your email address?" when you click on the email box. Let's create a component for that.
-
-Right off the bat, we know we're going to need to share state regarding whether the input is in focus or not. This state is going to be shared between the input component and the component that displays our little message.
-
-Depending on when that input is in focus, we are going to hide or show the component we defined above. The below function is going to do just that. It will take in information about the input, and a prompt element, and return a representation of a DOM element that has an input field, and a prompt field that appears above it if the input is in focus.
+Depending on when that input is in focus, we need to hide or show the component we defined above. The below function is going to do just that. It will take in information about the input, and a prompt element, and return a representation of a DOM element that has an input field, and a prompt field that appears above it if the input is in focus.
 
 {% highlight clojure  %}
 (defn input-and-prompt
@@ -272,7 +272,7 @@ Let's dive in a little deeper. The below snippet is what hides and shows the pro
 (if @input-focus prompt-element [:div])
 {% endhighlight %}
 
-Notice we aren't using any templating! Just plain old clojure. If the input-focus atom is set to true, we return the prompt-element, otherwise, we return an empty div. COOL! Note this shows that reagent allows you to place functions within its vectors so long as the functions also return vectors that can be compiled to DOM nodes. We are also defining a new atom (input-focus) and passing that into our input-element (this is how we are sharing state!). Let's change the input-element component to use it.
+If the input-focus atom is set to true, we return the prompt-element, otherwise, we return an empty div. COOL! We need to pass this input-focus atom to our input-element and have it update this atom on focus or blur. Let's share this state variable by making input-element use it.
 
 {% highlight clojure  %}
 (defn input-element
