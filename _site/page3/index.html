@@ -10,7 +10,7 @@
 
   <title>
     
-      Understanding Core Async vs. Events and Callbacks &middot; Dhruv's Blog
+      Dhruv's Blog &middot; Always Be Learnin'
     
   </title>
 
@@ -49,10 +49,18 @@
       </header>
 
       <main>
-        <article class="post">
-  <h1 class="post-title">Understanding Core Async vs. Events and Callbacks</h1>
-  <time datetime="2015-02-24T00:00:00-08:00" class="page-date">24 Feb 2015</time>
-  <h2 id="introduction">Introduction</h2>
+        <div class="posts">
+  
+  <article class="post">
+    <h1 class="post-title">
+      <a href="/2015/02/24/understanding-core-async-examples/">
+        Understanding Core Async vs. Events and Callbacks
+      </a>
+    </h1>
+
+    <time datetime="2015-02-24T00:00:00-08:00" class="post-date">24 Feb 2015</time>
+
+    <h2 id="introduction">Introduction</h2>
 
 <p>If you read David Nolen’s <a href="http://swannodette.github.io/">blog</a>, you’ll notice he frequently extolls the virtues of Core.Async as opposed to events and callbacks. For a while, I haven’t quite understood why Core.Async and Go style concurrency is a big deal. So I went over to his blog and read this <a href="http://swannodette.github.io/2013/07/12/communicating-sequential-processes/">post</a> to get a better idea. The below is my attempt to break down his example and contrast it to what you would do in traditional eventing to finally understand why Core.Async and Go Channels are a big deal.</p>
 
@@ -183,56 +191,20 @@
 
 <p>In Nolen’s version there is no such problem. All the processes have to do is push events onto a channel and that’s it. There’s no executing arbitrary code, handing control of execution over etc. Indeed this is quite simple! And if you’ve heard Rich Hickey Talk, then you’ll know that simple is easy.</p>
 
+  </article>
   
-  <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        /* * * CONFIGURATION VARIABLES * * */
-        var disqus_shortname = 'dhruvpgithubio';
+</div>
 
-        /* * * DON'T EDIT BELOW THIS LINE * * */
-        (function() {
-            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+<div class="pagination">
   
-</article>
-
-<aside class="related">
-  <h2>Related Posts</h2>
-  <ul class="related-posts">
+    <a class="pagination-item older" href="/page4">Older</a>
+  
+  
     
-      <li>
-        <h3>
-          <a href="//2018/12/31/matrices/">
-            An intuitive understanding of matrices
-            <small><time datetime="2018-12-31T00:00:00-08:00">31 Dec 2018</time></small>
-          </a>
-        </h3>
-      </li>
+      <a class="pagination-item newer" href="/page2">Newer</a>
     
-      <li>
-        <h3>
-          <a href="//2015/03/07/re-frame/">
-            Re-Frame - Functional Reactive Programming With Clojurescript
-            <small><time datetime="2015-03-07T00:00:00-08:00">07 Mar 2015</time></small>
-          </a>
-        </h3>
-      </li>
-    
-      <li>
-        <h3>
-          <a href="//2015/02/23/mailchimip-clojure/">
-            Building a login form in Clojurescript and Reagent
-            <small><time datetime="2015-02-23T00:00:00-08:00">23 Feb 2015</time></small>
-          </a>
-        </h3>
-      </li>
-    
-  </ul>
-</aside>
+  
+</div>
 
       </main>
 
