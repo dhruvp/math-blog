@@ -53,7 +53,7 @@
   <h1 class="post-title">An intuitive understanding of matrices</h1>
   <time datetime="2018-12-31T00:00:00-08:00" class="page-date">31 Dec 2018</time>
   
-<h3 id="matrices-and-their-intuition">Matrices and their Intuition</h3>
+<h2 id="matrices-and-their-intuition">Matrices and their Intuition</h2>
 
 <p>Many of us have probably encountered matrices at some point but in math class. They’re this little awkward tables with seemingly byzantine rules for multiplying and inverting them. We all probably learned how to operate on them at some point but how did someone come up with them? Where do these rules for multiplication and inversion even come from? In short, what’s the underlying intuition for matrices?</p>
 
@@ -61,7 +61,7 @@
 
 <p>So let’s try and rectify that a litte. Through this post, I’m going to share my intuition of matrices and why they represent such a powerful idea. We’re going to do so by starting with the idea of linear functions and then using that knowledge to derive matrices.</p>
 
-<h3 id="linear-functions">Linear functions</h3>
+<h2 id="linear-functions">Linear functions</h2>
 
 <p>Linear functions are the foundations of matrices. Before diving into what they are, let’s start really simply by focusing on one specific example and moving up from there.</p>
 
@@ -97,18 +97,18 @@ Show example</li>
   </li>
 </ul>
 
-<h3 id="geometric-interpretation-of-linear-functions">Geometric Interpretation of Linear Functions</h3>
+<h2 id="geometric-interpretation-of-linear-functions">Geometric Interpretation of Linear Functions</h2>
 <p>What do these linear functions look like? Here are a few videos from <a href="https://www.youtube.com/channel/UCYO_jab_esuFRV4b17AJtAw">3 Blue 1 Brown’s Youtube Channel</a> visualizing their effect.</p>
 
-<h5 id="1-dimensional-linear-functions">1-dimensional linear functions</h5>
+<h4 id="1-dimensional-linear-functions">1-dimensional linear functions</h4>
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/xnLx3aZOpCE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
 
-<h5 id="2-dimensional-linear-functions">2-dimensional linear functions</h5>
+<h4 id="2-dimensional-linear-functions">2-dimensional linear functions</h4>
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/2xKaXDHDGsA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
 
-<h3 id="representing-functions">Representing Functions</h3>
+<h2 id="representing-functions">Representing Functions</h2>
 <p>We now know what linear functions are - but how can we succintly represent them? Taking a step back, how do we represent functions in general? One way is to simply have a table that takes every input and displays its output. For instance, we could write:</p>
 
 <table>
@@ -175,11 +175,11 @@ Show example</li>
 
 <p>In short, the right representation allows us to succintly understand, combine, and process functions in extremely powerful ways.</p>
 
-<h4 id="representing-linear-functions">Representing Linear Functions</h4>
+<h3 id="representing-linear-functions">Representing Linear Functions</h3>
 
 <p>Returning to linear functions, how can we easily represent them?</p>
 
-<h5 id="1-dimension">1-dimension</h5>
+<h4 id="1-dimension">1-dimension</h4>
 
 <p>Let’s start with linear functions that take in real numbers and return real numbers (all in 1 dimension - the real line).</p>
 
@@ -190,7 +190,7 @@ Let's start with linear functions that take inputs on the real line and return o
 
 <p>These linear transforms will always be written simply as <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mi>m</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">f(x) = mx</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base"><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathit">x</span><span class="mclose">)</span><span class="mord rule" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mord rule" style="margin-right:0.2777777777777778em;"></span><span class="mord mathit">m</span><span class="mord mathit">x</span></span></span></span> for some <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>m</mi></mrow><annotation encoding="application/x-tex">m</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span><span class="base"><span class="mord mathit">m</span></span></span></span>. So the representation for linear functions that operate in one dimension is easy.</p>
 
-<h5 id="2-dimensions">2-dimensions</h5>
+<h4 id="2-dimensions">2-dimensions</h4>
 
 <p>But what about in 2 dimensions (i.e. the input is a vector <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mo fence="true">[</mo><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mn>1</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mn>0</mn></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{bmatrix}
 1 \\
@@ -262,7 +262,7 @@ Let’s just start by describing what the function does to two of the most basic
 
 <p>I would put this sentence before your actual multiplication above ^ and then draw visual diagrams from f(10,9) to the (1,0) and (0,1) former and latter 1’s specifically. As a visual learner the diagram would help connect the dots much faster.</p>
 
-<h5 id="matrices">Matrices</h5>
+<h4 id="matrices">Matrices</h4>
 
 <p>Ok so is there a way I can succintly describe what a function does to <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mo fence="true">[</mo><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mn>1</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mn>0</mn></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow></mrow><annotation encoding="application/x-tex">\begin{bmatrix}
 1 \\
@@ -285,7 +285,7 @@ Let’s just start by describing what the function does to two of the most basic
 
 <p>So just like whenever you see <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mn>2</mn><mi>x</mi><mo>+</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">f(x) = 2x + 3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base"><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathit">x</span><span class="mclose">)</span><span class="mord rule" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mord rule" style="margin-right:0.2777777777777778em;"></span><span class="mord">2</span><span class="mord mathit">x</span><span class="mord rule" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mord rule" style="margin-right:0.2222222222222222em;"></span><span class="mord">3</span></span></span></span>, you immediately know you’re dealing with a function, <strong>next time you see a matrix, know that you are dealing with a shorthand for a linear function</strong>. It’s the <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mi>m</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">f(x) = mx</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base"><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathit">x</span><span class="mclose">)</span><span class="mord rule" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mord rule" style="margin-right:0.2777777777777778em;"></span><span class="mord mathit">m</span><span class="mord mathit">x</span></span></span></span> of the linear world.</p>
 
-<h5 id="understanding-matrix-multiplication">Understanding Matrix Multiplication</h5>
+<h4 id="understanding-matrix-multiplication">Understanding Matrix Multiplication</h4>
 <p>Ok so we know that a matrix represents a function - but how do we apply this function on an input?</p>
 
 <p>Specifically, say I have the same function <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi></mrow><annotation encoding="application/x-tex">f</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base"><span class="mord mathit" style="margin-right:0.10764em;">f</span></span></span></span> which we described by the matrix <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi><mo>=</mo><mrow><mo fence="true">[</mo><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mn>3</mn></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mn>0</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mn>0</mn></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mn>5</mn></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow></mrow><annotation encoding="application/x-tex">F =  \begin{bmatrix} 3 &amp; 0 \\ 0 &amp; 5 \end{bmatrix} </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.45em;"></span><span class="strut bottom" style="height:2.40003em;vertical-align:-0.95003em;"></span><span class="base"><span class="mord mathit" style="margin-right:0.13889em;">F</span><span class="mord rule" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mord rule" style="margin-right:0.2777777777777778em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">3</span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"></span></span></span></span><span class="arraycolsep" style="width:0.5em;"></span><span class="arraycolsep" style="width:0.5em;"></span><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">0</span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">5</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">]</span></span></span></span></span></span>. I want to apply this function on the vector <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mo fence="true">[</mo><mtable><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>x</mi></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>y</mi></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow></mrow><annotation encoding="application/x-tex"> \begin{bmatrix} x \\ y \end{bmatrix} </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:1.45em;"></span><span class="strut bottom" style="height:2.40003em;vertical-align:-0.95003em;"></span><span class="base"><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.45em;"><span style="top:-3.61em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathit">x</span></span></span><span style="top:-2.4099999999999997em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9500000000000004em;"></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">]</span></span></span></span></span></span>. How do we do it?</p>
@@ -315,7 +315,7 @@ Let’s just start by describing what the function does to two of the most basic
 
 <p>The matrix multiplication rule is just a shorthand for applying a function on a vector! This is really what’s happening under the scenes.</p>
 
-<h5 id="matrix-multiplication-as-function-composition">Matrix Multiplication as Function Composition</h5>
+<h4 id="matrix-multiplication-as-function-composition">Matrix Multiplication as Function Composition</h4>
 
 <p>Ok so we’ve seen that multiplying a 2x2 matrix by a vector is just applying the function on the vector. But what does matrix multiplication when we are multiplying two 2x2 matrices?</p>
 
@@ -344,7 +344,7 @@ Let’s just start by describing what the function does to two of the most basic
 
 <p>Thanks to matrix multiplication, we have amazingly simple rules for understanding <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo>⋅</mo><mi>g</mi></mrow><annotation encoding="application/x-tex">f\cdot g</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base"><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="mord rule" style="margin-right:0.2222222222222222em;"></span><span class="mbin">⋅</span><span class="mord rule" style="margin-right:0.2222222222222222em;"></span><span class="mord mathit" style="margin-right:0.03588em;">g</span></span></span></span>, <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo>+</mo><mi>g</mi></mrow><annotation encoding="application/x-tex">f+g</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base"><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="mord rule" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mord rule" style="margin-right:0.2222222222222222em;"></span><span class="mord mathit" style="margin-right:0.03588em;">g</span></span></span></span> etc. without manually writing out a bunch of tables.</p>
 
-<h4 id="combining-functions">Combining Functions</h4>
+<h3 id="combining-functions">Combining Functions</h3>
 
 <p>Remember how much power we gained by being able to represent a function as a polynomial? We were able to combine polynomials, compose them, multiply them - we now have all that same power for linear functions! We can compose them (matrix multiplication), add them (matrix addition), and invert them (matrix inversion) all by following some simple rules.</p>
 
@@ -352,7 +352,7 @@ Let’s just start by describing what the function does to two of the most basic
 
 <p>Imagine doing all this with input-output tables! It would be hell. Instead, we can now operate on these complex functions and combine them in all kinds of ways and immediately know the resulting function.</p>
 
-<h4 id="looking-forward">Looking Forward</h4>
+<h3 id="looking-forward">Looking Forward</h3>
 <p>So we’ve seen pretty clearly that matrices are just functions and that linear algebra is the study of combining linear functions.</p>
 
 <p>Understanding this helps us perceive some of the key ideas of linear algebra in a new way. In the next post, we’re going to focus on eigenvectors and learn why they are so useful in playing with these functions.</p>
@@ -372,7 +372,7 @@ Let’s just start by describing what the function does to two of the most basic
 
       <footer class="footer">
         <small>
-          &copy; <time datetime="2018-12-31T19:27:51-08:00">2018</time>. All rights reserved.
+          &copy; <time datetime="2018-12-31T19:39:42-08:00">2018</time>. All rights reserved.
         </small>
       </footer>
     </div>
