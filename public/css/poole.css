@@ -428,3 +428,15 @@ a.pagination-item:hover {
     border-bottom-right-radius: 4px;
   }
 }
+
+/* INSERTED BY DHRUV */
+.image-block {
+  text-align: center;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.image-block img {
+  margin-left: auto;
+  margin-right: auto;
+}
