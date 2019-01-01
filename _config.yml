@@ -3,7 +3,7 @@ permalink:        pretty
 
 # Setup
 title:            Dhruv's Blog
-tagline:          Always Be Learnin'
+tagline:          
 url:              http://dhruvp.github.io
 paginate:         1
 baseurl:          /
