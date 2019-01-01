@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://dhruvp.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://dhruvp.github.io/" rel="alternate" type="text/html" /><updated>2018-12-31T20:03:41-08:00</updated><id>http://dhruvp.github.io/feed.xml</id><title type="html">Dhruv’s Blog</title><author><name>Dhruv Parthasarathy</name><email>dhruv@udacity.com</email></author><entry><title type="html">An intuitive understanding of matrices</title><link href="http://dhruvp.github.io/2018/12/31/matrices/" rel="alternate" type="text/html" title="An intuitive understanding of matrices" /><published>2018-12-31T00:00:00-08:00</published><updated>2018-12-31T00:00:00-08:00</updated><id>http://dhruvp.github.io/2018/12/31/matrices</id><content type="html" xml:base="http://dhruvp.github.io/2018/12/31/matrices/">&lt;h2 id=&quot;matrices-and-their-intuition&quot;&gt;Matrices and their Intuition&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://dhruvp.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://dhruvp.github.io/" rel="alternate" type="text/html" /><updated>2018-12-31T20:10:09-08:00</updated><id>http://dhruvp.github.io/feed.xml</id><title type="html">Dhruv’s Blog</title><author><name>Dhruv Parthasarathy</name><email>dhruv@udacity.com</email></author><entry><title type="html">An intuitive understanding of matrices</title><link href="http://dhruvp.github.io/2018/12/31/matrices/" rel="alternate" type="text/html" title="An intuitive understanding of matrices" /><published>2018-12-31T00:00:00-08:00</published><updated>2018-12-31T00:00:00-08:00</updated><id>http://dhruvp.github.io/2018/12/31/matrices</id><content type="html" xml:base="http://dhruvp.github.io/2018/12/31/matrices/">&lt;h2 id=&quot;matrices-and-their-intuition&quot;&gt;Matrices and their Intuition&lt;/h2&gt;
 
 &lt;p&gt;Many of us have probably encountered matrices at some point but in math class. They’re this little awkward tables with seemingly byzantine rules for multiplying and inverting them. We all probably learned how to operate on them at some point but how did someone come up with them? Where do these rules for multiplication and inversion even come from? In short, what’s the underlying intuition for matrices?&lt;/p&gt;
 
@@ -8,31 +8,11 @@
 
 &lt;h2 id=&quot;linear-functions&quot;&gt;Linear functions&lt;/h2&gt;
 
-&lt;p&gt;Linear functions are the foundations of matrices. Before diving into what they are, let’s start really simply by focusing on one specific example and moving up from there.&lt;/p&gt;
-
-&lt;p&gt;Let’s take the function that reflects lines about the y axis.&lt;/p&gt;
-
-&lt;p&gt;[INSERT DIAGRAM HERE]&lt;/p&gt;
-
-&lt;p&gt;What are some interesting things to note about this function?&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;I can multiply by a number before or after applying the function and I’ll get the same result.
-Show example&lt;/li&gt;
-  &lt;li&gt;I can add before or after applying the function and I’ll get the same result.
-Show example&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;In fact, there are a lot of functions that obey these rules. Here are a few more:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Rotations&lt;/li&gt;
-  &lt;li&gt;Scaling&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Early mathematicians realized that such functions can model a lot of the phenomena that happen in the real world from physics, to statistics. We call these functions linear functions (not to be confused with a linear equation) and their main rules are as follows:&lt;/p&gt;
+&lt;p&gt;Linear functions are the foundations of matrices. Their main rules are as follows:&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;f&lt;/mi&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mi&gt;c&lt;/mi&gt;&lt;mo&gt;⋅&lt;/mo&gt;&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;)&lt;/mo&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mi&gt;c&lt;/mi&gt;&lt;mo&gt;⋅&lt;/mo&gt;&lt;mi&gt;f&lt;/mi&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;)&lt;/mo&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt; f(c \cdot x) = c \cdot f(x) &lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.75em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;strut bottom&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;mord mathit&quot; style=&quot;margin-right:0.10764em;&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;mopen&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mord mathit&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;mord rule&quot; style=&quot;margin-right:0.2222222222222222em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mbin&quot;&gt;⋅&lt;/span&gt;&lt;span class=&quot;mord rule&quot; style=&quot;margin-right:0.2222222222222222em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathit&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;mclose&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;mord rule&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mord rule&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathit&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;mord rule&quot; style=&quot;margin-right:0.2222222222222222em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mbin&quot;&gt;⋅&lt;/span&gt;&lt;span class=&quot;mord rule&quot; style=&quot;margin-right:0.2222222222222222em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathit&quot; style=&quot;margin-right:0.10764em;&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;mopen&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mord mathit&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;mclose&quot;&gt;)&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;
     &lt;ul&gt;
-      &lt;li&gt;Can multiply before or after applying the function and get the same result.&lt;/li&gt;
+      &lt;li&gt;Can multiply by a scalar before or after applying by the function and get the same result.&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;&lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;f&lt;/mi&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mi&gt;y&lt;/mi&gt;&lt;mo&gt;)&lt;/mo&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mi&gt;f&lt;/mi&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;)&lt;/mo&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mi&gt;f&lt;/mi&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mi&gt;y&lt;/mi&gt;&lt;mo&gt;)&lt;/mo&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt; f(x+y) = f(x) + f(y) &lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.75em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;strut bottom&quot; style=&quot;height:1em;vertical-align:-0.25em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;mord mathit&quot; style=&quot;margin-right:0.10764em;&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;mopen&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mord mathit&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;mord rule&quot; style=&quot;margin-right:0.2222222222222222em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mbin&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mord rule&quot; style=&quot;margin-right:0.2222222222222222em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathit&quot; style=&quot;margin-right:0.03588em;&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;mclose&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;mord rule&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mord rule&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathit&quot; style=&quot;margin-right:0.10764em;&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;mopen&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mord mathit&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;mclose&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;mord rule&quot; style=&quot;margin-right:0.2222222222222222em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mbin&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mord rule&quot; style=&quot;margin-right:0.2222222222222222em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord mathit&quot; style=&quot;margin-right:0.10764em;&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;mopen&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mord mathit&quot; style=&quot;margin-right:0.03588em;&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;mclose&quot;&gt;)&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;
@@ -42,19 +22,37 @@ Show example&lt;/li&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;p&gt;Early mathematicians realized that such functions can model a lot of the phenomena that happen in the real world from physics, to statistics. Here are a few other examples of linear functions in geometry:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Rotations
+    &lt;ul&gt;
+      &lt;li&gt;A function that rotates a line about the y-axis.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Scaling
+    &lt;ul&gt;
+      &lt;li&gt;A function that takes a 2d image and makes it 2x as large.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;h2 id=&quot;geometric-interpretation-of-linear-functions&quot;&gt;Geometric Interpretation of Linear Functions&lt;/h2&gt;
 &lt;p&gt;What do these linear functions look like? Here are a few videos from &lt;a href=&quot;https://www.youtube.com/channel/UCYO_jab_esuFRV4b17AJtAw&quot;&gt;3 Blue 1 Brown’s Youtube Channel&lt;/a&gt; visualizing their effect.&lt;/p&gt;
 
 &lt;h4 id=&quot;1-dimensional-linear-functions&quot;&gt;1-dimensional linear functions&lt;/h4&gt;
 
+&lt;p&gt;The below video shows how the linear transformation &lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math&gt;&lt;semantics&gt;&lt;mrow&gt;&lt;mi&gt;f&lt;/mi&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mi&gt;x&lt;/mi&gt;&lt;mo&gt;)&lt;/mo&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;mfrac&gt;&lt;mrow&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;mrow&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mrow&gt;&lt;/mfrac&gt;&lt;mi&gt;x&lt;/mi&gt;&lt;/mrow&gt;&lt;annotation encoding=&quot;application/x-tex&quot;&gt;f(x) = \frac{1}{2} x&lt;/annotation&gt;&lt;/semantics&gt;&lt;/math&gt;&lt;/span&gt;&lt;span class=&quot;katex-html&quot; aria-hidden=&quot;true&quot;&gt;&lt;span class=&quot;strut&quot; style=&quot;height:0.845108em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;strut bottom&quot; style=&quot;height:1.190108em;vertical-align:-0.345em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;base&quot;&gt;&lt;span class=&quot;mord mathit&quot; style=&quot;margin-right:0.10764em;&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;mopen&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mord mathit&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;mclose&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;mord rule&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mrel&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mord rule&quot; style=&quot;margin-right:0.2777777777777778em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mord&quot;&gt;&lt;span class=&quot;mopen nulldelimiter&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mfrac&quot;&gt;&lt;span class=&quot;vlist-t vlist-t2&quot;&gt;&lt;span class=&quot;vlist-r&quot;&gt;&lt;span class=&quot;vlist&quot; style=&quot;height:0.845108em;&quot;&gt;&lt;span style=&quot;top:-2.6550000000000002em;&quot;&gt;&lt;span class=&quot;pstrut&quot; style=&quot;height:3em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;sizing reset-size6 size3 mtight&quot;&gt;&lt;span class=&quot;mord mtight&quot;&gt;&lt;span class=&quot;mord mtight&quot;&gt;2&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;top:-3.15em;&quot;&gt;&lt;span class=&quot;pstrut&quot; style=&quot;height:3em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;stretchy&quot; style=&quot;height:0.2em;&quot;&gt;&lt;svg width=&quot;400em&quot; height=&quot;0.2em&quot; viewBox=&quot;0 0 400000 200&quot; preserveAspectRatio=&quot;xMinYMin slice&quot;&gt;&lt;path d=&quot;M0 80H400000 v40H0z M0 80H400000 v40H0z&quot;&gt;&lt;/path&gt;&lt;/svg&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&quot;top:-3.394em;&quot;&gt;&lt;span class=&quot;pstrut&quot; style=&quot;height:3em;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;sizing reset-size6 size3 mtight&quot;&gt;&lt;span class=&quot;mord mtight&quot;&gt;&lt;span class=&quot;mord mtight&quot;&gt;1&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;vlist-s&quot;&gt;​&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;vlist-r&quot;&gt;&lt;span class=&quot;vlist&quot; style=&quot;height:0.345em;&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;mclose nulldelimiter&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;mord mathit&quot;&gt;x&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt; affects all points on the real number line. It essentially squeezes the number line.&lt;/p&gt;
+
 &lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/xnLx3aZOpCE&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
 
 &lt;h4 id=&quot;2-dimensional-linear-functions&quot;&gt;2-dimensional linear functions&lt;/h4&gt;
 
+&lt;p&gt;The below video shows a set of different linear transformations and how they change the 2d cartesian space. The main thing to note is how they stretch and rotate the space but keep all straight lines straight.&lt;/p&gt;
+
 &lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/2xKaXDHDGsA&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
 
 &lt;h2 id=&quot;representing-functions&quot;&gt;Representing Functions&lt;/h2&gt;
-&lt;p&gt;We now know what linear functions are - but how can we succintly represent them? Taking a step back, how do we represent functions in general? One way is to simply have a table that takes every input and displays its output. For instance, we could write:&lt;/p&gt;
+&lt;p&gt;So we now know what linear functions are - but how can we succintly represent them? Taking a step back, how do we represent functions in general? One way is to simply have a table that takes every input and displays its output. For instance, we could write:&lt;/p&gt;
 
 &lt;table&gt;
   &lt;thead&gt;
