@@ -19,7 +19,6 @@ plugins:
   - jekyll-katex
 
 katex:
-  js_path: "/Users/dhruv/.rvm/gems/ruby-2.5.1/gems/jekyll-katex-0.3.0/lib/assets/js"  # Path used to search for katex.min.js
   rendering_options:
     # Default KaTeX rendering options. See https://github.com/Khan/KaTeX#rendering-options
     throw_error: true                       # throwOnError - set to false if you want rendering to output error as text rather than a build error
