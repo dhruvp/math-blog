@@ -440,3 +440,8 @@ a.pagination-item:hover {
   margin-left: auto;
   margin-right: auto;
 }
+
+.highlight-block {
+  background-color:#fffaf0;
+  padding: 10px;
+}
