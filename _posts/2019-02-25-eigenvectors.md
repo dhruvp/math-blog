@@ -183,10 +183,13 @@ Recall our discussion on vector notation in a different basis:
 
 So, we know the following additional information:
 
-$$f(\textcolor{blue}{b_1}) = {\begin{bmatrix}\lambda_1 \\ 0 \end{bmatrix}}_B $$
-$$f(\textcolor{blue}{b_1}) = \lambda_1 \cdot \textcolor{blue}{b_1} + 0 \cdot \textcolor{#228B22}{b_2} = \mathbf{\lambda_1 \cdot \textcolor{blue}{b_1}}$$
-$$f(\textcolor{#228B22}{b_2}) = {\begin{bmatrix}0 \\ \lambda_2 \end{bmatrix}}_B$$
-$$f(\textcolor{#228B22}{b_2}) = 0 \cdot \textcolor{blue}{b_1} + \lambda_2 \cdot \textcolor{#228B22}{b_2} = \mathbf{\lambda_2 \cdot \textcolor{#228B22}{b_2}}$$
+$$f(\textcolor{blue}{b_1}) = {\begin{bmatrix}\lambda_1 \\ 0 \end{bmatrix}}_B = f(\textcolor{blue}{b_1}) = \lambda_1 \cdot \textcolor{blue}{b_1} + 0 \cdot \textcolor{#228B22}{b_2}$$
+$$ f(\textcolor{blue}{b_1}) = \mathbf{\lambda_1 \cdot \textcolor{blue}{b_1}}$$
+
+Similarly,
+
+$$f(\textcolor{#228B22}{b_2}) = {\begin{bmatrix}0 \\ \lambda_2 \end{bmatrix}}_B = 0 \cdot \textcolor{blue}{b_1} + \lambda_2 \cdot \textcolor{#228B22}{b_2}$$
+$$f(\textcolor{#228B22}{b_2}) = \mathbf{\lambda_2 \cdot \textcolor{#228B22}{b_2}}$$
 
 <div class='highlight-block'>
     So if we can find $b_1$ and $b_2$ such that:
