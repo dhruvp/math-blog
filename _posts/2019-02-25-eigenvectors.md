@@ -108,7 +108,7 @@ $$F = \begin{bmatrix} f(\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}) 
 
 When I use the basis $B = \{\textcolor{blue}{b_1}, \textcolor{#228B22}{b_2}\}$, the first column now represents $f(\textcolor{blue}{b_1})$ and the second column represents $f(\textcolor{#228B22}{b_2})$. The matrix $F_{B}$ in basis $B$ becomes:
 
-$$F_{B} = \begin{bmatrix} f(\textcolor{blue}{b_1}) & f(\textcolor{#228B22}{b_2}) \end{bmatrix}$$
+$$F_{B} = \begin{bmatrix} f(\textcolor{blue}{b_1})_{B} & f(\textcolor{#228B22}{b_2})_{B} \end{bmatrix}$$
 
 <hr />
 
@@ -126,38 +126,47 @@ Usually, calculating this is really cumbersome.
 
 <p class="image-block">
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Matrix_multiplication_diagram_2.svg/313px-Matrix_multiplication_diagram_2.svg.png" />
-Can you imagine doing this 5 times in a row? Yeesh.
+Can you imagine doing this 5 times in a row? Yeesh. Image Source: Wikipedia.
 </p>
 
 
-But let's imagine for a moment that $F$ was a diagonal matrix (i.e. something like $F = \begin{bmatrix} a & 0 \\ 0 & b \end{bmatrix} $). If this were the case, then this multiplication would be EASY. If $F$ is diagonal, $F^{n} = \begin{bmatrix} a^n & 0 \\ 0 & b^n \end{bmatrix}$! Let's see it below:
+But let's imagine for a moment that $F$ was a diagonal matrix (i.e. something like $F = \begin{bmatrix} a & 0 \\ 0 & b \end{bmatrix} $). If this were the case, then this multiplication would be EASY.
+
+Why? Let's take at what $F \cdot F$ is:
 
 $$F \cdot F = \begin{bmatrix} a & 0 \\ 0 & b \end{bmatrix} \cdot \begin{bmatrix} a & 0 \\ 0 & b \end{bmatrix} $$
 $$F \cdot F = \begin{bmatrix} a \cdot a + 0 \cdot 0 & a \cdot 0 + 0 \cdot b  \\ 0 \cdot a + b \cdot 0 & 0 \cdot 0 + b \cdot b \end{bmatrix}$$
 $$F \cdot F =  \begin{bmatrix} a^2 & 0 \\ 0 & b^2 \end{bmatrix} $$
 
+<p class='highlight-block'>
+More generally,
+
+$$F^{n} = \begin{bmatrix} a^n & 0 \\ 0 & b^n \end{bmatrix}$$
+
+This is way easier to work with!
 So how can we get $F$ to be a diagonal matrix?
+</p>
 
 <hr />
 
-### Which Basis makes a Matrix a Diagonal Matrix?
+### Which Basis makes a Matrix Diagonal?
 
-Earlier, we saw that choosing a new basis makes us change how we write down the matrix. Can we extend this idea to choose some basis $B$ which actually allows us to write $F_{B}$ as a diagonal matrix?
+Earlier, we saw that choosing a new basis makes us change how we write down the matrix. So can we choose a basis $B$ that converts $F$ into a diagonal matrix?
 
-From earlier, we know that
+From earlier, we know that $F_{B}$, the matrix $F$ in the basis $B$, is written as:
 
-$$F_B = \begin{bmatrix} f(\textcolor{blue}{b_1}) & f(\textcolor{#228B22}{b_2}) \end{bmatrix}$$
+$$F_B = \begin{bmatrix} f(\textcolor{blue}{b_1})_{B} & f(\textcolor{#228B22}{b_2})_{B} \end{bmatrix}$$
 
 For this to be diagonal, we must have:
 
-$$F_B = \begin{bmatrix} f(\textcolor{blue}{b_1}) & f(\textcolor{#228B22}{b_2}) \end{bmatrix} = \begin{bmatrix} \lambda_1 & 0 \\ 0 & \lambda_2  \end{bmatrix}$$
+$$F_B = \begin{bmatrix} f(\textcolor{blue}{b_1})_{B} & f(\textcolor{#228B22}{b_2})_{B} \end{bmatrix} = \begin{bmatrix} \lambda_1 & 0 \\ 0 & \lambda_2  \end{bmatrix}$$
 
 for some $\lambda_1$ and $\lambda_2$ (i.e. the the top-right and bottom-left elements are $0$).
 
 This implies:
 
-1. $f(\textcolor{blue}{b_1}) =  {\begin{bmatrix}\lambda_1 \\ 0 \end{bmatrix}}_B$.
-2. $f(\textcolor{#228B22}{b_2}) = {\begin{bmatrix}0 \\ \lambda_2 \end{bmatrix}}_B$.
+1. $f(\textcolor{blue}{b_1})_{B} =  {\begin{bmatrix}\lambda_1 \\ 0 \end{bmatrix}}_{B}$.
+2. $f(\textcolor{#228B22}{b_2})_{B} = {\begin{bmatrix}0 \\ \lambda_2 \end{bmatrix}}_{B}$.
 
 Recall our discussion on vector notation in a different basis:
 
@@ -165,63 +174,91 @@ Recall our discussion on vector notation in a different basis:
 >Then the vector $\begin{bmatrix} c \\ d \end{bmatrix}_{B}$ means:
 >* The vector you get when you compute: $c \cdot \textcolor{blue}{b_1} + d  \cdot \textcolor{#228B22}{b_2}$.
 
-This means that in the basis $B = \{\textcolor{blue}{b_1}, \textcolor{#228B22}{b_2}\}$,
+So, we know the following additional information:
 
 $$f(\textcolor{blue}{b_1}) = {\begin{bmatrix}\lambda_1 \\ 0 \end{bmatrix}}_B = \lambda_1 \cdot \textcolor{blue}{b_1} + 0 \cdot \textcolor{#228B22}{b_2} = \mathbf{\lambda_1 \cdot \textcolor{blue}{b_1}}$$
 $$f(\textcolor{#228B22}{b_2}) = {\begin{bmatrix}0 \\ \lambda_2 \end{bmatrix}}_B = 0 \cdot \textcolor{blue}{b_1} + \lambda_2 \cdot \textcolor{#228B22}{b_2} = \mathbf{\lambda_2 \cdot \textcolor{#228B22}{b_2}}$$
 
-So the answer is yes! if we can find a $B = \{\textcolor{blue}{b_1}, \textcolor{#228B22}{b_2}\}$ that satisfies the above properties, $F$ can be rewritten as $F_{B}$ which is a diagonal matrix!
+<p class='highlight-block'>
+    So if we can find $b_1$ and $b_2$ such that:
 
+    <ol>
+        <li>
+            $f(\textcolor{blue}{b_1}) = \lambda_1 \textcolor{blue}{b_1}$ and
+        </li>
+        <li>
+            $f(\textcolor{#228B22}{b_2}) = \lambda_2 \textcolor{#228B22}{b_2}$,
+        </li>
+    </ol>
+
+    then, $F$ can be rewritten as $F_{B}$, where
+
+    $$F_{B} = \begin{bmatrix} \lambda_1 & 0 \\ 0 & \lambda_2  \end{bmatrix}$$
+    A nice diagonal matrix!
+</p>
 <hr />
 
 ### Enter Eigenvectors
 
-The vectors $\textcolor{blue}{b_1}$ and $\textcolor{#228B22}{b_2}$ we've discussed are **exactly the eigenvectors of $f$**. The eigenvectors of a matrix $F$ are the exact basis vectors that make $F_{B}$ a diagonal matrix.
+Is there a special name for the vectors above $b_1$ and $b_2$ that magically let us rewrite a matrix as a diagonal? Yes! These vectors are **the eigenvectors of $f$**. That's right - you derived them all by yourself.
+
+<p class='image-block'>
+    <img src='https://media.giphy.com/media/d3mlE7uhX8KFgEmY/giphy.gif' />
+    You the real MVP.
+</p>
 
 
-More formally, we define an eigenvector of $f$ as any vector $v$ such that:
+<p class='highlight-block'>
+More formally, we define an eigenvector of $f$ as any non-zero vector $v$ such that:
 
 $$f(v) = \lambda v $$
 
 or
 
 $$F \cdot v = \lambda v $$
+</p>
 
-<p class='highlight-block'>
-Once we switch to using the eigenbasis (basis of eigenvectors), our original problem of finding $f\circ f\circ f \circ f \circ f (v)$ becomes:
+The basis formed by the eigenvectors is known as the <strong>eigenbasis</strong>. Once we switch to using the eigenbasis, our original problem of finding $f\circ f\circ f \circ f \circ f (v)$ becomes:
 
 $$F_{B} \cdot F_{B} \cdot F_{B} \cdot F_{B} \cdot F_{B} \cdot v_{B}$$
-$$ {\begin{bmatrix} {\lambda_1}^5 & 0 \\ 0 & {\lambda_2}^5 \end{bmatrix}}_{B} $$
+$$ = {\begin{bmatrix} {\lambda_1}^5 & 0 \\ 0 & {\lambda_2}^5 \end{bmatrix}}_{B} $$
 
-**Using the eigenvector basis makes this problem trivial.**
-</p>
+<strong>So. Much. Easier.</strong>
 
 <hr />
 
 ### An Example
 
-Let's work through a full example of rewriting a matrix in its eigenbases to see this in action. Imagine we had the matrix $F = \begin{bmatrix}2 & 1 \\ 1 & 2 \end{bmatrix}$. Since the goal of this post is not learning how to *find* eigenvectors, I'm just going to give you the eigenvectors for this matrix. They are:
+Well this has all been pretty theoretical with abstract vectors like $b$ and $v$ - let's make this concrete with real vectors and matrices to see it in action.
+
+Imagine we had the matrix $F = \begin{bmatrix}2 & 1 \\ 1 & 2 \end{bmatrix}$. Since the goal of this post is not learning how to *find* eigenvectors, I'm just going to give you the eigenvectors for this matrix. They are:
 
 $$b_{1} = \begin{bmatrix} 1 \\ -1 \end{bmatrix}$$
 $$b_{2} = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$$
 
-What is $F_{B}$, the matrix $F$ written in the basis $B=\{b_1, b_2\}$?
+The eigenbasis is just $B = \{b_1, b_2\}$.
+What is $F_{B}$, the matrix $F$ written in the eigenbasis $B$?
 
-Since $F_B = \begin{bmatrix} f(\textcolor{blue}{b_1}) & f(\textcolor{#228B22}{b_2}) \end{bmatrix}$, we need to find :
-- $f(\textcolor{blue}{b_1})$ and $f(\textcolor{#228B22}{b_2})$
+Since $F_B = \begin{bmatrix} f(\textcolor{blue}{b_1})_{B} & f(\textcolor{#228B22}{b_2})_{B} \end{bmatrix}$, we need to find :
+- $f(\textcolor{blue}{b_1})_{B}$ and $f(\textcolor{#228B22}{b_2})_{B}$
+
+We'll break this down by first finding $f(\textcolor{blue}{b_1})$ and $f(\textcolor{#228B22}{b_2})$, and rewrite then in the notation of the eigenbasis $B$ to get $f(\textcolor{blue}{b_1})_{B}$ and $f(\textcolor{#228B22}{b_2})_{B}$.
+
+#### Finding $f(\textcolor{blue}{b_1})$
 
 $f(\textcolor{blue}{b_1})$ is:
 
 $$ f(\textcolor{blue}{b_1}) = F\cdot \textcolor{blue}{b_1} = \begin{bmatrix}2 & 1 \\ 1 & 2\end{bmatrix} \cdot \begin{bmatrix} 1 \\ -1 \end{bmatrix}$$
 $$ f(\textcolor{blue}{b_1}) = \begin{bmatrix} -1 \\ 1 \end{bmatrix}$$
 
+#### Finding $f(\textcolor{#228B22}{b_2})$
 
 Similarly,
 
 $$ f(\textcolor{#228B22}{b_2}) = F\cdot \textcolor{#228B22}{b_2} = \begin{bmatrix}2 & 1 \\ 1 & 2\end{bmatrix} \cdot \begin{bmatrix} 1 \\ 1 \end{bmatrix}$$
 $$ f(\textcolor{#228B22}{b_2}) = \begin{bmatrix} 3 \\ 3 \end{bmatrix}$$
 
-#### Writing $F_{B}$
+#### Rewriting the vectors in the basis $B$
 
 We've now found $f(b_1)$ and $f(b_2)$. We need to rewrite these vectors in the notation for our new basis $B$.
 
@@ -230,7 +267,8 @@ What's $f(b_1)_{B}$?
 $$f(b_1) = \begin{bmatrix} -1 \\ 1 \end{bmatrix} = \textcolor{blue}{-1} \cdot b_1 + \textcolor{#228B22}{0} \cdot b_2$$
 $$f(b_1)_{B} = \begin{bmatrix} \textcolor{blue}{-1} \\ \textcolor{#228B22}{0} \end{bmatrix}$$
 
-Similarly
+Similarly,
+
 $$f(b_2) = \begin{bmatrix} 3 \\ 3 \end{bmatrix} = \textcolor{blue}{0} \cdot b_1 + \textcolor{#228B22}{3} \cdot b_2$$ $$f(b_2)_{B} = \begin{bmatrix} \textcolor{blue}{0} \\ \textcolor{#228B22}{3} \end{bmatrix}$$
 
 <p class='highlight-block'>
@@ -252,18 +290,24 @@ $$F \cdot v = \lambda v $$
 
 How are $\lambda v$ and $v$ related? $\lambda v$ is just a scaling of $v$ in the same direction - it can't be rotated in any way.
 
-For instance, the following image shows $\begin{bmatrix} 2 \\ 1 \end{bmatrix}$, $2 \cdot \begin{bmatrix} 2 \\ 1 \end{bmatrix}$ and $3 \cdot \begin{bmatrix} 2 \\ 1 \end{bmatrix}$ all on the same graph. Notice how they all appear on the same line or axis.
-
-INSERT IMAGE SHOWING EIGENVECTOR AS A SCALING.
+<p class='image-block'>
+    <img src='/public/images/eigenvector_scaling.png' width='300'/>
+    Notice how $\lambda v$ is in the same direction as $v$. Image Source: Wikipedia.
+</p>
 
 <p class='highlight-block'>
 In this sense, the eigenvectors of a linear map $f$ show us the axes along which the map simply scales or stretches its inputs.
 </p>
 
-INSERT IMAGE or VIDEO SHOWING EIGEN VECTOR SCALING/STRETCHING.
+The single best visualization I've seen of this is by 3Blue1Brown who has a fantastic [youtube channel](https://www.google.com/search?q=3blue1brown+youtube&oq=3blue1brown+youtube&aqs=chrome.0.0l6.2679j0j7&sourceid=chrome&ie=UTF-8) on visualizing math in general.
 
-Note, there are some linear maps that rotate everywhere - take the linear map that rotates all its input by 90º. Such linear maps will clearly not purely scale on any input and will thus not have eigenvectors. So, **not all linear maps have eigenvectors**.
+I'm embedding his video on eigenvectors and their visualizations below as it is the best geometric intuition out there:
 
+<p style='display: flex; flex-direction: column; align-items: center; justify-content: center;'>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/PFDu9oVAE-g" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+    Source: <a href='https://www.google.com/search?q=3blue1brown+youtube&oq=3blue1brown+youtube&aqs=chrome.0.0l6.2679j0j7&sourceid=chrome&ie=UTF-8'>3Blue1Brown</a>
+</p>
 <hr />
 
 ### Google and Eigenvectors
