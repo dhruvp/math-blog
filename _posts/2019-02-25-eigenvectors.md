@@ -10,11 +10,11 @@ In the [last post]({% post_url 2018-12-31-matrices %}), we developed an intuitio
 
 In this post, we're going to dive deeper into the world of linear algebra and cover eigenvectors. Eigenvectors are central to Linear Algebra and help us understand many interesting properties of linear maps including:
 1. The effect of applying the linear map repeatedly on an input.
-2. How the linear map rotates the space. In fact eigenvectors were first derived to study the axis of rotation of heavenly bodies!
+2. How the linear map rotates the space. In fact eigenvectors were first derived to study the axis of rotation of planets!
 
 <p class='image-block'>
-    <img src='https://images.unsplash.com/photo-1495239423169-a795244fddcc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2550&q=80' />
-    Eigenvectors helped early mathematicians study how the planets and moons rotate. Source: Unsplash.
+    <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Saturn_during_Equinox.jpg/2560px-Saturn_during_Equinox.jpg' />
+    Eigenvectors helped early mathematicians study how the planets rotate. Image Source: Wikipedia.
 </p>
 
 
