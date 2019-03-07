@@ -206,7 +206,7 @@ $$f(\textcolor{#228B22}{b_2}) = 0 \cdot \textcolor{blue}{b_1} + \lambda_2 \cdot 
 
 ### Enter Eigenvectors
 
-Is there a special name for the vectors above $b_1$ and $b_2$ that magically let us rewrite a matrix as a diagonal? Yes! These vectors are **the eigenvectors of $f$**. That's right - you derived them all by yourself.
+Is there a special name for the vectors above $b_1$ and $b_2$ that magically let us rewrite a matrix as a diagonal? Yes! These vectors are **the eigenvectors of $f$**. That's right - you derived eigenvectors all by yourself.
 
 <p class='image-block'>
     <img src='https://media.giphy.com/media/d3mlE7uhX8KFgEmY/giphy.gif' />
