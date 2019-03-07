@@ -8,14 +8,21 @@ comments: false
 
 In the last post, we developed an intuition for matrices. We found that they are just compact representations of linear maps and that adding and multiplying matrices are just ways of combining the underlying linear maps.
 
-In this post, we're going to dive deeper into the world of linear algebra and cover eigenvectors. Eigenvectors are central to Linear Algebra and help us understand one of the important algorithms of all time - The original Page Rank algorithm that powers Google Search! So needless to say, they're an extremely powerful idea worth exploring further!
+In this post, we're going to dive deeper into the world of linear algebra and cover eigenvectors. Eigenvectors are central to Linear Algebra and help us understand many interesting properties of linear maps including:
+1. The effect of applying the linear map repeatedly on an input.
+2. How the linear map rotates the space. In fact eigenvectors were first derived to study the axis of rotation of the heavenly bodies!
 
 <p class='image-block'>
-    <img src='https://upload.wikimedia.org/wikipedia/commons/9/96/Google_web_search.png' />
-    The PageRank Algorithm that powers Google Search was built using eigenvectors.
+    <img src='https://images.unsplash.com/photo-1495239423169-a795244fddcc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2550&q=80' />
+    Source: Unsplash.
 </p>
 
-In this post we're going to take a slightly different approach to understanding eigenvectors - we're going to try and derive them ourselves. So hang in there and wait for the big reveal - I promise it will be really exciting when it all comes together!
+
+ For a more modern example, eigenvectors are at the heart of the original Page Rank algorithm that powers Google Search!
+
+#### Our Goals
+
+In this post we're going to try and derive eigenvectors ourselves. To really create a strong motivation, we're going to explore basis vectors, matrices in different bases, and matrix diagonalization. So hang in there and wait for the big reveal - I promise it will be really exciting when it all comes together!
 
 Everything we'll be doing is going to be in the 2D space $R^2$ - the standard coordinate plane over real numbers you're probably already used to.
 
