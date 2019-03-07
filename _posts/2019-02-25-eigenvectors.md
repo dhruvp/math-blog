@@ -6,19 +6,19 @@ comments: false
 ---
 {% katexmm %}
 
-In the last post, we developed an intuition for matrices. We found that they are just compact representations of linear maps and that adding and multiplying matrices are just ways of combining the underlying linear maps.
+In the [last post]({% post_url 2018-12-31-matrices %}), we developed an intuition for matrices. We found that they are just compact representations of linear maps and that adding and multiplying matrices are just ways of combining the underlying linear maps.
 
 In this post, we're going to dive deeper into the world of linear algebra and cover eigenvectors. Eigenvectors are central to Linear Algebra and help us understand many interesting properties of linear maps including:
 1. The effect of applying the linear map repeatedly on an input.
-2. How the linear map rotates the space. In fact eigenvectors were first derived to study the axis of rotation of the heavenly bodies!
+2. How the linear map rotates the space. In fact eigenvectors were first derived to study the axis of rotation of heavenly bodies!
 
 <p class='image-block'>
     <img src='https://images.unsplash.com/photo-1495239423169-a795244fddcc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2550&q=80' />
-    Source: Unsplash.
+    Eigenvectors helped early mathematicians study how the planets and moons rotate. Source: Unsplash.
 </p>
 
 
- For a more modern example, eigenvectors are at the heart of the original Page Rank algorithm that powers Google Search!
+ For a more modern example, eigenvectors are at the heart of one of the most important algorithms of all time - the original Page Rank algorithm that powers Google Search.
 
 #### Our Goals
 
@@ -113,7 +113,7 @@ This similarly extends to matrices. Earlier, the matrix $F$ for the function $f$
 
 $$F = \begin{bmatrix} f(\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}) & f(\textcolor{#228B22}{\begin{bmatrix} 0 \\ 1 \end{bmatrix}}) \end{bmatrix}$$
 
-When I use the basis $B = \{\textcolor{blue}{b_1}, \textcolor{#228B22}{b_2}\}$, the first column now represents $f(\textcolor{blue}{b_1})$ and the second column represents $f(\textcolor{#228B22}{b_2})$. The matrix $F_{B}$ in basis $B$ becomes:
+When I use the basis $B = \{\textcolor{blue}{b_1}, \textcolor{#228B22}{b_2}\}$, the first column now represents $f(\textcolor{blue}{b_1})_{B}$ and the second column represents $f(\textcolor{#228B22}{b_2})_{B}$. The matrix $F_{B}$ in basis $B$ becomes:
 
 $$F_{B} = \begin{bmatrix} f(\textcolor{blue}{b_1})_{B} & f(\textcolor{#228B22}{b_2})_{B} \end{bmatrix}$$
 
@@ -158,7 +158,7 @@ So how can we get $F$ to be a diagonal matrix?
 
 ### Which Basis makes a Matrix Diagonal?
 
-Earlier, we saw that choosing a new basis makes us change how we write down the matrix. So can we choose a basis $B$ that converts $F$ into a diagonal matrix?
+Earlier, we saw that choosing a new basis makes us change how we write down the matrix. So can we find a basis $B$ that converts $F$ into a diagonal matrix?
 
 From earlier, we know that $F_{B}$, the matrix $F$ in the basis $B$, is written as:
 
@@ -183,7 +183,7 @@ Recall our discussion on vector notation in a different basis:
 
 So, we know the following additional information:
 
-$$f(\textcolor{blue}{b_1}) = {\begin{bmatrix}\lambda_1 \\ 0 \end{bmatrix}}_B = f(\textcolor{blue}{b_1}) = \lambda_1 \cdot \textcolor{blue}{b_1} + 0 \cdot \textcolor{#228B22}{b_2}$$
+$$f(\textcolor{blue}{b_1}) = {\begin{bmatrix}\lambda_1 \\ 0 \end{bmatrix}}_B = \lambda_1 \cdot \textcolor{blue}{b_1} + 0 \cdot \textcolor{#228B22}{b_2}$$
 <div classname='highlight-block'>
     $$ f(\textcolor{blue}{b_1}) = \mathbf{\lambda_1 \cdot \textcolor{blue}{b_1}}$$
 </div>
