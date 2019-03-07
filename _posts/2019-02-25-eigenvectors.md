@@ -119,7 +119,7 @@ $$F_{B} = \begin{bmatrix} f(\textcolor{blue}{b_1})_{B} & f(\textcolor{#228B22}{b
 
 <hr />
 
-### Choosing the Right Basis
+### The Power of Diagonals
 
 We took this short detour into notation for a very specific reason - rewriting a matrix in a different basis is actually a neat trick that allows us to reconfigure the matrix to make it easier to use. How? Let's find out with a quick example.
 
