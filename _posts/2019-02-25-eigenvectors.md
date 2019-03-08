@@ -192,9 +192,10 @@ This implies:
 
 Recall our discussion on vector notation in a different basis:
 
->Say my basis is $B = \{\textcolor{blue}{b_1}, \textcolor{#228B22}{b_2}\}$.
->Then the vector $\begin{bmatrix} c \\ d \end{bmatrix}_{B}$ means:
->* The vector you get when you compute: $c \cdot \textcolor{blue}{b_1} + d  \cdot \textcolor{#228B22}{b_2}$.
+>Say my basis is $B = \{\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}, \textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}\}$.
+>Then the vector $\begin{bmatrix} \textcolor{blue}{3} \\ \textcolor{#228B22}{4} \end{bmatrix}_{B}$ means:
+> * The vector you get when you compute: $\textcolor{blue}{3 \cdot \begin{bmatrix} 1 \\ 0 \end{bmatrix}} + \textcolor{#228B22}{4 \cdot \begin{bmatrix} 1 \\ 1 \end{bmatrix}}$.
+
 
 So, we know the following additional information:
 
