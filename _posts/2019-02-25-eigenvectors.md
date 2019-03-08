@@ -97,15 +97,26 @@ I'll leave a simple proof of this as an appendix at the end of this post so we c
 
 ### Vector Notation Based on Bases
 
-In all our notation so far, we've been implicitly working in the basis $\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}$ and $\textcolor{#228B22}{\begin{bmatrix} 0 \\ 1 \end{bmatrix}}$. Every time I wrote a vector ${\begin{bmatrix} \textcolor{blue}{c} \\ \textcolor{#228B22}{d} \end{bmatrix}}$, I was actually saying:
+In all our notation so far, we've been implicitly working in the basis $\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}$ and $\textcolor{#228B22}{\begin{bmatrix} 0 \\ 1 \end{bmatrix}}$. Every time I wrote a vector like ${\begin{bmatrix} \textcolor{blue}{3} \\ \textcolor{#228B22}{4} \end{bmatrix}}$, I was actually saying:
 
-* The vector you get when you compute $\textcolor{blue}{c \cdot \begin{bmatrix} 1 \\ 0 \end{bmatrix}} + \textcolor{#228B22}{d \cdot \begin{bmatrix} 0 \\ 1 \end{bmatrix}}$. It's just a simple shorthand for $c$ parts the <strong><span style='color: blue;'>first basis vector</span></strong> plus $d$ parts the <strong><span style='color: #228B22;'>second basis vector</span></strong>.
+* The vector you get when you compute $\textcolor{blue}{3 \cdot \begin{bmatrix} 1 \\ 0 \end{bmatrix}} + \textcolor{#228B22}{4 \cdot \begin{bmatrix} 0 \\ 1 \end{bmatrix}}$. It's a shorthand for $3$ parts the <strong><span style='color: blue;'>first basis vector</span></strong> plus $4$ parts the <strong><span style='color: #228B22;'>second basis vector</span></strong>.
 
-Now when I use a different basis, the meaning of this notation actually changes. Say my basis is $B = \{\textcolor{blue}{b_1}, \textcolor{#228B22}{b_2}\}$.
+<p class='image-block'>
+    <img src='/public/images/canonical_notation.png' />
+    In our usual notation, ${\begin{bmatrix} \textcolor{blue}{3} \\ \textcolor{#228B22}{4} \end{bmatrix}}$ means $3$ units of $\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}$ and $4$ units of $\textcolor{#228B22}{\begin{bmatrix} 0 \\ 1 \end{bmatrix}}$
+</p>
 
-Then the vector $\begin{bmatrix} \textcolor{blue}{c} \\ \textcolor{#228B22}{d} \end{bmatrix}_{B}$ means:
+Now when I use a different basis, the meaning of this notation actually changes. Say my basis is $B = \{\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}, \textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}\}$.
 
-* The vector you get when you compute: $\textcolor{blue}{c \cdot b_1} + \textcolor{#228B22}{d \cdot b_2}$.
+Then the vector $\begin{bmatrix} \textcolor{blue}{3} \\ \textcolor{#228B22}{4} \end{bmatrix}_{B}$ means:
+
+* The vector you get when you compute: $\textcolor{blue}{3 \cdot \begin{bmatrix} 1 \\ 0 \end{bmatrix}} + \textcolor{#228B22}{4 \cdot \begin{bmatrix} 1 \\ 1 \end{bmatrix}}$.
+
+<p class='image-block'>
+    <img src='/public/images/new_basis_notation.png' />
+    In the notation of basis $B$, ${\begin{bmatrix} \textcolor{blue}{3} \\ \textcolor{#228B22}{4} \end{bmatrix}}_{B}$ means $3$ units of $\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}$ and $4$ units of $\textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}$ giving us point $P_{B}$.
+</p>
+
 
 ### Matrix Notation Based on Bases
 
@@ -113,9 +124,13 @@ This similarly extends to matrices. Earlier, the matrix $F$ for the function $f$
 
 $$F = \begin{bmatrix} f(\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}) & f(\textcolor{#228B22}{\begin{bmatrix} 0 \\ 1 \end{bmatrix}}) \end{bmatrix}$$
 
-When I use the basis $B = \{\textcolor{blue}{b_1}, \textcolor{#228B22}{b_2}\}$, the first column now represents $f(\textcolor{blue}{b_1})_{B}$ and the second column represents $f(\textcolor{#228B22}{b_2})_{B}$. The matrix $F_{B}$ in basis $B$ becomes:
+When I use the basis $B = \{\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}, \textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}\}$, the matrix $F_{B}$ in basis $B$ becomes:
 
-$$F_{B} = \begin{bmatrix} f(\textcolor{blue}{b_1})_{B} & f(\textcolor{#228B22}{b_2})_{B} \end{bmatrix}$$
+$$F_{B} = \begin{bmatrix} f(\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}})_{B} & f(\textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}})_{B} \end{bmatrix}$$
+
+More generally, for a basis $B = \{b_1, b_2\}$, the matrix is:
+
+$$F_{B} = \begin{bmatrix} f(\textcolor{blue}{b_1}) & f(\textcolor{#228B22}{b_2}) \end{bmatrix}$$
 
 <hr />
 
@@ -139,7 +154,7 @@ Can you imagine doing this 5 times in a row? Yeesh. Image Source: Wikipedia.
 
 But let's imagine for a moment that $F$ was a diagonal matrix (i.e. something like $F = \begin{bmatrix} a & 0 \\ 0 & b \end{bmatrix} $). If this were the case, then this multiplication would be EASY.
 
-Why? Let's take at what $F \cdot F$ is:
+Why? Let's see what $F \cdot F$ is:
 
 $$F \cdot F = \begin{bmatrix} a & 0 \\ 0 & b \end{bmatrix} \cdot \begin{bmatrix} a & 0 \\ 0 & b \end{bmatrix} $$
 $$F \cdot F = \begin{bmatrix} a \cdot a + 0 \cdot 0 & a \cdot 0 + 0 \cdot b  \\ 0 \cdot a + b \cdot 0 & 0 \cdot 0 + b \cdot b \end{bmatrix}$$
@@ -256,14 +271,14 @@ What is $F_{B}$, the matrix $F$ written in the eigenbasis $B$?
 Since $F_B = \begin{bmatrix} f(\textcolor{blue}{b_1})_{B} & f(\textcolor{#228B22}{b_2})_{B} \end{bmatrix}$, we need to find :
 - $f(\textcolor{blue}{b_1})_{B}$ and $f(\textcolor{#228B22}{b_2})_{B}$
 
-We'll break this down by first finding $f(\textcolor{blue}{b_1})$ and $f(\textcolor{#228B22}{b_2})$, and rewrite then in the notation of the eigenbasis $B$ to get $f(\textcolor{blue}{b_1})_{B}$ and $f(\textcolor{#228B22}{b_2})_{B}$.
+We'll break this down by first finding $f(\textcolor{blue}{b_1})$ and $f(\textcolor{#228B22}{b_2})$, and rewrite them in the notation of the eigenbasis $B$ to get $f(\textcolor{blue}{b_1})_{B}$ and $f(\textcolor{#228B22}{b_2})_{B}$.
 
 #### Finding $f(\textcolor{blue}{b_1})$
 
 $f(\textcolor{blue}{b_1})$ is:
 
 $$ f(\textcolor{blue}{b_1}) = F\cdot \textcolor{blue}{b_1} = \begin{bmatrix}2 & 1 \\ 1 & 2\end{bmatrix} \cdot \begin{bmatrix} 1 \\ -1 \end{bmatrix}$$
-$$ f(\textcolor{blue}{b_1}) = \begin{bmatrix} -1 \\ 1 \end{bmatrix}$$
+$$ f(\textcolor{blue}{b_1}) = \begin{bmatrix} 1 \\ -1 \end{bmatrix}$$
 
 #### Finding $f(\textcolor{#228B22}{b_2})$
 
@@ -278,18 +293,19 @@ We've now found $f(b_1)$ and $f(b_2)$. We need to rewrite these vectors in the n
 
 What's $f(b_1)_{B}$?
 
-$$f(b_1) = \begin{bmatrix} -1 \\ 1 \end{bmatrix} = \textcolor{blue}{-1} \cdot b_1 + \textcolor{#228B22}{0} \cdot b_2$$
-$$f(b_1)_{B} = \begin{bmatrix} \textcolor{blue}{-1} \\ \textcolor{#228B22}{0} \end{bmatrix}$$
+$$f(b_1) = \begin{bmatrix} 1 \\ -1 \end{bmatrix} = \textcolor{blue}{1} \cdot \begin{bmatrix} 1 \\ -1 \end{bmatrix} + \textcolor{#228B22}{0} \cdot \begin{bmatrix} 1 \\ 1 \end{bmatrix} = \textcolor{blue}{1} \cdot b_1 + \textcolor{#228B22}{0} \cdot b_2$$
+$$f(b_1)_{B} = \begin{bmatrix} \textcolor{blue}{1} \\ \textcolor{#228B22}{0} \end{bmatrix}$$
 
 Similarly,
 
-$$f(b_2) = \begin{bmatrix} 3 \\ 3 \end{bmatrix} = \textcolor{blue}{0} \cdot b_1 + \textcolor{#228B22}{3} \cdot b_2$$ $$f(b_2)_{B} = \begin{bmatrix} \textcolor{blue}{0} \\ \textcolor{#228B22}{3} \end{bmatrix}$$
+$$f(b_2) = \begin{bmatrix} 3 \\ 3 \end{bmatrix} = \textcolor{blue}{0} \cdot \begin{bmatrix} 1 \\ -1 \end{bmatrix} + \textcolor{#228B22}{3} \cdot \begin{bmatrix}1 \\ 1 \end{bmatrix} = \textcolor{blue}{0} \cdot b_1 + \textcolor{#228B22}{3} \cdot b_2$$
+$$f(b_2)_{B} = \begin{bmatrix} \textcolor{blue}{0} \\ \textcolor{#228B22}{3} \end{bmatrix}$$
 
 <p class='highlight-block'>
 Putting this all together,
 
 $$F_B = \begin{bmatrix} f(\textcolor{blue}{b_1})_{B} & f(\textcolor{#228B22}{b_2})_{B} \end{bmatrix}$$
-$$F_B = \begin{bmatrix} -1 & 0 \\ 0 & 3 \end{bmatrix}$$
+$$F_B = \begin{bmatrix} 1 & 0 \\ 0 & 3 \end{bmatrix}$$
 
 So we get the nice diagonal we wanted!
 </p>
