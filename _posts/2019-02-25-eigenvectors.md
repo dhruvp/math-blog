@@ -130,7 +130,7 @@ $$F_{B} = \begin{bmatrix} f(\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix
 
 More generally, for a basis $B = \{b_1, b_2\}$, the matrix is:
 
-$$F_{B} = \begin{bmatrix} f(\textcolor{blue}{b_1}) & f(\textcolor{#228B22}{b_2}) \end{bmatrix}$$
+$$F_{B} = \begin{bmatrix} f(\textcolor{blue}{b_1})_{B} & f(\textcolor{#228B22}{b_2})_{B} \end{bmatrix}$$
 
 <hr />
 
