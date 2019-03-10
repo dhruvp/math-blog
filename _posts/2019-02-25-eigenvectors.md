@@ -215,7 +215,29 @@ This implies:
 1. $f(\textcolor{blue}{b_1})_{B} =  {\begin{bmatrix}\lambda_1 \\ 0 \end{bmatrix}}_{B}$.
 2. $f(\textcolor{#228B22}{b_2})_{B} = {\begin{bmatrix}0 \\ \lambda_2 \end{bmatrix}}_{B}$.
 
-#### Seeing this visually
+Recall our discussion on vector notation in a different basis:
+
+>Say my basis is $B = \{\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}, \textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}\}$.
+>Then the vector $\begin{bmatrix} \textcolor{blue}{3} \\ \textcolor{#228B22}{4} \end{bmatrix}_{B}$ means:
+> * The vector you get when you compute: $\textcolor{blue}{3 \cdot \begin{bmatrix} 1 \\ 0 \end{bmatrix}} + \textcolor{#228B22}{4 \cdot \begin{bmatrix} 1 \\ 1 \end{bmatrix}}$.
+
+
+So, we know the following additional information:
+
+$$f(\textcolor{blue}{b_1}) = {\begin{bmatrix}\lambda_1 \\ 0 \end{bmatrix}}_B = \lambda_1 \cdot \textcolor{blue}{b_1} + 0 \cdot \textcolor{#228B22}{b_2}$$
+<div classname='highlight-block'>
+    $$ f(\textcolor{blue}{b_1}) = \mathbf{\lambda_1 \cdot \textcolor{blue}{b_1}}$$
+</div>
+
+Similarly,
+
+$$f(\textcolor{#228B22}{b_2}) = {\begin{bmatrix}0 \\ \lambda_2 \end{bmatrix}}_B = 0 \cdot \textcolor{blue}{b_1} + \lambda_2 \cdot \textcolor{#228B22}{b_2}$$
+<div classname='highlight-block'>
+    $$f(\textcolor{#228B22}{b_2}) = \mathbf{\lambda_2 \cdot \textcolor{#228B22}{b_2}}$$
+</div>
+
+
+#### Seeing this Visually
 
 What do these vectors look like on our coordinate axis?
 
@@ -229,17 +251,7 @@ We saw earlier that choosing a new basis $B = \{b_1, b_2\}$ creates a new coordi
 
 <br />
 
-Recall our discussion earlier on what vector notation means in the new basis:
-
-> Now when we use a different basis , the meaning of this notation actually changes.
-
->For the basis is $B = \{\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}, \textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}\}$, the vector $\begin{bmatrix} \textcolor{blue}{3} \\ \textcolor{#228B22}{4} \end{bmatrix}_{B}$ means:
-
->* The vector you get from: $\textcolor{blue}{3 \cdot \begin{bmatrix} 1 \\ 0 \end{bmatrix}} + \textcolor{#228B22}{4 \cdot \begin{bmatrix} 1 \\ 1 \end{bmatrix}}$.
-
-
-
-With this in mind, let's plot $f(\textcolor{blue}{b_1})_{B} =  {\begin{bmatrix}\lambda_1 \\ 0 \end{bmatrix}}_{B}$:
+Let's plot $f(\textcolor{blue}{b_1})_{B} =  {\begin{bmatrix}\lambda_1 \\ 0 \end{bmatrix}}_{B}$:
 
 <div class='image-block'>
     <img src='/public/images/diagonalization/diagonalization.002.jpeg' />
@@ -259,7 +271,7 @@ Similarly, let's plot $f(\textcolor{#228B22}{b_2})_{B} = {\begin{bmatrix}0 \\ \l
     <img src='/public/images/diagonalization/diagonalization.003.jpeg' />
 </div>
 
-Similarly, we see that ${\begin{bmatrix}0 \\ \lambda_2 \end{bmatrix}}_{B} = \lambda_2 b_2$, so
+From the above, we see clearly that ${\begin{bmatrix}0 \\ \lambda_2 \end{bmatrix}}_{B} = \lambda_2 b_2$, so
 
 <div class='highlight-block'>
     $f(\textcolor{blue}{b_2})_{B} = \lambda_2 b_2$
@@ -267,7 +279,9 @@ Similarly, we see that ${\begin{bmatrix}0 \\ \lambda_2 \end{bmatrix}}_{B} = \lam
 
 <br />
 
-So if we can find $b_1$ and $b_2$ such that:
+#### Rules For Getting a Diagonal
+
+So if we can find a basis $B$ formed by $b_1$ and $b_2$ such that:
 
 <div class='highlight-block'>
     <ol>
