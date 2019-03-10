@@ -132,7 +132,7 @@ You can see this change below:
     In the notation of basis $B$, ${\begin{bmatrix} \textcolor{blue}{3} \\ \textcolor{#228B22}{4} \end{bmatrix}}_{B}$ means $3$ units of $\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}$ and $4$ units of $\textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}$ giving us point $P_{B}$.
 </p>
 
-What's happened is that changing the underlying axes, has changed the location of $P$ even though it's still called $(3, 4)$. You can see this below:
+By changing the underlying axes, we changed the location of $P$ even though it's still called $(3, 4)$. You can see this below:
 
 <p class='image-block'>
     <img src='/public/images/point_movement.gif' />
