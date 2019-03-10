@@ -4,6 +4,7 @@ title: Eigenvectors
 comments: false
 
 ---
+
 {% katexmm %}
 
 In the [last post]({% post_url 2018-12-31-matrices %}), we developed an intuition for matrices. We found that they are just compact representations of linear maps and that adding and multiplying matrices are just ways of combining the underlying linear maps.
@@ -95,32 +96,56 @@ I'll leave a simple proof of this as an appendix at the end of this post so we c
 
 <hr />
 
-### Vector Notation Based on Bases
+### Bases as New Coordinate Axes
 
-In all our notation so far, we've been implicitly working in the basis $\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}$ and $\textcolor{#228B22}{\begin{bmatrix} 0 \\ 1 \end{bmatrix}}$. Every time I wrote a vector like ${\begin{bmatrix} \textcolor{blue}{3} \\ \textcolor{#228B22}{4} \end{bmatrix}}$, I was actually saying:
+In many ways, choosing a new basis is like choosing a new set of axes for the coordinate plane. When we when we switch our basis to say $B = \{\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}, \textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}\}$, our axes just rotate as shown below:
 
-* The vector you get when you compute $\textcolor{blue}{3 \cdot \begin{bmatrix} 1 \\ 0 \end{bmatrix}} + \textcolor{#228B22}{4 \cdot \begin{bmatrix} 0 \\ 1 \end{bmatrix}}$. It's a shorthand for $3$ parts the <strong><span style='color: blue;'>first basis vector</span></strong> plus $4$ parts the <strong><span style='color: #228B22;'>second basis vector</span></strong>.
+<div class='image-block'>
+    <img src='/public/images/axis_rotation.gif' />
+    As our second basis vector changed from $\textcolor{#228B22}{\begin{bmatrix} 0 \\ 1 \end{bmatrix}}$ to $\textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}$, our y axis rotates to be in line with $\textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}$.
+</div>
+
+<br />
+
+As a result of this, the same notation for a vector means different things in different bases.
+
+In the original basis, ${\begin{bmatrix} \textcolor{blue}{3} \\ \textcolor{#228B22}{4} \end{bmatrix}}$ meant:
+
+* The vector you get when you compute $\textcolor{blue}{3 \cdot \begin{bmatrix} 1 \\ 0 \end{bmatrix}} + \textcolor{#228B22}{4 \cdot \begin{bmatrix} 0 \\ 1 \end{bmatrix}}$.
+* Or just $\textcolor{blue}{3} \cdot$ <strong><span style='color: blue;'>first basis vector</span></strong> plus $\textcolor{#228B22}{4} \cdot$ <strong><span style='color: #228B22;'>second basis vector</span></strong>.
 
 <p class='image-block'>
     <img src='/public/images/canonical_notation.png' />
     In our usual notation, ${\begin{bmatrix} \textcolor{blue}{3} \\ \textcolor{#228B22}{4} \end{bmatrix}}$ means $3$ units of $\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}$ and $4$ units of $\textcolor{#228B22}{\begin{bmatrix} 0 \\ 1 \end{bmatrix}}$
 </p>
 
-Now when I use a different basis, the meaning of this notation actually changes. Say my basis is $B = \{\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}, \textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}\}$.
+Now when we use a different basis , the meaning of this notation actually changes.
 
-Then the vector $\begin{bmatrix} \textcolor{blue}{3} \\ \textcolor{#228B22}{4} \end{bmatrix}_{B}$ means:
+For the basis is $B = \{\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}, \textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}\}$, the vector $\begin{bmatrix} \textcolor{blue}{3} \\ \textcolor{#228B22}{4} \end{bmatrix}_{B}$ means:
 
-* The vector you get when you compute: $\textcolor{blue}{3 \cdot \begin{bmatrix} 1 \\ 0 \end{bmatrix}} + \textcolor{#228B22}{4 \cdot \begin{bmatrix} 1 \\ 1 \end{bmatrix}}$.
+* The vector you get from: $\textcolor{blue}{3 \cdot \begin{bmatrix} 1 \\ 0 \end{bmatrix}} + \textcolor{#228B22}{4 \cdot \begin{bmatrix} 1 \\ 1 \end{bmatrix}}$.
+
+You can see this change below:
 
 <p class='image-block'>
     <img src='/public/images/new_basis_notation.png' />
     In the notation of basis $B$, ${\begin{bmatrix} \textcolor{blue}{3} \\ \textcolor{#228B22}{4} \end{bmatrix}}_{B}$ means $3$ units of $\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}$ and $4$ units of $\textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}$ giving us point $P_{B}$.
 </p>
 
+What's happened is that changing the underlying axes, has changed the location of $P$ even though it's still called $(3, 4)$. You can see this below:
+
+<p class='image-block'>
+    <img src='/public/images/point_movement.gif' />
+    The point $P$ also changes position when we change the basis. It is still $3$ parts first basis vector, $4$ parts second basis vector. But since the underlying basis vectors have changed, it also changes.
+</p>
+
+<div class='highlight-block'>
+    So the vectors ${\begin{bmatrix} \textcolor{blue}{3} \\ \textcolor{#228B22}{4} \end{bmatrix}}$ and ${\begin{bmatrix} \textcolor{blue}{3} \\ \textcolor{#228B22}{4} \end{bmatrix}}_{B}$ refer to different actual vectors based on basis $B$.
+</div>
 
 ### Matrix Notation Based on Bases
 
-This similarly extends to matrices. Earlier, the matrix $F$ for the function $f$ was represented by:
+Similarly the same notation also means different things for matrices based on the basis. Earlier, the matrix $F$ for the function $f$ was represented by:
 
 $$F = \begin{bmatrix} f(\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}) & f(\textcolor{#228B22}{\begin{bmatrix} 0 \\ 1 \end{bmatrix}}) \end{bmatrix}$$
 
@@ -173,7 +198,7 @@ So how can we get $F$ to be a diagonal matrix?
 
 ### Which Basis makes a Matrix Diagonal?
 
-Earlier, we saw that choosing a new basis makes us change how we write down the matrix. So can we find a basis $B$ that converts $F$ into a diagonal matrix?
+Earlier, we saw that choosing a new basis makes us change how we write down the matrix. So can we find a basis $B = \{b_1, b_2\}$ that converts $F$ into a diagonal matrix?
 
 From earlier, we know that $F_{B}$, the matrix $F$ in the basis $B$, is written as:
 
@@ -181,7 +206,7 @@ $$F_B = \begin{bmatrix} f(\textcolor{blue}{b_1})_{B} & f(\textcolor{#228B22}{b_2
 
 For this to be diagonal, we must have:
 
-$$F_B = \begin{bmatrix} f(\textcolor{blue}{b_1})_{B} & f(\textcolor{#228B22}{b_2})_{B} \end{bmatrix} = \begin{bmatrix} \lambda_1 & 0 \\ 0 & \lambda_2  \end{bmatrix}$$
+$$F_B = \begin{bmatrix} f(\textcolor{blue}{b_1})_{B} & f(\textcolor{#228B22}{b_2})_{B} \end{bmatrix} = {\begin{bmatrix} \lambda_1 & 0 \\ 0 & \lambda_2  \end{bmatrix}}_{B}$$
 
 for some $\lambda_1$ and $\lambda_2$ (i.e. the the top-right and bottom-left elements are $0$).
 
@@ -190,26 +215,57 @@ This implies:
 1. $f(\textcolor{blue}{b_1})_{B} =  {\begin{bmatrix}\lambda_1 \\ 0 \end{bmatrix}}_{B}$.
 2. $f(\textcolor{#228B22}{b_2})_{B} = {\begin{bmatrix}0 \\ \lambda_2 \end{bmatrix}}_{B}$.
 
-Recall our discussion on vector notation in a different basis:
+#### Seeing this visually
 
->Say my basis is $B = \{\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}, \textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}\}$.
->Then the vector $\begin{bmatrix} \textcolor{blue}{3} \\ \textcolor{#228B22}{4} \end{bmatrix}_{B}$ means:
-> * The vector you get when you compute: $\textcolor{blue}{3 \cdot \begin{bmatrix} 1 \\ 0 \end{bmatrix}} + \textcolor{#228B22}{4 \cdot \begin{bmatrix} 1 \\ 1 \end{bmatrix}}$.
+What do these vectors look like on our coordinate axis?
+
+We saw earlier that choosing a new basis $B = \{b_1, b_2\}$ creates a new coordinate axis for $R^2$ like below:
 
 
-So, we know the following additional information:
-
-$$f(\textcolor{blue}{b_1}) = {\begin{bmatrix}\lambda_1 \\ 0 \end{bmatrix}}_B = \lambda_1 \cdot \textcolor{blue}{b_1} + 0 \cdot \textcolor{#228B22}{b_2}$$
-<div classname='highlight-block'>
-    $$ f(\textcolor{blue}{b_1}) = \mathbf{\lambda_1 \cdot \textcolor{blue}{b_1}}$$
+<div class='image-block'>
+    <img src='/public/images/diagonalization/diagonalization.001.jpeg' />
+    A new basis $B = \{b_1, b_2\}$ gives us new coordinate axis.
 </div>
 
-Similarly,
+<br />
 
-$$f(\textcolor{#228B22}{b_2}) = {\begin{bmatrix}0 \\ \lambda_2 \end{bmatrix}}_B = 0 \cdot \textcolor{blue}{b_1} + \lambda_2 \cdot \textcolor{#228B22}{b_2}$$
-<div classname='highlight-block'>
-    $$f(\textcolor{#228B22}{b_2}) = \mathbf{\lambda_2 \cdot \textcolor{#228B22}{b_2}}$$
+Recall our discussion earlier on what vector notation means in the new basis:
+
+> Now when we use a different basis , the meaning of this notation actually changes.
+
+>For the basis is $B = \{\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}, \textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}\}$, the vector $\begin{bmatrix} \textcolor{blue}{3} \\ \textcolor{#228B22}{4} \end{bmatrix}_{B}$ means:
+
+>* The vector you get from: $\textcolor{blue}{3 \cdot \begin{bmatrix} 1 \\ 0 \end{bmatrix}} + \textcolor{#228B22}{4 \cdot \begin{bmatrix} 1 \\ 1 \end{bmatrix}}$.
+
+
+
+With this in mind, let's plot $f(\textcolor{blue}{b_1})_{B} =  {\begin{bmatrix}\lambda_1 \\ 0 \end{bmatrix}}_{B}$:
+
+<div class='image-block'>
+    <img src='/public/images/diagonalization/diagonalization.002.jpeg' />
 </div>
+
+In the graph above, we can see that ${\begin{bmatrix}\lambda_1 \\ 0 \end{bmatrix}}_{B} =  \lambda_1 b_1$, so
+
+<div class='highlight-block'>
+    $f(\textcolor{blue}{b_1})_{B} = \lambda_1 b_1$
+</div>
+
+<br />
+
+Similarly, let's plot $f(\textcolor{#228B22}{b_2})_{B} = {\begin{bmatrix}0 \\ \lambda_2 \end{bmatrix}}_{B}$:
+
+<div class='image-block'>
+    <img src='/public/images/diagonalization/diagonalization.003.jpeg' />
+</div>
+
+Similarly, we see that ${\begin{bmatrix}0 \\ \lambda_2 \end{bmatrix}}_{B} = \lambda_2 b_2$, so
+
+<div class='highlight-block'>
+    $f(\textcolor{blue}{b_2})_{B} = \lambda_2 b_2$
+</div>
+
+<br />
 
 So if we can find $b_1$ and $b_2$ such that:
 
@@ -353,6 +409,7 @@ Stay tuned.
 
 ### Appendix
 
+
 Proof that $\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}$ and $\textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}$ span $R^2$:
 
 
@@ -360,6 +417,5 @@ Proof that $\textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}}$ and $\textco
 2. We can create ${\begin{bmatrix} 0 \\ 1 \end{bmatrix}}$ by computing:
     - $\textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}} - \textcolor{blue}{\begin{bmatrix} 1 \\ 0 \end{bmatrix}} = {\begin{bmatrix} 0 \\ 1 \end{bmatrix}}$
 3. Thus we can combine our vectors to obtain both ${\begin{bmatrix} 1 \\ 0 \end{bmatrix}}$ and ${\begin{bmatrix} 0 \\ 1 \end{bmatrix}}$. By point 1, this means every vector in $R^2$ is reachable by combining $\textcolor{blue}{\begin{bmatrix} 0 \\ 1 \end{bmatrix}}$ and $\textcolor{#228B22}{\begin{bmatrix} 1 \\ 1 \end{bmatrix}}$.
-
 
 {% endkatexmm %}
