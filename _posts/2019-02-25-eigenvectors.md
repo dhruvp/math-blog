@@ -413,7 +413,7 @@ I'm embedding his video on eigenvectors and their visualizations below as it is 
 
 ### Google and Eigenvectors
 
-Like we saw at the beginning of this post, eigenvectors are not just an abstract concept used by eccentric mathematicians in dark rooms - they underpin some of the most useful technology in our lives including Google Search. For the brave, here's Larry Page and Sergey's original paper on PageRank, the algorithm that makes it possible for us to type in a few letters on a search box and instantly find every relevant website on the internet.
+Like we saw at the beginning of this post, eigenvectors are not just an abstract concept used by eccentric mathematicians in dark rooms - they underpin some of the most useful technology in our lives including Google Search. For the brave, [here's](http://ilpubs.stanford.edu:8090/422/1/1999-66.pdf) Larry Page and Sergey's original paper on PageRank, the algorithm that makes it possible for us to type in a few letters on a search box and instantly find every relevant website on the internet.
 
 In the next post, we're going to actually dig through this paper and see how eigenvectors are applied in Google search!
 
