@@ -244,6 +244,13 @@ f(v+k) &= f(v)
     By decomposing $v+k$ into $v$, and $k$, we see that $f(v+k) = f(v)$.
 </div>
 
+Additionally, given this is true for some $v+k$, this is true for all points on the line $v+K$. The reason is that the different amounts of $K$ all contribute nothing different and it's only the value of $v$ that matters to $f$. This is shown below:
+
+<div class='image-block'>
+    <img src='/public/images/kernels/f_v+K=f_v.gif'>
+    Any point in $K$, such as $k$, $k'$, and $k''$, does not change the result of $f$. Hence, $f(v+K) = f(v)$.
+</div>
+
 Pretty simple!! This is possible because, as you remember from our first blog post on matrices, $f$ is a linear function and linear functions have the property that $f(x+y) = f(x)+f(y)$!
 
 ### The Relation Between Translations of $K$ and Points in the Image
