@@ -1,21 +1,21 @@
 ---
 layout: post
-title: From Matrices to Abstract Algebra
+title: Kernels
 comments: false
 
 ---
 
 {% katexmm %}
 
-In the last few posts we've focused heavily on matrices and their applications. In this post we're going to use matrices as a launching pad to learn about some really pretty results in abstract algebra. More specifically, we'll see the First Isomorphism Theorem of group theory in practice and see just how cool it is.
+In the last few posts we've focused heavily on [matrices](% post_url 2018-12-31-matrices %}) and their [applications](% post_url 2019-03-20-pagerank %}). In this post we're going to use matrices to learn about some really pretty results in abstract algebra. More specifically, we'll explore the concept of Kernels (Nullspace) and see how they help us succinctly define what a matrix does to its inputs.
 
 I hope that by the end of this post you will:
 
-1. Be able to quickly predict what points in the input map to certain points in the output.
-2. See a full application of the First Isomorphism Theorem and how neat it is.
+1. Understand what a Kernel is and see why it's so useful.
+2. Realize that all pre-images of points are some translation of the Kernel.
 3. Realize that abstract algebra is accessible and really pretty!
 
-### Changing Spaces
+### Squashing Spaces
 
 In previous posts, we noticed how matrices are just linear functions. We found that the matrices we studied just rotate or stretch a vector in some way.
 
@@ -42,7 +42,7 @@ $$ F v = \begin{bmatrix} 8 \\ 5 \end{bmatrix} $$
 
 <br />
 
-So $F$ effectively takes vectors in a 3D space and puts it onto a 2D space! You can think of it something like a what happens when you take a picture on your phone - you are taking a 3D space (the world you see), and collapsing it onto a 2D space (the camera sensor).
+So $F$ effectively takes vectors in a 3D space and squashes them onto a 2D space! You can think of it something like a what happens when you take a picture on your phone - you are taking a 3D space (the world you see), and collapsing it onto a 2D space (the camera sensor).
 
 <div class='image-block'>
     <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Pinhole-camera.svg/1200px-Pinhole-camera.svg.png'>
@@ -55,11 +55,18 @@ $$f: R^3 \rightarrow R^2$$
 
 <h3>Collapsing Points</h3>
 
-$R^3$ is clearly a higher dimensional space than $R^2$. It is thus, generally speaking, "bigger" than $R^2$.
+When you take a picture and squash a 3D world onto a 2D sensor, you are losing some amount of information. Usually, what happens is points that are far away appear close to each other even though they may be far apart.
 
-Will our function therefore squeeze multiple points from $R^3$ onto the same point in $R^2$?
+We refer to this as a perspective effect but you can also think about it as a loss of depth information when converting from 3D to 2D.
 
-### Mapping to the Origin
+<div class='image-block'>
+    <img src='https://images.unsplash.com/photo-1554976757-606d486f5d92?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2204&q=80' />
+    Notice how the pillars start seeming closer and closer to eachother even though they are staying the same distance apart. We have lost information about the distance between this pillars when converting to 2D. Our eyes do the same thing as they also convert the 3D world to a 2D representation! Image source: Unsplash.
+</div>
+
+Similarly, will our function also "lose" some information and collapse multiple points from the input to the same point in the output?
+
+### The Kernel
 
 Let's start by seeing what points $v = \begin{bmatrix} v_1 \\ v_2 \\ v_3 \end{bmatrix}$ collide onto the origin of the output space - $\begin{bmatrix} 0 \\ 0 \end{bmatrix}$.
 
@@ -123,7 +130,7 @@ Let's get some more quick terminology out of the way before proceeding. We're go
 
 2. **Pre-Image** - the set of inputs for the function (i.e. the $x$ in $f(x)$). The pre-image of a point $y$ is just $f^{-1}(y)$.
 
-### Mapping to $\begin{bmatrix} 1 \\ 1 \end{bmatrix}$
+### Translations of the Kernel - Mapping to $\begin{bmatrix} 1 \\ 1 \end{bmatrix}$
 
 We found the set of points that map to $\begin{bmatrix} 0 \\ 0 \end{bmatrix}$ (i.e. the pre-image of the origin). We call this set the Kernel or $K$ for short.
 
@@ -174,7 +181,7 @@ Let's see them both on the same graph:
     Notice that $f^{-1}(\begin{bmatrix}1 \\ 1\end{bmatrix})$ is parallel to $K$. In other words, $f^{-1}(\begin{bmatrix}1 \\ 1\end{bmatrix})$ is just $K$ shifted over.
 </div>
 
-#### Translating $K$
+#### Translating the Kernel
 
 So what's the relation between $f^{-1}(\begin{bmatrix}1 \\ 1\end{bmatrix})$ and $K = f^{-1}(\begin{bmatrix} 0 \\ 0 \end{bmatrix})$?
 
@@ -208,7 +215,7 @@ f(k + v) &= f(\begin{bmatrix} -3 \\ 6 \\ 2 \end{bmatrix} + \begin{bmatrix} 0 \\ 
 &= \begin{bmatrix} 2 & 1 & 0 \\ 0 & 1 & 3 \end{bmatrix} \begin{bmatrix} -3 \\ 7 \\ 2 \end{bmatrix} \\
 &= \begin{bmatrix} 1 \\ 1 \end{bmatrix}
 \end{aligned}$$
-### What's going on?!
+### All Pre-Images are Translations of the Kernel
 
 Ok there's something kind of mind blowing going on here:
 
