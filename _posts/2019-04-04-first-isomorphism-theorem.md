@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Kernels
+title: Kernels of Functions
 comments: false
 
 ---
