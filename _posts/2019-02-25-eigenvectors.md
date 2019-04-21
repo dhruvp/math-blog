@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Eigenvectors
+title: Deriving Eigenvectors from Scratch
 comments: false
 
 ---
