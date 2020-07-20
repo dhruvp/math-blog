@@ -12,7 +12,7 @@ author:
   email:          dhruv.parthasarathy@gmail.com
 pages_list:
   About: '/about'
-  Archive: '/archive'
+  All Posts: '/archive'
   Feed: '/atom.xml'
 plugins:
   - jekyll-paginate
