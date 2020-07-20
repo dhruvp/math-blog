@@ -9,7 +9,7 @@ paginate:         1
 baseurl:          /
 author:
   name:           Dhruv Parthasarathy
-  email:          dhruv@udacity.com
+  email:          dhruv.parthasarathy@gmail.com
 pages_list:
   About: '/about'
   Archive: '/archive'
