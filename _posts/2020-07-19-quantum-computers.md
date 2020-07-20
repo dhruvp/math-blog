@@ -71,7 +71,7 @@ You may be surprised at just how often we use polarization everyday. For instanc
 
 <p class='image-block'>
     <img src='/public/images/quantum_computer/sunglasses.png' />
-    The lenses on sunglasses are polarization filters that only allow light of a specific polarization through. Image Source: [https://vision-works.co.za/polarized-lenses-explained/](https://vision-works.co.za/polarized-lenses-explained/)
+    The lenses on sunglasses are polarization filters that only allow light of a specific polarization through. Image Source (https://vision-works.co.za/polarized-lenses-explained/)
 
     A sunglass lens is a specific example of a polarization filter - a barrier that only lets in light of a specific polarization angle.
 </p>
@@ -235,7 +235,7 @@ We can think of a vertical line/vector (black) as the sum of a 135º (blue) vect
     </p>        
 </div>
 
-So in that sense, we can think of a vertically filtered photon as the **combination** of a 135º filtered photon and a 45º filtered photon. Or in other words, the vertically filtered photon can be seen as filtered in **both these angles at once** (Note that it's a very **amount** ({% katex %}  \frac{\sqrt{2}}{2} {% endkatex %}) of each of these options. But we are going to postpone that discussion for now).
+So in that sense, we can think of a vertically filtered photon as the **combination** of a 135º filtered photon and a 45º filtered photon. Or in other words, the vertically filtered photon can be seen as filtered in **both these angles at once** (Note that it's a very **specific amount** ({% katex %}  \frac{\sqrt{2}}{2} {% endkatex %}) of each of these options. But we are going to postpone that discussion for now).
 
 <p class='image-block'>
     <img src="/public/images/quantum_computer/photon_sum.png" />
@@ -334,7 +334,7 @@ Let us now see how this gives us the ability to build really powerful computers.
 
 <p class='image-block'>
     <img src="/public/images/quantum_computer/photon_computer.png">
-    An example of a real quantum computer built using photons. We won't be creating this but instead will focus on a toy example with polarizer lenses.
+    An example of a real quantum computer built using photons. We won't be creating this but instead will focus on a toy example with polarizer lenses. Image source: https://arstechnica.com/science/2018/09/engineering-tour-de-force-births-programmable-optical-quantum-computer/.
 </p>
 
 To build our computer, we will  start by understanding the the idea of a computer "bit".
@@ -565,9 +565,8 @@ Just as we leveraged the fact that light can be polarized in multiple directions
 
 <p class='image-block'>
     <img src='/public/images/quantum_computer/electron_spin.png'>
+    Just as light can be polarized in multiple directions at once, an electron can spin in multiple orientations at once. Image source: https://commons.princeton.edu/josephhenry/modern-understanding/.
 </p>
-
-Just as light can be polarized in multiple directions at once, an electron can spin in multiple orientations at once.
 
 To perform computations on these qubits, we similarly rotate the orientation of these electron spins in interesting ways.
 
@@ -575,9 +574,9 @@ Today, quantum computers are achieving new heights and are already doing things 
 
 <p class='image-block'>
     <img src='/public/images/quantum_computer/sycamore.png' />
+    Google's quantum computer, Sycamore, achieved results that pushed the boundaries of computing. Image source: https://ai.googleblog.com/2019/10/quantum-supremacy-using-programmable.html
 </p>
 
-Google's quantum computer, Sycamore, achieved results that pushed the boundaries of computing.
 
 It's exciting to see where this field will go and hopefully through this post you were able to get a bit more intuition into how these computers work and how engineers around the world are building them!
 
