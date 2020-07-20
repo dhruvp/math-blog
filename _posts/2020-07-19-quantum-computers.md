@@ -63,7 +63,10 @@ In the 1800s, Maxwell [famously discovered](https://www.space.com/speed-of-light
 
 In this electromagnetic wave, there are two parts: the electric field wave and the magnetic field wave. We call direction of orientation of the electric field the **polarization** of light.
 
-![EM Wave](/public/images/quantum_computer/em_wave.png)
+<p class='image-block'>
+    <img src='public/images/quantum_computer/em_wave.png' />
+    Image source: https://socratic.org/questions/58f0fd7e7c0149308e221579
+</p>
 
 ---
 
