@@ -86,8 +86,9 @@ Let us now dig into what makes light polarization so useful in building a quantu
 
 Through experiments, we  will see that a single photon of light can be polarized **in multiple directions at once**. This is an idea rooted in quantum physics known as **superposition.**.
 
-<p class='img-block'>
+<p class='image-block'>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/UjaAxUO6-Uw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <br/>
     In the thought experiment, Schrodinger's Cat is somehow both **dead and alive** at the same time. In the same way, a photon of light can be polarized **in multiple directions** at the same time.
 </p>
 
