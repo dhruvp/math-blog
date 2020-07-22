@@ -96,7 +96,7 @@ You may have seen superposition in the famous Schrodinger's Cat paradox where th
 
 ### Experiments
 
-Let us now see this ourselves! We will run a set of experiments to in fact ourselves verify that **light can be polarized in multiple angles at once.**
+Let us now see this ourselves! We will run a set of experiments to in fact ourselves verify that **light can be polarized in multiple angles at once.**. Note with a large set of photons we can explain these effects using classical physics but when we get down to single photons, we need to use the quantum interpretation we will soon discuss. 
 
 Here are the experiments we will run:
 
