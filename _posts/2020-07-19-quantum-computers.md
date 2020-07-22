@@ -70,11 +70,11 @@ In this electromagnetic wave, there are two parts: the electric field wave and t
 
 ---
 
-You may be surprised at just how often we use polarization everyday. For instance, any time you put on a pair of sunglasses on a sunny day, you are harnessing light polarization! The black lenses on sunglasses block certain types of light to reduce the glare that we see. The lenses do so by only letting in light of a certain polarization angle and blocking all other light.
+You may be surprised at just how often we use polarization everyday. For instance, any time you put on a pair of polarized sunglasses on a sunny day, you are harnessing light polarization! The black lenses on polarized sunglasses block certain types of light to reduce the glare that we see. The lenses do so by only letting in light of a certain polarization angle and blocking all other light.
 
 <p class='image-block'>
     <img src='/public/images/quantum_computer/sunglasses.png' />
-    The lenses on sunglasses are polarization filters that only allow light of a specific polarization through. Image Source (https://vision-works.co.za/polarized-lenses-explained/)
+    The lenses on polarized sunglasses are polarization filters that only allow light of a specific polarization through. Image Source (https://vision-works.co.za/polarized-lenses-explained/)
 
     A sunglass lens is a specific example of a polarization filter - a barrier that only lets in light of a specific polarization angle.
 </p>
