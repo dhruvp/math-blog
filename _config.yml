@@ -18,6 +18,7 @@ plugins:
   - jekyll-paginate
   - jekyll-katex
 
+
 katex:
   rendering_options:
     # Default KaTeX rendering options. See https://github.com/Khan/KaTeX#rendering-options
