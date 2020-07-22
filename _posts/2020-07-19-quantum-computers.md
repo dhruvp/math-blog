@@ -84,11 +84,12 @@ This may seem fairly straight forward but as we study polarization more, we noti
 
 Let us now dig into what makes light polarization so useful in building a quantum computer.
 
-Through experiments, we  will see that a single photon of light can be polarized **in multiple directions at once**. This is an idea rooted in quantum physics known as **superposition.**, and you may have heard of it in the famous Schrodinger's Cat problem.
+Through experiments, we  will see that a single photon of light can be polarized **in multiple directions at once**. This is an idea rooted in quantum physics known as **superposition.**.
 
+<p class='img-block'>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/UjaAxUO6-Uw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-In the thought experiment, Schrodinger's Cat is somehow both **dead and alive** at the same time. In the same way, a photon of light can be polarized **in multiple directions** at the same time.
+    In the thought experiment, Schrodinger's Cat is somehow both **dead and alive** at the same time. In the same way, a photon of light can be polarized **in multiple directions** at the same time.
+</p>
 
 You may have seen superposition in the famous Schrodinger's Cat paradox where the cat is somehow both   "dead" and "alive" at the same time. This is exactly what we'll see is going on with the state of a photon's polarization!
 
