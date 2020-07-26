@@ -7,7 +7,7 @@ comments: false
 
 {% katexmm %}
 
-Eigenvectors - they came up **again and again** in studying Linear Algebra. They have some  formulas that we memorize and use. But why do we care about them? In this post, I'll show how Eigenvectors help us immediately understand what a linear function will do to an input. With this, we'll see just why we care so much about finding the eigenvector of a linear function/matrix.
+Eigenvectors - they came up **again and again** in studying Linear Algebra. They have some  formulas that we memorize and use. But why do we care about them? In this post, we'll see how Eigenvectors help us immediately understand what a linear function will do to an input - we'll do so by playing with an interactive visualization that allows us to see just how a function can be interpreted using its eigenvectors.
 
 ### Quick Refresher
 
@@ -85,7 +85,7 @@ As an example, imagine $\lambda_1=5$ and $\lambda_2=2$. The plots of $\lambda_1^
 
 So $A$ **pulls** its input closer and closer to a multiple of $v_1$, as $\lambda_1^x$ grows much faster than $\lambda_2^x$.
 
-### Seeing this in Action
+### Interactive Exploration
 
 {% include eigenvectors.html %}
 
