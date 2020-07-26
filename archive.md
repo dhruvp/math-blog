@@ -15,3 +15,6 @@ title: Archive
 
 
 * 6 Mar 2017 &raquo; [Baudu's Deep Voice Explained: Part 1 - The Inference Pipeline](https://blog.athelas.com/paper-1-baidus-deep-voice-675a323705df)
+
+
+* 25 Sep 2016 &raquo; [Write a Neural Network to Play Pong From Scratch](https://medium.com/@dhruvp/how-to-write-a-neural-network-to-play-pong-from-scratch-956b57d4f6e0)
