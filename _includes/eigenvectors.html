@@ -1,0 +1,171 @@
+<body>
+    <div style="min-width: 1280px; margin-left: -200px;">
+        <div class="row">
+            <div class="col-xs-offset-5 col-xs-2" style="position: relative; text-align: center; padding-left: 50px;">
+                <div class="box">
+                    <div class="slidecontainer">
+                        <div id="rangeValue" style="padding-bottom: 10px;"></div>
+                        <input type="range" min="0" max="5" value="0" class="slider" id="myRange">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-2">
+                <div class="box" style="position: relative;">
+                    <div id="source-vector" style="margin-top: 50%; margin-left: -20px;">
+                        <div style="position: absolute; right: -40px; z-index: 1; top: 50%;">
+                            <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z"/></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-7" style="position: relative;">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <div class="box" style="position: relative;">
+                            <div id="basis-vector-one"></div>
+                            <div style="position: absolute; right: -10px; z-index: 1; top: 50%;">
+                                <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="box" style="width: 100%; height: 100%; position: relative;">
+                            <div id="function-box-one" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: 20px; background-color:antiquewhite; border-color: black; display: flex; align-items: center; justify-content: center;text-align: center;"></div>
+                            <div style="position: absolute; right: -30px; z-index: 1; top: 50%;">
+                                <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="box">
+                            <div id="output-basis-vector-one"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-4">
+                        <div class="box" style="position: relative;">
+                            <div id="basis-vector-two"></div>
+                            <div style="position: absolute; right: -10px; z-index: 1; top: 50%;">
+                                <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="box" style="width: 100%; height: 100%; position: relative;">
+                            <div id="function-box-two" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: 20px; background-color:antiquewhite; border-color: black; display: flex; align-items: center; justify-content: center;text-align: center;">
+                            </div>
+                            <div style="position: absolute; right: -40px; z-index: 1; top: 50%;">
+                                <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="box">
+                            <div id="output-basis-vector-two"></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="position: absolute; right: -30px; z-index: 1; top: 43%;">
+                    <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z"/></svg>
+                </div>
+            </div>
+            <div class="col-xs-2">
+                <div class="box">
+                    <div id="final-output" style="margin-top: 50%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var inputVectorColor = "#848ccf"
+        var vectorOneColor = "#930077"
+        var vectorTwoColor = "#e61c5d"
+        var finalVectorColor = "#ffbd39"
+        document.addEventListener("DOMContentLoaded", function(){
+            var eigenVectorOne = math.multiply(2/3, [[1], [1]])
+            var eigenValueOne = 5
+            var eigenVectorTwo = math.multiply(1/3, [[-2], [1]])
+            var eigenValueTwo = 2
+
+            // First, checks if it isn't implemented yet.
+            if (!String.prototype.format) {
+            String.prototype.format = function() {
+                var args = arguments;
+                return this.replace(/{(\d+)}/g, function(match, number) { 
+                return typeof args[number] != 'undefined'
+                    ? args[number]
+                    : match
+                ;
+                });
+            };
+            }
+
+            function generateLineData (x, y, title, color, gridSize = null) {
+                if (!gridSize) {
+                    gridSize = Math.max(Math.abs(x), Math.abs(y))
+                }
+                return {
+                    title: title,
+                    xaxis: {
+                        range: [-1.1 * gridSize, gridSize * 1.1]
+                    },
+                    yaxis: {
+                        range: [-1.1 * gridSize, gridSize * 1.1]
+                    },
+                    width: 280,
+                    height: 280,
+                    shapes: [
+                        //Line Diagonal
+
+                        {
+                            type: 'line',
+                            x0: 0,
+                            y0: 0,
+                            x1: x,
+                            y1: y,
+                            line: {
+                                color: color,
+                                width: 6,
+                            }
+                        }
+                    ]
+                };
+            }
+            Plotly.newPlot('source-vector', [], generateLineData(0, 1, "Input Vector", inputVectorColor), { responsive: true });
+            Plotly.newPlot('basis-vector-one', [], generateLineData(eigenVectorOne[0][0], eigenVectorOne[1][0], "EigenVector 1", vectorOneColor)), { responsive: true };
+            Plotly.newPlot('basis-vector-two', [], generateLineData(eigenVectorTwo[0][0], eigenVectorTwo[1][0], "EigenVector 2", vectorTwoColor), { responsive: true });
+
+            var slider = document.getElementById('myRange');
+            var sliderValue = document.getElementById('rangeValue');
+            sliderValue.innerHTML = "Number of times A is applied: {0}".format(slider.value);
+
+            var maxGridSize = Math.max(Math.max(eigenVectorOne[0][0], eigenVectorOne[1][0]), Math.max(eigenVectorTwo[0][0], eigenVectorTwo[1][0]))
+            Plotly.newPlot('output-basis-vector-one', [], generateLineData(eigenVectorOne[0][0], eigenVectorOne[1][0], "Output of EigenVector 1", vectorOneColor, maxGridSize), { responsive: true });
+            Plotly.newPlot('output-basis-vector-two', [], generateLineData(eigenVectorTwo[0][0], eigenVectorTwo[1][0], "Ouptut of EigenVector 2", vectorTwoColor, maxGridSize), { responsive: true });
+
+
+            Plotly.newPlot('final-output', [], generateLineData(0, 1, "Final Vector", "orange"), {}, { responsive: true });
+
+
+            katex.render('A^{0}v_1 = \\lambda_1^{0}v_1 = {1}^{0}v_1'.format(slider.value, eigenValueOne), document.getElementById('function-box-one'))
+            katex.render('A^{0}v_2 = \\lambda_2^{0}v_2 = {1}^{0}v_2'.format(slider.value, eigenValueTwo), document.getElementById('function-box-two'))
+            slider.oninput = function () {
+                sliderValue.innerHTML = "Number of times A is applied: {0}".format(slider.value);
+                katex.render('A^{0}v_1 = \\lambda_1^{0}v_1 = {1}^{0}v_1'.format(slider.value, eigenValueOne), document.getElementById('function-box-one'))
+                katex.render('A^{0}v_2 = \\lambda_2^{0}v_2 = {1}^{0}v_2'.format(slider.value, eigenValueTwo), document.getElementById('function-box-two'))
+
+                var firstEigenVectorUpdated = math.multiply(Math.pow(eigenValueOne, slider.value), eigenVectorOne)
+                var secondEigenVectorUpdated = math.multiply(Math.pow(eigenValueTwo, slider.value), eigenVectorTwo)
+                var maxGridSize = Math.max(Math.max(firstEigenVectorUpdated[0][0], firstEigenVectorUpdated[1][0]), Math.max(secondEigenVectorUpdated[0][0], secondEigenVectorUpdated[1][0]))
+                var finalVector = math.add(firstEigenVectorUpdated,secondEigenVectorUpdated)
+                Plotly.update('output-basis-vector-one', [], generateLineData(firstEigenVectorUpdated[0][0], firstEigenVectorUpdated[1][0], "Output EigenVector 1",  vectorOneColor, maxGridSize));
+                Plotly.update('output-basis-vector-two', [], generateLineData(secondEigenVectorUpdated[0][0], secondEigenVectorUpdated[1][0], "Output EigenVector 2", vectorTwoColor, maxGridSize));
+                Plotly.update('final-output', [], generateLineData(finalVector[0][0], finalVector[1][0], "Final Output Vector", finalVectorColor));
+            }
+
+        });
+    </script>
+</body>
