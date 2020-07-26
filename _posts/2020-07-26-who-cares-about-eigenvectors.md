@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Why You Care About Eigenvectors.
+title: Interactive Visualization of Why Eigenvectors Matter
 comments: false
 
 ---
