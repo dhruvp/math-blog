@@ -27,7 +27,7 @@ We also saw in a previous blog post (please check it out if you haven't yet!) ho
     In the interactive visualization from Setosa.io, applying $A$ to the vector $v$ pulls $v$ towards the line $s_1$.
 </p>
 
-Let's start with some intuition. Please go ahead and try out this visualization from [setosa.io](http://setosa.io) (it's a great blog with a lot of other visualizations as well).
+Let's start with some intuition. Please go ahead and try out this visualization from [setosa.io](https://setosa.io/ev/eigenvectors-and-eigenvalues/) (it's a great blog with a lot of other visualizations as well).
 
 In the above example, $s_1$ is the eigenline for the eigenvector with eigenvalue $1.1$. This means it is the "axis" of that given eigenvector (i.e. you draw a line out from that eigenvector). Similarly, $s_2$ is the eigenline for the eigenvector with eigenvalue 0.5. The red dots represent the result of applying $A$ on an input vector $v$. 
 
