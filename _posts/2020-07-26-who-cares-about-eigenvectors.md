@@ -9,7 +9,7 @@ comments: false
 
 You've probably heard the word eigenvectors hundreds of times in class and have been asked to calculate it hundreds more. But why is this concept so cecntral in Linear Algebra? Why is it that we study the eigenvector of a matrix so often?
 
-In this post, we'll see how Eigenvectors help us immediately understand what a linear function will do to an input. We'll do so by playing with an interactive visualization that allows us to see just that. In doing so, we'll see how eigenvectors help us understand linear functions, and in doing so become a natural focal point in the study of Linear Algebra.
+In this post, we'll see how Eigenvectors help us immediately understand what a linear function will do to an input. We'll do so by playing with an interactive visualization that allows us to see just that.
 
 ### Quick Refresher
 
@@ -61,38 +61,50 @@ We know that that any vector $v$ can be written as the sum of the eigenvectors o
 
 $v = c_1 \cdot v_1 + c_2 \cdot v_2$ for some constants $c_1$ and $c_2$.
 
+<p class='image-block'>
+    <img src="/public/images/eigenvector_pull/split.png"  style="width: 30%"/>
+    We first split $v$ into its eigenvector subcomponents.
+</p>
+
 When we have this representation, we can then rethink $A^3v$ as:
 
 $$A^3v = A^3(c_1 \cdot v_1 + c_2 \cdot v_2)$$.
 
-Since A is a linear function (i.e. $f(x+y) = f(x) + f(y)$ we can break the expression up as follows:
+or more simply:
 
 $$A^3v = c_1 \cdot A^3v_1 + c_2\cdot A^3v_2$$
 
-Visually, this is shown in the earlier diagram. We are just splitting this computation up and applying it on the eigenvector components - and then summing the result.
-
-By the properties of eigenvectors, this simplifies to
-
-$$A^3v = c_1 \lambda_1^3v_1 + c_2 \lambda_2^3v_2$$
-
-Now, imagine $\lambda_1$ is much larger than $\lambda_2$ . What is going to happen to the result? Since $\lambda_1^3$ is growing much faster than $\lambda_2^3$, the final result will lean heavily towards $\lambda_1^3v_1$. And as we apply A more times (i.e. we look at $A^{20}v$ etc.) this term dominates more and more. This is due to the power of exponentials - the larger eigenvalue is going to grow much faster than the smaller eigenvalue.
-
-As an example, imagine $\lambda_1=5$ and $\lambda_2=2$. The plots of $\lambda_1^x$ and $\lambda_2^x$ are shown below. Notice how the distance between these two curves get bigger as x increases (i.e. as we apply A more times).
 
 <p class='image-block'>
-    <img src='/public/images/eigenvector_pull/exponentials.png' />
-    Due to the power of exponentials, the dominant eigenvector will play a bigger and bigger role the more times we apply A. Notice how the distance between the two expontial functions increases with x.
+    <img src="/public/images/eigenvector_pull/process.png" style="width: 30%"/>
+    We then carry out $A^3v_1$ and $A_3v_2$.
 </p>
 
+We then carry out the computation of $A^3v_1$ and $A_3v_2$. Thanks to $v_1$ and $v_2$ being eigenvectors, this neatly simplifies to $A^3v = c_1 \lambda_1^3v_1 + c_2 \lambda_2^3v_2$ where $\lambda_1$ is the eigenvalue of $v_1$ and $\lambda_2$ is the eigenvalue of $v_2$.
 
-So $A$ **pulls** its input closer and closer to a multiple of $v_1$, as the $\lambda_1^3 v_1$ term grows so much faster than the $\lambda_2^3v_2$ term.
+<p class='image-block'>
+    <img src="/public/images/eigenvector_pull/combine.png" style="width: 30%"/>
+    We finally combine the results to get $A^3v$.
+</p>
 
-### Interactive Exploration
-We can see the above in this interactive example:
+We then finally combine the results to get $A^3v$.
+
+
+Now, what happens when $\lambda_1$ is larger than $\lambda_2$? Let's imagine $\lambda_1 = 5$ and $\lambda_2 = 2$. Let's now display what it would look like to carry out $A^3v$ when we have this difference in eigenvalues.
+
+
+The interaction below shows this setup. 
 
 {% include eigenvectors.html %}
 
-The widget above takes the following values:
+1. Drag the slider to increase or decrease the number of times we apply $A$ on $v$.
+2. Notice how "Output Eigenvector 1" and "Output Eigenvector 2" change at different rates.
+3. Notice how "Final Output Vector" tilts towards "Output Eigenvector 1" as you drag the slider to the right.
+
+We thus see that when there's one eigenvalue larger than the other ($\lambda_1 > \lambda_2$), the linear function pushes its inputs towards the eigenvector associated with that large eigenvalue ("Output EigenVector One"). The more times we apply $A$, the larger this effect.
+
+
+The widget above took on the following real values:
 
 $$A = \begin{bmatrix}3 & 2 \\ 1 & 4\end{bmatrix}$$
 
@@ -101,18 +113,25 @@ $$v_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$$
 $$v_2 =  \begin{bmatrix} -2 \\ 1 \end{bmatrix}$$
 
 
-1. Move the slider to increase or decrease the number of times we apply $A$ on $v$.
-2. Notice how "Output Eigenvector 1" grows so much faster than "Output Eigenvector 2" as you increase the slider value.
-3. Then notice how "Final Output Vector" tilts towards Output Eigenvector 1 as you increase the slider value.
+### Why this happens
+
+This tilt towards "Output Vector One" happens largely due to exponential growth. $\lambda_1^x$ grows much faster than $\lambda_2^x$. As such the more times we apply $A$ ($x$ in our exponentials), the bigger the difference between $\lambda_1^x$ and $\lambda_2^x$. This will tilt the sum towards the $\lambda_1^x$ term.
+
+<p class='image-block'>
+    <img src='/public/images/eigenvector_pull/exponentials.png' />
+    Due to the power of exponentials, the dominant eigenvector will play a bigger and bigger role the more times we apply A. Notice how the distance between the two expontial functions increases with x.
+</p>
+
+In the image above we see just how much faster $\lambda_1^x$ grows than $\lambda_2^x$ for $\lambda_1 = 5$ and $\lambda_2 = 2$.
 
 ## Conclusion
 
-Thus, just using the properties of linear functions, we are  able to see why eigenvectors are so important - they show us where a linear function will "push" its input.
+So, just using the properties of linear functions, we are able to see why eigenvectors are so important - they show us where a linear function will "push" its input.
 
 ### Caveat
 
 1. Note everything I've discussed is for real eigenvalues.
-2. You might be wondering what happens if multiple eigenvalues are equal? Then which way does the function "pull" its input? Eigenvectors with the same eigenvalue will be linearly dependent - so they will have the same eigenline. So the function will just pull the input towards that given eigenline.
+
 
 #### Credits
 Thanks to Luis Serrano, Pranav Ramakrishnan, and Daniel Hsu for feedback.
