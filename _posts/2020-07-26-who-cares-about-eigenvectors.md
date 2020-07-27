@@ -80,7 +80,7 @@ $$A^3v = c_1 \cdot A^3v_1 + c_2\cdot A^3v_2$$
     We then carry out $A^3v_1$ and $A_3v_2$.
 </p>
 
-We then carry out the computation of $A^3v_1$ and $A_3v_2$. Thanks to $v_1$ and $v_2$ being eigenvectors, this neatly simplifies to $A^3v = c_1 \lambda_1^3v_1 + c_2 \lambda_2^3v_2$ where $\lambda_1$ is the eigenvalue of $v_1$ and $\lambda_2$ is the eigenvalue of $v_2$.
+We then carry out the computation of $A^3v_1$ and $A^3v_2$. Thanks to $v_1$ and $v_2$ being eigenvectors, this neatly simplifies to $A^3v = c_1 \lambda_1^3v_1 + c_2 \lambda_2^3v_2$ where $\lambda_1$ is the eigenvalue of $v_1$ and $\lambda_2$ is the eigenvalue of $v_2$.
 
 <p class='image-block'>
     <img src="/public/images/eigenvector_pull/combine.png" style="width: 30%"/>
