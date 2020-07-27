@@ -115,22 +115,22 @@ $$v_2 =  \begin{bmatrix} -2 \\ 1 \end{bmatrix}$$
 
 ### Why this happens
 
-This tilt towards "Output Vector One" happens largely due to exponential growth. $\lambda_1^x$ grows much faster than $\lambda_2^x$. As such the more times we apply $A$ ($x$ in our exponentials), the bigger the difference between $\lambda_1^x$ and $\lambda_2^x$. This will tilt the sum towards the $\lambda_1^x$ term.
+This tilt towards "Output Vector One" happens due to exponential growth. $\lambda_1^x$ grows much faster than $\lambda_2^x$. As such the more times we apply $A$ ($x$ in our exponentials), the bigger the difference between $\lambda_1^x$ and $\lambda_2^x$. This will tilt the sum towards the $\lambda_1^x$ term. This increasing difference is shown in the plots below.
 
 <p class='image-block'>
     <img src='/public/images/eigenvector_pull/exponentials.png' />
     Due to the power of exponentials, the dominant eigenvector will play a bigger and bigger role the more times we apply A. Notice how the distance between the two expontial functions increases with x.
 </p>
 
-In the image above we see just how much faster $\lambda_1^x$ grows than $\lambda_2^x$ for $\lambda_1 = 5$ and $\lambda_2 = 2$.
+So knowing the largest eigenvalue $\lambda_1$ and its corresponding eigenvector $v_1$, we can know where a function will aim to push its inputs.
 
 ## Conclusion
 
-So, just using the properties of linear functions, we are able to see why eigenvectors are so important - they show us where a linear function will "push" its input.
+So, just using the properties of linear functions, we are able to see why eigenvectors are so important they show us where a linear function will "push" its inputs. In doing so they give us immediate visual intuition for how a linear function will behave.
 
 ### Caveat
 
-1. Note everything I've discussed is for real eigenvalues.
+1. Everything I've discussed is for real eigenvalues.
 
 
 #### Credits
