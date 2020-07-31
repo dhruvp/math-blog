@@ -20,7 +20,9 @@ In this post, we'll see how Eigenvectors help us immediately understand what a l
 
 Let's do a quick refresher to begin with. The eigenvector of a linear function A is just the vector $v$ s.t. $Av = \lambda v$ for some constant $\lambda$ which we call the eigenvalue. At a high level, the eigenvector is just a dimension along which the linear function only stretches its input (for real valued eigenvalues).
 
-We also saw in a [previous blog post]() (please check it out if you haven't yet!) how eigenvectors help us create a basis that represents the linear function as a diagonal matrix. This is great and all but what can we do once we get an Eigenvector?
+We saw in a [previous blog post](2019/02/25/eigenvectors/) how eigenvectors help us create a basis that diagonalizes our matrix. We also saw [how eigenvectors power PageRank](2019/03/20/pagerank/) - the algorithm that powers Google Search!
+
+This is great and all but what can we do once we find an Eigenvector? What does it tell us about the underlying Matrix?
 
 ### Linear Functions Pull Inputs Towards the Dominant Eigenvector
 
