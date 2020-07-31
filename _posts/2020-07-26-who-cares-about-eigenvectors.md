@@ -131,7 +131,13 @@ So, just using the properties of linear functions, we are able to see why eigenv
 1. Everything I've discussed is for real eigenvalues.
 
 
+#### Further Reading
+
+1. [You could have come up with eigenvectors. Here's how](2019/02/25/eigenvectors/)
+2. [How Eigenvectors Power PageRank - the algorithm behind Google Search](2019/03/20/pagerank/)
+3. [Three Blue One Brown on Eigenvectors](https://www.youtube.com/watch?v=PFDu9oVAE-g&t=264s)
+
 #### Credits
-Thanks to Luis Serrano, Pranav Ramakrishnan, and Daniel Hsu for feedback.
+Thanks to Luis Serrano, and Pranav Ramakrishnan for feedback.
 
 {% endkatexmm %}
