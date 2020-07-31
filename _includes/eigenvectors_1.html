@@ -1,9 +1,19 @@
 <body>
-    <div style="min-width: 1280px; margin-left: -200px;">
+    <style>
+        @media only screen and (min-width: 1200px) {
+            .overall-container {
+                margin-left: -100px;
+            }
+        }
+        .overall-container {
+            min-width: 1280px;
+        }
+    </style>
+    <div class="overall-container">
         <div class="row">
-            <div class="col-xs-offset-4 col-xs-2" style="position: relative; display: flex; align-items: center; justify-content: center;">
-                <div class="box">
-                    <div class="slidecontainer">
+            <div class="col-xs-offset-2 col-xs-2" style="position: relative; display: flex; align-items: center; justify-content: center;">
+                <div class="box" style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                    <div class="slidecontainer" style="flex-direction: column; text-align: center;">
                         <div id="rangeValue" style="padding-bottom: 10px;"></div>
                         <input type="range" min="0" max="5" value="0" class="slider" id="myRange-og">
                     </div>
@@ -11,29 +21,29 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-3" style="display: flex; align-items: center; justify-content: center;">
+            <div class="col-xs-2" style="display: flex; align-items: center; justify-content: center;">
                 <div class="box" style="position: relative;">
                     <div id="source-vector-og">
-                        <div style="position: absolute; right: 10px; z-index: 1; top: 50%;">
+                        <div style="position: absolute; right: 25px; z-index: 1; top: 50%;">
                             <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z"/></svg>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-xs-3" style="position: relative; display: flex; justify-content: center; align-items: center;">
+            <div class="col-xs-2" style="position: relative; display: flex; justify-content: center; align-items: center;">
                 <div class="box" style="width: 100%; height: 100%; position: relative;">
                     <div id="function-box" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: 20px; background-color:antiquewhite; border-color: black; display: flex; align-items: center; justify-content: center;text-align: center;"></div>
-                    <div style="position: absolute; right: -40px; top: 50%; z-index: 1;">
+                    <div style="position: absolute; right: -15px; top: 50%; z-index: 1;">
                         <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z"/></svg>
                     </div>
                 </div>
             </div>
-            <div class="col-xs-3" style="display: flex; justify-content: center; align-items: center;">
+            <div class="col-xs-2" style="display: flex; justify-content: center; align-items: center;">
                 <div class="box">
                     <div id="final-output-og"></div>
                 </div>
             </div>
-            <div class="col-xs-3" style="display: flex; justify-content: center; align-items: center;">
+            <div class="col-xs-2" style="display: flex; justify-content: center; align-items: center;">
                 <div class="box">
                     <div id="eigenvector-one-og"></div>
                 </div>
@@ -76,8 +86,8 @@
                     yaxis: {
                         range: [-1.1 * gridSize, gridSize * 1.1]
                     },
-                    width: 350,
-                    height: 350,
+                    width: 300,
+                    height: 300,
                     shapes: [
                         //Line Diagonal
 
