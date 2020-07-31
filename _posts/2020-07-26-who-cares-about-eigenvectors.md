@@ -20,7 +20,7 @@ In this post, we'll see how Eigenvectors help us immediately understand what a l
 
 Let's do a quick refresher to begin with. The eigenvector of a linear function A is just the vector $v$ s.t. $Av = \lambda v$ for some constant $\lambda$ which we call the eigenvalue. At a high level, the eigenvector is just a dimension along which the linear function only stretches its input (for real valued eigenvalues).
 
-We also saw in a previous blog post (please check it out if you haven't yet!) how eigenvectors help us create a basis that represents the linear function as a diagonal matrix. This is great and all but what can we do once we get an Eigenvector?
+We also saw in a [previous blog post]() (please check it out if you haven't yet!) how eigenvectors help us create a basis that represents the linear function as a diagonal matrix. This is great and all but what can we do once we get an Eigenvector?
 
 ### Linear Functions Pull Inputs Towards the Dominant Eigenvector
 
@@ -38,7 +38,7 @@ To play with this visualization, do the following:
 2. Notice how the output vector tilts towards $v_1$, an eigenvector of $A$.
 
 
-So it seems like just by knowing an eigenvector of $A$ (namely the eigenvector with the largest eigenvalue as we'll see), we can get a sense of what $A$ does -  $A$ **pulls** its inputs towards the axis of $v_1$, the eigenvector of $A$ with the largest eigenvalue.
+So it seems like just by knowing an eigenvector of $A$ (namely the dominant eigenvector), we can get a sense of what $A$ does -  $A$ **pulls** its input towards the axis of the dominant eigenvector.
 
 How is this happening? And why is it only towards one eigenvector?
 
