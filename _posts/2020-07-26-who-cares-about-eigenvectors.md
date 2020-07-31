@@ -44,7 +44,7 @@ So it seems like just by knowing an eigenvector of $A$ (namely the dominant eige
 
 How is this happening? And why is it only towards one eigenvector?
 
-### Breaking the Input Up Into its Eigenbasis
+### Breaking Up the Input With an Eigenbasis
 
 You'll be surprised to see that this behavior comes very naturally from the properties of linear functions.  Let's see this with an example.
 
