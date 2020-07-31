@@ -106,6 +106,8 @@ The interaction below shows this setup.
 
 We thus see that when there's one eigenvalue larger than the other ($\lambda_1 > \lambda_2$), the linear function pushes its inputs towards the eigenvector associated with that large eigenvalue ("Output EigenVector One"). The more times we apply $A$, the larger this effect.
 
+Note this "push" effect will only happen towards this eigenvector with the largest eignevalue - not any of the other eigenvectors.
+
 
 ### Why this happens
 
