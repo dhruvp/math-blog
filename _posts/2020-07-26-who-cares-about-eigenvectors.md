@@ -113,29 +113,28 @@ Note this "push" effect will only happen towards this eigenvector with the large
 
 ### Why this happens
 
-This tilt towards "Output Vector One" happens due to exponential growth. $\lambda_1^x$ grows much faster than $\lambda_2^x$. As such the more times we apply $A$ ($x$ in our exponentials), the bigger the difference between $\lambda_1^x$ and $\lambda_2^x.$ This will tilt the sum towards the $\lambda_1^x$ term. This increasing difference is shown in the plots below.
+This tilt towards "Output Vector One" happens due to exponential growth. $\lambda_1^x$ grows much faster than $\lambda_2^x$. As such the more times we apply $A$ ($x$ in our exponentials), the bigger the difference between $\lambda_1^x$ and $\lambda_2^x.$ This increasing difference is shown in the plots below.
 
 <p class='image-block'>
     <img src='/public/images/eigenvector_pull/exponentials.png' />
     Due to the power of exponentials, the dominant eigenvector will play a bigger and bigger role the more times we apply A. Notice how the distance between the two expontial functions increases with x.
 </p>
 
-So knowing the largest eigenvalue $\lambda_1$ and its corresponding eigenvector $v_1$, we can know where a function will aim to push its inputs.
-
 ## Conclusion
 
-So, just using the properties of linear functions, we are able to see why eigenvectors are so important they show us where a linear function will "push" its inputs. In doing so they give us immediate visual intuition for how a linear function will behave.
+So, just using the properties of linear functions, we are able to see why eigenvectors are so important. They show us where a linear function will "push" its inputs.
+
+If you've enjoyed this post on eigenvectors, check out the following additional posts on the topic I've written:
+
+1. [You could have come up with eigenvectors. Here's how](2019/02/25/eigenvectors/)
+2. [How Eigenvectors Power PageRank - the algorithm behind Google Search](2019/03/20/pagerank/)
+
+Thanks for reading!
 
 ### Caveat
 
 1. Everything I've discussed is for real eigenvalues.
 
-
-#### Further Reading
-
-1. [You could have come up with eigenvectors. Here's how](2019/02/25/eigenvectors/)
-2. [How Eigenvectors Power PageRank - the algorithm behind Google Search](2019/03/20/pagerank/)
-3. [Three Blue One Brown on Eigenvectors](https://www.youtube.com/watch?v=PFDu9oVAE-g&t=264s)
 
 #### Credits
 Thanks to Luis Serrano, and Pranav Ramakrishnan for feedback.
