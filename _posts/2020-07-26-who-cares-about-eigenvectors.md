@@ -137,6 +137,6 @@ Thanks for reading!
 
 
 #### Credits
-Thanks to Luis Serrano, and Pranav Ramakrishnan for feedback.
+Thanks to Luis Serrano, Rouzbeh Shirvani, and Pranav Ramkrishnan for feedback.
 
 {% endkatexmm %}
