@@ -20,8 +20,6 @@ In this post, we'll see how Eigenvectors help us immediately understand what a l
 
 Let's do a quick refresher to begin with. The eigenvector of a linear function A is just the vector $v$ s.t. $Av = \lambda v$ for some constant $\lambda$ which we call the eigenvalue. At a high level, the eigenvector is just a dimension along which the linear function only stretches its input (for real valued eigenvalues).
 
-We saw in a [previous blog post](2019/02/25/eigenvectors/) how eigenvectors help us create a basis that diagonalizes our matrix. We also saw [how eigenvectors power PageRank](2019/03/20/pagerank/) - the algorithm that powers Google Search!
-
 This is great and all but what can we do once we find an Eigenvector? What does it tell us about the underlying Matrix?
 
 ### Linear Functions Pull Inputs Towards the Dominant Eigenvector
@@ -34,13 +32,16 @@ Let's see what happens when we apply $A$ repeatedly on the input $\begin{bmatrix
 
 {% include eigenvectors_1.html %}
 
+<br/>
+<br/>
+
 To play with this visualization, do the following:
 
 1. Drag the slider to increase the number of times we apply $A$.
 2. Notice how the output vector tilts towards $v_1$, an eigenvector of $A$.
 
 
-So it seems like just by knowing an eigenvector of $A$ (namely the dominant eigenvector), we can get a sense of what $A$ does -  $A$ **pulls** its input towards the axis of the dominant eigenvector.
+So just by knowing an eigenvector of $A$ (namely the dominant eigenvector), we can get a sense of what $A$ does -  $A$ **pulls** its input towards the axis of the dominant eigenvector.
 
 How is this happening? And why is it only towards one eigenvector?
 
@@ -51,11 +52,11 @@ You'll be surprised to see that this behavior comes very naturally from the prop
 Let's keep the same matrix/linear function $A = \begin{bmatrix}3 & 2 \\ 1 & 4\end{bmatrix}$, and analyze applying $A$ three times on the input $v = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$ (i.e. $A^3v$).
 
 <p class='image-block'>
-    <img src='/public/images/eigenvector_pull/standard_flow.png' style="width: 50%;"/>
+    <img src='/public/images/eigenvector_pull/standard_flow.png' style="width: 75%;"/>
     In the standard way, we'd just use standard matrix multiplication to find $A^3v.$
 </p>
 
-The standard way to do this is to simply follow the rules of multiplication and carry out $A(A(A(v))).$ But as part of this exercise, let's do this a different way using eigenvectors.
+The standard way to do this is to simply follow the rules of multiplication and carry out $A(A(A(v))).$ But instead, let's do this a different way using eigenvectors.
 
 <p class='image-block'>
     <img src='/public/images/eigenvector_pull/split_flow.png' />
@@ -67,7 +68,7 @@ We know that that any vector $v$ can be written as the sum of the eigenvectors o
 $v = c_1 \cdot v_1 + c_2 \cdot v_2$ for some constants $c_1$ and $c_2.$
 
 <p class='image-block'>
-    <img src="/public/images/eigenvector_pull/split.png"  style="width: 30%"/>
+    <img src="/public/images/eigenvector_pull/split.png"  style="width: 45%"/>
     We first split $v$ into its eigenvector subcomponents.
 </p>
 
@@ -81,26 +82,39 @@ $$A^3v = c_1 \cdot A^3v_1 + c_2\cdot A^3v_2$$
 
 
 <p class='image-block'>
-    <img src="/public/images/eigenvector_pull/process.png" style="width: 30%"/>
+    <img src="/public/images/eigenvector_pull/process.png" style="width: 45%"/>
     We then carry out $A^3v_1$ and $A_3v_2.$
 </p>
 
-We then carry out the computation of $A^3v_1$ and $A^3v_2$. Thanks to $v_1$ and $v_2$ being eigenvectors, this neatly simplifies to $A^3v = c_1 \lambda_1^3v_1 + c_2 \lambda_2^3v_2$ where $\lambda_1$ is the eigenvalue of $v_1$ and $\lambda_2$ is the eigenvalue of $v_2.$
+We then carry out the computation of $A^3v_1$ and $A^3v_2$. Thanks to $v_1$ and $v_2$ being eigenvectors, we have:
+
+$$A^3v_1 = \lambda_1^3v_1$$
+$$A^3v_2 = \lambda_2^3v_2$$
+
 
 <p class='image-block'>
-    <img src="/public/images/eigenvector_pull/combine.png" style="width: 30%"/>
+    <img src="/public/images/eigenvector_pull/combine.png" style="width: 45%"/>
     We finally combine the results to get $A^3v.$
 </p>
 
-We then finally combine the results to get $A^3v.$
+We then finally combine the results to get $A^3v.$ We find:
+
+$$A^3v = c_1 \lambda_1^3v_1 + c_2 \lambda_2^3v_2$$
+
+### Dominant Eignevalues and Eigenvectors
+
+Now, what happens when $\lambda_1$ is larger than $\lambda_2$ (i.e. there exists a dominant eigenvalue)? Let's imagine $\lambda_1 = 5$ and $\lambda_2 = 2.$ Let's now display what it would look like to carry out $A^3v$ when we have this difference in eigenvalues.
 
 
-Now, what happens when $\lambda_1$ is larger than $\lambda_2$? Let's imagine $\lambda_1 = 5$ and $\lambda_2 = 2.$ Let's now display what it would look like to carry out $A^3v$ when we have this difference in eigenvalues.
+The interaction below shows this setup:
 
-
-The interaction below shows this setup. 
+<br/>
+<br/>
 
 {% include eigenvectors.html %}
+
+<br/>
+<br/>
 
 1. Drag the slider to increase or decrease the number of times we apply $A$ on $v.$
 2. Notice how "Output Eigenvector 1" and "Output Eigenvector 2" change at different rates.
@@ -126,8 +140,8 @@ So, just using the properties of linear functions, we are able to see why eigenv
 
 If you've enjoyed this post on eigenvectors, check out the following additional posts on the topic I've written:
 
-1. [You could have come up with eigenvectors. Here's how](2019/02/25/eigenvectors/)
-2. [How Eigenvectors Power PageRank - the algorithm behind Google Search](2019/03/20/pagerank/)
+1. [You could have come up with eigenvectors. Here's how.](2019/02/25/eigenvectors/)
+2. [How Eigenvectors Power PageRank - the algorithm behind Google Search.](2019/03/20/pagerank/)
 
 Thanks for reading!
 

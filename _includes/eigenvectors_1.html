@@ -14,7 +14,7 @@
             <div class="col-xs-offset-2 col-xs-2" style="position: relative; display: flex; align-items: center; justify-content: center;">
                 <div class="box" style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
                     <div class="slidecontainer" style="flex-direction: column; text-align: center;">
-                        <div id="rangeValue" style="padding-bottom: 10px;"></div>
+                        <div id="rangeValue-og" style="padding-bottom: 10px;"></div>
                         <input type="range" min="0" max="5" value="0" class="slider" id="myRange-og">
                     </div>
                 </div>
@@ -108,7 +108,7 @@
             Plotly.newPlot('source-vector-og', [], generateLineData(0, 1, "Input Vector", inputVectorColor), { responsive: true });
 
             var slider = document.getElementById('myRange-og');
-            var sliderValue = document.getElementById('rangeValue');
+            var sliderValue = document.getElementById('rangeValue-og');
             sliderValue.innerHTML = "Number of times A is applied: {0}".format(slider.value);
 
             Plotly.newPlot('final-output-og', [], generateLineData(0, 1, "Final Vector", "orange"), {}, { responsive: true });
