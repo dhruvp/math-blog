@@ -7,7 +7,7 @@ comments: false
 
 {% katexmm %}
 
-You've probably heard the word eigenvectors hundreds of times in class and have been asked to calculate it hundreds more. But why is this concept so cecntral in Linear Algebra? Why is it that we study the eigenvector of a matrix so often?
+You've probably heard the word eigenvectors hundreds of times in class and have been asked to calculate it hundreds more. But why is this concept so central in Linear Algebra? Why is it that we study the eigenvector of a matrix so often?
 
 In this post, we'll see how Eigenvectors help us immediately understand what a linear function will do to an input. We'll do so by playing with an interactive visualization that allows us to see just that.
 
