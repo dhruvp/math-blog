@@ -63,7 +63,7 @@ The standard way to do this is to simply follow the rules of multiplication and 
     In the following discussion we will split $v$ into a linear combination of $A$'s eigenvectors. We then apply $A^3$ to each of these pieces and combine the result.
 </p>
 
-We know that that any vector $v$ can be written as the sum of the eigenvectors of $A$. After all, eigenvectors are linearly independent and form a basis for the space. If $v_1$ and $v_2$ are the eigenvectors of $A,$ we can break up $v$ as:
+We know that that any vector $v$ can be written as the sum of the eigenvectors of $A$. After all, eigenvectors are linearly independent and form a basis for the space (if the matrix $A$ is diagonalizable). If $v_1$ and $v_2$ are the eigenvectors of $A,$ we can break up $v$ as:
 
 $v = c_1 \cdot v_1 + c_2 \cdot v_2$ for some constants $c_1$ and $c_2.$
 
