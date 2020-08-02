@@ -83,7 +83,7 @@ $$A^3v = c_1 \cdot A^3v_1 + c_2\cdot A^3v_2$$
 
 <p class='image-block'>
     <img src="/public/images/eigenvector_pull/process.png" style="width: 45%"/>
-    We then carry out $A^3v_1$ and $A_3v_2.$
+    We then carry out $A^3v_1$ and $A^33v_2.$
 </p>
 
 We then carry out the computation of $A^3v_1$ and $A^3v_2$. Thanks to $v_1$ and $v_2$ being eigenvectors, we have:
