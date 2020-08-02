@@ -103,7 +103,7 @@ $$A^3v = c_1 \lambda_1^3v_1 + c_2 \lambda_2^3v_2$$
 
 ### Dominant Eignevalues and Eigenvectors
 
-Now, what happens when $\lambda_1$ is larger than $\lambda_2$ (i.e. there exists a dominant eigenvalue)? Let's imagine $\lambda_1 = 5$ and $\lambda_2 = 2.$ Let's now display what it would look like to carry out $A^3v$ when we have this difference in eigenvalues.
+Now, what happens when $\lambda_1$ is larger than $\lambda_2$ (i.e. there exists a dominant eigenvalue)? In this example, $\lambda_1 = 5$ and $\lambda_2 = 2.$ Let's now display what it would look like to carry out $A^3v$ when we have this difference in eigenvalues.
 
 
 The interaction below shows this setup:
@@ -127,7 +127,7 @@ Note this "push" effect will only happen towards this eigenvector with the large
 
 ### Why this happens
 
-This tilt towards "Output Vector One" happens due to exponential growth. $\lambda_1^x$ grows much faster than $\lambda_2^x$. As such the more times we apply $A$ ($x$ in our exponentials), the bigger the difference between $\lambda_1^x$ and $\lambda_2^x.$ This increasing difference is shown in the plots below.
+This tilt towards "Output Vector One" happens due to exponential growth. $\lambda_1^x$ grows much faster than $\lambda_2^x$. As such the more times we apply $A$ ($x$ in our exponentials), the bigger the difference between $\lambda_1^x$ and $\lambda_2^x.$ Hence the $v_1$ term has much more weight in the final sum. This increasing difference is shown in the plot below.
 
 <p class='image-block'>
     <img src='/public/images/eigenvector_pull/exponentials.png' />
