@@ -140,8 +140,8 @@ So, just using the properties of linear functions, we are able to see why eigenv
 
 If you've enjoyed this post on eigenvectors, check out the following additional posts on the topic I've written:
 
-1. [You could have come up with eigenvectors. Here's how.](https://dhruvonmath.com/2019/02/25/eigenvectors/)
-2. [How Eigenvectors Power PageRank - the algorithm behind Google Search.](https://dhruvonmath.com/2019/03/20/pagerank/)
+1. [You could have come up with eigenvectors. Here's how.](https://www.dhruvonmath.com/2019/02/25/eigenvectors/)
+2. [How Eigenvectors Power PageRank - the algorithm behind Google Search.](https://www.dhruvonmath.com/2019/03/20/pagerank/)
 
 Thanks for reading!
 
