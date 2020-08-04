@@ -120,7 +120,7 @@ The interaction below shows this setup:
 2. Notice how "Output Eigenvector 1" and "Output Eigenvector 2" change at different rates.
 3. Notice how "Final Output Vector" tilts towards "Output Eigenvector 1" as you drag the slider to the right.
 
-We thus see that when there's one eigenvalue larger than the other ($\lambda_1 > \lambda_2$), the linear function pushes its inputs towards the eigenvector associated with that large eigenvalue ("Output EigenVector One"). The more times we apply $A$, the larger this effect.
+We thus see that when there's one eigenvalue larger than the other ($|\lambda_1| > |\lambda_2|$), the linear function pushes its inputs towards the eigenvector associated with that large eigenvalue ("Output EigenVector One"). The more times we apply $A$, the larger this effect.
 
 Note this "push" effect will only happen towards this eigenvector with the largest eignevalue - not any of the other eigenvectors.
 
