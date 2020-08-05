@@ -14,7 +14,7 @@ In this post, we'll see how Eigenvectors help us immediately understand what a l
 ### Quick Refresher
 
 <p class='image-block'>
-    <img src='/public/images/eigenvector_scaling.png' width='300'/>
+    <img src='/public/images/eigenvector_pull/eigenvector_scaling.png' width='300'/>
     Here, applying $F$ on its eigenvector $v$ leades to a new vector $\lambda v$ is in the same direction as $v$. Image Source: Wikipedia.
 </p>
 
