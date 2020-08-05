@@ -103,7 +103,7 @@ $$A^3v = c_1 \lambda_1^3v_1 + c_2 \lambda_2^3v_2$$
 
 ### Dominant Eignevalues and Eigenvectors
 
-Now, what happens when $\lambda_1$ is larger than $\lambda_2$ (i.e. there exists a dominant eigenvalue)? In this example, $\lambda_1 = 5$ and $\lambda_2 = 2.$ Let's now display what it would look like to carry out $A^3v$ when we have this difference in eigenvalues.
+Now, what happens when $|\lambda_1|$ is larger than $|\lambda_2|$ (i.e. there exists a dominant eigenvalue)? In this example, $\lambda_1 = 5$ and $\lambda_2 = 2.$ Let's now display what it would look like to carry out $A^3v$ when we have this difference in eigenvalues.
 
 
 The interaction below shows this setup:
