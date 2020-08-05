@@ -15,7 +15,7 @@ In this post, we'll see how Eigenvectors help us immediately understand what a l
 
 <p class='image-block'>
     <img src='/public/images/eigenvector_pull/eigenvector_scaling.png' width='300'/>
-    Here, applying $F$ on its eigenvector $v$ leades to a new vector $\lambda v$ is in the same direction as $v$. Image Source: Wikipedia.
+    Here, applying $A$ on its eigenvector $v$ leades to a new vector $\lambda v$ is in the same direction as $v$. Image Source: Wikipedia.
 </p>
 
 Let's do a quick refresher to begin with. The eigenvector of a linear function $A$ is just the vector $v$ s.t. $Av = \lambda v$ for some constant $\lambda$ which we call the eigenvalue. At a high level, the eigenvector is just a dimension along which the linear function only stretches its input (for real valued eigenvalues).
